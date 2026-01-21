@@ -1,0 +1,29 @@
+library/
+local/
+cellar/
+lock/
+python/
+sandbox/
+staging/
+# R trash
+.Rhistory
+.RData
+.Rproj.user/
+.Ruserdata
+
+# RStudio project files (if ever created)
+*.Rproj
+
+# renv local library
+renv/library/
+
+# Quarto / knitr caches
+*_cache/
+cache/
+.Rcheck/
+
+# Large raw data (we don't track these in Git)
+data/raw/
+
+# VS Code settings (optional)
+.vscode/
