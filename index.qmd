@@ -1,0 +1,144 @@
+---
+title: "MET Lake Comparison"
+subtitle: "Rotorua overview"
+author: "Cady B"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(slider)
+library(gt)
+library(reactable)
+library(plotly)
+library(here)
+
+# Load helpers
+source(here("scripts", "00_metrics_helpers.R"))
+source(here("scripts", "02_analysis_helpers.R"))
+
+# Map dataset names to processed files
+file_map <- list(
+  "ERA5"         = "data/processed/rotorua_era5_daily.csv",
+  "Buoy"         = "data/processed/rotorua_buoy_daily.csv",
+  "Town_40177"   = "data/processed/rotorua_town_40177_daily.csv",
+  "VCS_On"       = "data/processed/rotorua_vcs_on_daily.csv",
+  "Airport_1770" = "data/processed/rotorua_airport_1770_daily.csv"
+)
+
+read_from_map <- function(name) {
+  readr::read_csv(here(file_map[[name]]), show_col_types = FALSE) |>
+    mutate(Date = as.Date(Date))
+}
+
+ref_name <- "Airport_1770"
+target_names <- c("ERA5", "Buoy", "Town_40177", "VCS_On")
+vars <- c("Temp_C", "Precip_mm", "Wind_Spd_ms", "RadSWD_Wm2")
+
+ref_df <- read_from_map(ref_name)
+targets_list <- setNames(lapply(target_names, read_from_map), target_names)
+```
+
+## Data coverage
+
+```{r}
+coverage <- bind_rows(
+  Reference = ref_df,
+  !!!targets_list,
+  .id = "Dataset"
+) |>
+  summarise(
+    first_date = min(Date, na.rm = TRUE),
+    last_date  = max(Date, na.rm = TRUE),
+    n_days     = n(),
+    .by = Dataset
+  )
+
+reactable(
+  coverage,
+  sortable = TRUE,
+  striped = TRUE,
+  pagination = FALSE
+)
+```
+
+## Metrics table (reference vs targets)
+
+```{r}
+metrics_all <- purrr::imap_dfr(
+  targets_list,
+  ~ metrics_vs_ref(
+    ref_df = ref_df,
+    target_df = .x,
+    target_name = .y,
+    vars = vars,
+    wet_threshold_mm = 1,
+    windy_top_pct = 0.10
+  )
+)
+
+reactable(
+  metrics_all,
+  searchable = TRUE,
+  sortable = TRUE,
+  highlight = TRUE,
+  defaultPageSize = 8,
+  pagination = TRUE,
+  columns = list(
+    cor = colDef(format = colFormat(digits = 2)),
+    slope = colDef(format = colFormat(digits = 2)),
+    intercept = colDef(format = colFormat(digits = 2)),
+    mae = colDef(format = colFormat(digits = 2)),
+    rmse = colDef(format = colFormat(digits = 2)),
+    ccc = colDef(format = colFormat(digits = 2)),
+    bias = colDef(format = colFormat(digits = 2)),
+    rel_bias = colDef(format = colFormat(digits = 1))
+  )
+)
+```
+
+## Time series overlays
+
+```{r}
+ts_long <- bind_rows(
+  Reference = ref_df,
+  !!!targets_list,
+  .id = "Dataset"
+) |>
+  pivot_longer(
+    cols = all_of(vars),
+    names_to = "Variable",
+    values_to = "Value"
+  ) |>
+  drop_na(Value)
+
+make_ts_plot <- function(var) {
+  df <- ts_long |> filter(Variable == var)
+  x_rng <- range(df$Date, na.rm = TRUE)
+  y_rng <- range(df$Value, na.rm = TRUE)
+  p <- ggplot(df, aes(Date, Value, color = Dataset)) +
+    geom_line() +
+    facet_wrap(~Dataset, ncol = 1, scales = "fixed") +
+    coord_cartesian(xlim = x_rng, ylim = y_rng) +
+    labs(title = var, x = NULL, y = var) +
+    scale_color_manual(
+      values = c(
+        "Buoy" = "#1f77b4",       # blue
+        "ERA5" = "#d95f02",       # dark orange
+        "Reference" = "#000000",  # black
+        "Town_40177" = "#7570b3", # purple
+        "VCS_On" = "#1b9e77"      # green
+      )
+    ) +
+    theme_minimal() +
+    theme(legend.position = "none")
+  ggplotly(p, tooltip = c("Date", "Value", "Dataset"))
+}
+
+lapply(vars, make_ts_plot)
+```
+c

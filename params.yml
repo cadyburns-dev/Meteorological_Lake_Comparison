@@ -1,0 +1,9 @@
+params:
+  lake_id: "rotorua"
+  reference: "Airport_1770"
+  targets: ["ERA5", "Buoy", "Town_40177", "VCS_On"]
+  vars: ["Temp_C", "Precip_mm", "Wind_Spd_ms", "RadSWD_Wm2"]
+  wet_threshold_mm: 1
+  windy_top_pct: 0.10
+  windy_threshold_ms: 10
+  window_days: 30

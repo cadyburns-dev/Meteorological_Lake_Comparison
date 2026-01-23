@@ -190,10 +190,7 @@ metrics_vcsn <- metrics_vs_ref(ap1770, vcs_on, "vcs_on", wet_threshold_mm = 1, w
 metrics_all <- bind_rows(metrics_era5, metrics_buoy, metrics_vcsn)
 metrics_all
 
+#Note radiation only found in two datasets, and has very little points for this reason it is not used
+#Add extra code for RAD if yu have the nessesary data for analysis
 
 
-#----------------------------------------
-#2.  Scatter plot Variable, target vs reference (airport)
-#----------------------------------------
-#----------------------------------------
-#3.  Time series overlay (All met data)

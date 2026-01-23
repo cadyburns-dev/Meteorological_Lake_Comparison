@@ -1,0 +1,33 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "MET Lake Comparison"
+  navbar:
+    left:
+      - text: "Home"
+        href: index.qmd
+      - text: "Rotorua demo"
+        href: rotorua.qmd
+      - text: "Methods"
+        href: methods.qmd
+
+metadata-files:
+  - params.yml
+
+format:
+  html:
+    theme: cyborg
+    css: custom.css
+    toc: true
+    toc-title: "Table of Content"
+    toc-location: left
+    page-layout: full
+    code-fold: true
+    df-print: paged
+
+execute:
+  echo: true
+  warning: false
+  message: false

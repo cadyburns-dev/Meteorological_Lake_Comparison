@@ -2,27 +2,23 @@
 
 
 #Install packages for following scripts
+# scripts/000_project_setup.R
+if (!requireNamespace("renv", quietly = TRUE)) install.packages("renv")
+
+options(repos = c(CRAN = "https://packagemanager.posit.co/cran/latest"))
+
+renv::restore(prompt = FALSE)  # use the lockfile; idempotent
+
+# from GitHub  (records to renv.lock)
+renv::install("limnotrack/aemetools")
+renv::install("rLakeAnalyzer")
+renv::install("plotly")
+
+renv::snapshot(prompt = FALSE, prune = TRUE)
+
+# optional: check versions/status interactively
+if (interactive()) renv::status()
 
 
-# If you have all packages
-renv::init() #if you have installed packages in your cache
-renv::status()
-renv::restore() # if you have installed packages in renv.lock 
-renv::install("Rcpp") 
 
-
-# For Buoy data
-install.packages("rLakeAnalyzer")
-devtools::install_github("limnotrack/aemetools")
-aemetools::check_api_status()
-logger::log_threshold(logger::INFO)
-
-
-# For the rest
- install.packages(c(
-  "tidyverse","lubridate","readxl","openxlsx","arrow","sf",
-  "renv","devtools","logger",
-  "quarto","rmarkdown","knitr","gt","broom","modelr","janitor",
-  "testthat","lintr","styler", "readr", "cli", "ggplot2", "airGR", "zoo", "Rcpp"
-))
 

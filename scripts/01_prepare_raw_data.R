@@ -151,6 +151,10 @@ glimpse(Era5)
 #Get Bouy data from Limnotrack database - This is from the new Buoy so starts Feb 2022
 Rotorua_Buoy_raw <- read.csv(file = "https://www.dropbox.com/scl/fi/s37tbex1uej3r1xfzxkrd/Rotorua_202202-202508_meteorology.csv?rlkey=9oee6fzwx3q9yc7ubiobn9flc&st=obtfridy&dl=1", header = TRUE)
 
+aemetools::check_api_status()
+logger::log_threshold(logger::INFO)
+
+
 # +++++++++++++++++++++++++++++++++
 # Alternatively, if downloaded manually, read from data/raw
 
@@ -683,141 +687,6 @@ message("Saved cleaned Rotorua met datasets to data/processed/")
 
 #######################################################
 #########################################################
-
-##########################################################
-###########################################################
-###########################################################
-# i am up to here, please go back and make sure the buoy data is good, era5 data is change and later point check hourly data rather than daily data for the met stations.
-# also make sure the date is all formatted similar. this is the final file, look back and delete other files with useless code. 
-
-# new code in 02 file to execute but before all variables need to be same across board to plot. do this below ensuring all data is same
-##############################################################
-###########################################################
-#   ###########################################################
-###########################################################
-# -------------------------------------------------------------------
-# Strandadise data to compariable time resolution (daily)
-# -------------------------------------------------------------------
-# ONCE FILE PROCESSES and standardised put INTO one file 
-
-
-
-# -------------------------------------------------------------------
-# ---- Aggregate to daily resolution ----
-
-# Buoy daily aggregation
-buoy_daily <- buoy %>%
-  group_by(Date) %>%
-  summarise(
-    Temp_mean = mean(Temp_C, na.rm = TRUE),
-    Temp_min  = ifelse(all(is.na(Temp_C)), NA_real_, min(Temp_C, na.rm = TRUE)),
-    Temp_max  = ifelse(all(is.na(Temp_C)), NA_real_, max(Temp_C, na.rm = TRUE)),
-    Precip_mm = sum(Precip_mm, na.rm = TRUE),
-    Wind_mean = mean(Wind_Speed_ms, na.rm = TRUE),
-    HumRel_mean = mean(HumRel, na.rm = TRUE),
-    Baro_mean = mean(Baro_hPa, na.rm = TRUE),
-    RadSWD_mean = mean(RadSWD_Wm2, na.rm = TRUE),
-    n_hours = sum(!is.na(Temp_C)),
-    .groups = "drop"
-  )
-
-# Airport 1770 daily aggregation
-ap_1770_daily <- ap_1770 %>%
-  group_by(Date) %>%
-  summarise(
-    Temp_mean = mean(Temp_C, na.rm = TRUE),
-    Temp_min  = if (all(is.na(Temp_C))) NA_real_ else min(Temp_C, na.rm = TRUE),
-    Temp_max  = if (all(is.na(Temp_C))) NA_real_ else max(Temp_C, na.rm = TRUE),
-    Precip_mm = sum(Precip_mm, na.rm = TRUE),
-    Wind_mean = mean(Wind_Speed_ms, na.rm = TRUE),
-    HumRel_mean = mean(Mean.Relative.Humidity..percent., na.rm = TRUE),
-    Baro_mean = mean(Baro_hPa, na.rm = TRUE),
-    RadSWD_mean = mean(RadSWD_Wm2, na.rm = TRUE),
-    n_hours = sum(!is.na(Temp_C)),
-    .groups = "drop"
-  )
-
-
-# Airport 40177 daily aggregation
-ap_40177_daily <- ap_40177 %>%
-  group_by(Date) %>%
-  summarise(
-    Temp_mean = mean(Temp_C, na.rm = TRUE),
-    Temp_min  = if (all(is.na(Temp_C))) NA_real_ else min(Temp_C, na.rm = TRUE),
-    Temp_max  = if (all(is.na(Temp_C))) NA_real_ else max(Temp_C, na.rm = TRUE),
-    Precip_mm = sum(Precip_mm, na.rm = TRUE),
-    Wind_mean = mean(Wind_Speed_ms, na.rm = TRUE),
-    HumRel_mean = mean(Mean.Relative.Humidity..percent., na.rm = TRUE),
-    Baro_mean = mean(Baro_hPa, na.rm = TRUE),
-    RadSWD_mean = mean(RadSWD_Wm2, na.rm = TRUE),
-    n_hours = sum(!is.na(Temp_C)),
-    .groups = "drop"
-  )
-
-# ---- ERA5 daily aggregation ----
-era5_hourly <- era5 %>%
-  filter(str_detect(datetime, "\\d{2}:\\d{2}:\\d{2}")) %>%
-  mutate(Date = as_date(datetime))
-era5_daily <- era5_hourly %>%
-  group_by(Date) %>%
-  summarise(
-    Temp_mean = mean(Temp_C, na.rm = TRUE),
-    Temp_min  = min(Temp_C, na.rm = TRUE),
-    Temp_max  = max(Temp_C, na.rm = TRUE),
-    Precip_mm = sum(Precip_mm, na.rm = TRUE),
-    Wind_mean = mean(Wind_Speed_ms, na.rm = TRUE),
-    n_hours   = sum(!is.na(Temp_C)),
-    .groups = "drop"
-  )
-
-# ---- Buoy: aggregate 5-min to hourly, then to daily ----
-buoy_hourly <- buoy_raw %>%
-  mutate(
-    DateTime_chr = as.character(DateTime),
-    DateTime_clean = if_else(
-      str_detect(DateTime_chr, "^\\d{4}-\\d{2}-\\d{2}$"),
-      paste0(DateTime_chr, " 00:00:00"),
-      DateTime_chr
-    ),
-    DateTime = ymd_hms(DateTime_clean, tz = "UTC")
-  ) %>%
-  mutate(
-    Date = as_date(DateTime),
-    Hour = hour(DateTime)
-  ) %>%
-  group_by(Date, Hour) %>%
-  summarise(
-    TmpAir = mean(TmpAir, na.rm = TRUE),
-    Precip_mm = sum(PpRain, na.rm = TRUE),
-    Wind_Speed_ms = mean(WndSpd, na.rm = TRUE),
-    HumRel = mean(HumRel, na.rm = TRUE),
-    Baro_hPa = mean(PrBaro, na.rm = TRUE),
-    RadSWD = mean(RadSWD, na.rm = TRUE),
-    n_5min = n(),
-    .groups = "drop"
-  )
-buoy_daily <- buoy_hourly %>%
-  group_by(Date) %>%
-  summarise(
-    Temp_mean = mean(TmpAir, na.rm = TRUE),
-    Temp_min  = if (all(is.na(TmpAir))) NA_real_ else min(TmpAir, na.rm = TRUE),
-    Temp_max  = if (all(is.na(TmpAir))) NA_real_ else max(TmpAir, na.rm = TRUE),
-    Precip_mm = sum(Precip_mm, na.rm = TRUE),
-    Wind_mean = mean(Wind_Speed_ms, na.rm = TRUE),
-    HumRel_mean = mean(HumRel, na.rm = TRUE),
-    Baro_mean = mean(Baro_hPa, na.rm = TRUE),
-    RadSWD_mean = mean(RadSWD, na.rm = TRUE),
-    n_hours = n(),
-    .groups = "drop"
-  )
-
-write_csv(era5_daily,     "data/processed/rotorua_era5_daily.csv")
-write_csv(buoy_daily,     "data/processed/rotorua_buoy_daily.csv")
-write_csv(ap_40177_daily, "data/processed/rotorua_airport_40177_daily.csv")
-write_csv(ap_1770_daily,  "data/processed/rotorua_airport_1770_daily.csv")
-
-
-message("Saved cleaned Rotorua met datasets to data/processed/")
 
 
 # -------------------------------------------------------------------

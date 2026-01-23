@@ -413,3 +413,266 @@ metrics_all <- bind_rows(metrics_era5, metrics_buoy, metrics_vcsn)
 metrics_all
 
 
+# Old scatter plots/ time series plots from original plotting library(tidyverse)
+
+
+# calc_metrics is used inside metrics_vs_ref.
+#Ensure vars match the column names in each dataset; adjust if your radiation column is named differently.
+#If any dataset lacks a variable, remove it from vars or handle with tryCatch.
+
+
+
+#----------------------------------------
+  # Load processed daily data--------------
+#----------------------------------------
+era5    <- read_csv("data/processed/rotorua_era5_daily.csv", show_col_types = FALSE)
+buoy    <- read_csv("data/processed/rotorua_buoy_daily.csv", show_col_types = FALSE)
+ap1770  <- read_csv("data/processed/rotorua_airport_1770_daily.csv", show_col_types = FALSE)
+twn40177 <- read_csv("data/processed/rotorua_town_40177_daily.csv", show_col_types = FALSE)
+vcs_on <- read_csv("data/processed/rotorua_vcs_on_daily.csv", show_col_types = FALSE)
+
+# Vars to compare (must exist in both ref and target)
+vars <- c("Temp_C", "Precip_mm", "Wind_Spd_ms", "RadSWD_Wm2")
+
+# Helper: compute metrics for one target vs reference (1770)
+metrics_vs_ref <- function(target_df, target_name) {
+  joined <- inner_join(ap1770, target_df, by = "Date", suffix = c("_ref", "_tgt"))
+  
+  map_dfr(vars, function(v) {
+    obs <- joined[[paste0(v, "_ref")]]
+    sim <- joined[[paste0(v, "_tgt")]]
+    calc_metrics(obs, sim) |>
+      mutate(var = v, .before = 1)
+  }) |>
+    mutate(target = target_name, .before = 1)
+}
+
+metrics_all <- bind_rows(
+  metrics_vs_ref(era5,   "ERA5"),
+  metrics_vs_ref(buoy,   "Buoy"),
+  metrics_vs_ref(twn40177,"Town_40177"),
+  metrics_vs_ref(vcs_on,  "VCS_On")
+)
+
+# View metrics table
+metrics_all
+
+
+
+#----------------------------------------------
+#  Faceted Scatter plot: all targets together, facets by variable (one figure--------------------
+#----------------------------------------------
+
+  # One figure, one variable (Temp_C), facets by target (vs 1770)
+  targets_list <- list(
+      ERA5          = era5,
+      Buoy          = buoy,
+      Town_40177 = twn40177,
+      VCS_On        = vcs_on
+    )
+
+  target_colors <- c(
+      ERA5          = "#d95f02",  # pink
+      Buoy          = "#7570b3",  # purple
+      Town_40177 = "#f0c400",  # deep yellow
+      VCS_On        = "#1b9e77"   # gray
+  )
+
+  plot_var_by_target <- function(var) {
+      df_all <- bind_rows(lapply(names(targets_list), function(nm) {
+          joined <- inner_join(ap1770, targets_list[[nm]], by = "Date", suffix = c("_ref", "_tgt"))
+          tibble(
+              target = nm,
+              ref    = joined[[paste0(var, "_ref")]],
+              tgt    = joined[[paste0(var, "_tgt")]]
+            ) 
+        })) |> drop_na(ref, tgt)
+      
+        ggplot(df_all, aes(x = ref, y = tgt, color = target, group = target)) +
+          geom_point(alpha = 0.5) +
+          geom_abline(slope = 1, intercept = 0, color = "black", linetype = "dashed") +
+          facet_wrap(~ target, scales = "free", ncol = 1) + #ncol = 1 brings each plot on its own row
+          scale_color_manual(values = target_colors) +
+          labs(
+              title = paste0(var, " Data vs Airport 1770"),
+              x = "Airport 1770",
+              y = "Site",
+              color = "Meterological data"
+            ) +
+          theme_bw()
+  }
+
+  p_temp_C <- plot_var_by_target("Temp_C")
+  p_wind_ms <- plot_var_by_target("Wind_Spd_ms")
+  p_rad_Wm2 <- plot_var_by_target("RadSWD_Wm2")
+  p_rain_mm <- plot_var_by_target("Precip_mm")
+print(p_temp_C)
+print(p_wind_ms)
+print(p_rad_Wm2)
+print(p_rain_mm)
+
+
+  
+
+
+
+
+# Quick scatter plots vs 1770 for each target showing att variable----------------
+plot_vs_ref <- function(target_df, target_name) {
+  inner_join(ap1770, target_df, by = "Date", suffix = c("_ref", "_tgt")) |>
+    pivot_longer(cols = ends_with("_ref"), names_to = "var_ref", values_to = "ref") |>
+    mutate(var = str_remove(var_ref, "_ref")) |>
+    left_join(
+      pivot_longer(target_df, cols = all_of(vars), names_to = "var", values_to = "tgt"),
+      by = c("Date", "var")
+    ) |>
+    filter(var %in% vars) |>
+    ggplot(aes(x = ref, y = tgt)) +
+    geom_point(alpha = 0.4) +
+    geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+    facet_wrap(~ var, scales = "free") +
+    labs(
+      title = paste("Target:", target_name, "vs Town 1770"),
+      x = "1770 reference",
+      y = target_name
+    ) +
+    theme_bw()
+}
+
+p_era5    <- plot_vs_ref(era5, "ERA5")
+p_buoy    <- plot_vs_ref(buoy, "Buoy")
+p_40177   <- plot_vs_ref(twn40177, "Town 40177")
+p_vcson   <- plot_vs_ref(vcs_on, "VCS On")
+
+print(p_era5)
+print(p_buoy)
+print(p_40177)
+print(p_vcson)
+
+
+# NOTE TO SELF - when happy with figs makecodeto save figs to file as i manually have ben doing it also to get shading on trend line you can add model fedality, to it, make line in front and and shade
+message("scatter plots complete")
+
+#-----------------------------
+     # Corolation plots X= date var  independent------------
+#-----------------------------
+
+targets_list <- list(
+  ERA5          = era5,
+  Buoy          = buoy,
+  Town_40177 = twn40177,
+  VCS_On        = vcs_on
+)
+
+target_colors <- c(
+  ERA5          = "#d95f02",  # pink
+  Buoy          = "#7570b3",  # purple
+  Town_40177 = "#f0c400",  # deep yellow
+  VCS_On        = "#1b9e77"   # gray
+)
+
+plot_var_by_target <- function(var) {
+  df_all <- bind_rows(lapply(names(targets_list), function(nm) {
+    joined <- inner_join(ap1770, targets_list[[nm]], by = "Date", suffix = c("_ref", "_tgt"))
+    tibble(
+      target = nm,
+      ref    = joined[[paste0(var, "_ref")]],
+      tgt    = joined[[paste0(var, "_tgt")]]
+    ) 
+  })) |> drop_na(ref, tgt)
+  
+  ggplot(df_all, aes(x = ref, y = tgt, color = target, group = target)) +
+    geom_line(alpha = 0.5) +
+    facet_wrap(~ target, scales = "free", ncol = 1) + #ncol = 1 brings each plot on its own row
+    scale_color_manual(values = target_colors) +
+    labs(
+      title = paste0(var, " Corolation"),
+      x = "Date",
+      y = "Site",
+      color = "Meterological data"
+    ) +
+    theme_bw()
+}
+
+p_temp_C <- plot_var_by_target("Temp_C")
+p_wind_ms <- plot_var_by_target("Wind_Spd_ms")
+p_rad_Wm2 <- plot_var_by_target("RadSWD_Wm2")
+p_rain_mm <- plot_var_by_target("Precip_mm")
+print(p_temp_C)
+print(p_wind_ms)
+print(p_rad_Wm2)
+print(p_rain_mm)
+
+
+
+#------------------------
+# Plots all stations together ------
+#----------------------------------
+era5    <- read_csv("data/processed/rotorua_era5_daily.csv", show_col_types = FALSE)
+buoy    <- read_csv("data/processed/rotorua_buoy_daily.csv", show_col_types = FALSE)
+ap1770  <- read_csv("data/processed/rotorua_airport_1770_daily.csv", show_col_types = FALSE)
+twn40177 <- read_csv("data/processed/rotorua_town_40177_daily.csv", show_col_types = FALSE)
+vcs_on <- read_csv("data/processed/rotorua_vcs_on_daily.csv", show_col_types = FALSE)
+
+# Vars to compare (must exist in both ref and target)
+vars <- c("Temp_C", "Precip_mm", "Wind_Spd_ms", "RadSWD_Wm2")
+
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+# Combine all targets into one long table
+target_list <- list(
+  ERA5          = era5,
+  Buoy          = buoy,
+  Town_40177    = twn40177,
+  VCS_On        = vcs_on,
+  Airport_1770  = ap1770
+)
+
+target_colors <- c(
+  ERA5          = "#d95f02",
+  Buoy          = "#7570b3",
+  Town_40177    = "#f0c400",
+  VCS_On        = "#1b9e77",
+  Airport_1770  = "black"
+)
+df_all <- bind_rows(lapply(names(target_list), function(nm) {
+  target_list[[nm]] %>%
+    filter(Date >= as.Date("2000-01-01"), Date <= as.Date("2025-12-31")) %>% #Select a data size within the timeseries
+    select(Date, all_of(vars)) %>%
+    mutate(target = nm)
+}))
+
+
+
+df_long <- df_all %>%
+  pivot_longer(cols = all_of(vars), names_to = "var", values_to = "value")
+
+p_time <- ggplot(df_long, aes(x = Date, y = value, color = target)) +
+  geom_line(alpha = 0.7) +
+  facet_wrap(~ var, scales = "free_y", ncol = 1) +  # change ncol as you like
+  scale_color_manual(values = target_colors) +
+  labs(
+    title = "Time series by variable across sites",
+    x = "Date",
+    y = "Value",
+    color = "Site"
+  ) +
+  theme_bw()
+
+print(p_time)
+
+# Wind data alone ------------
+
+Wind_buoy <- ggplot(buoy, aes(x = Date, y = Wind_Spd_ms)) +
+  geom_line(alpha = 0.5) +
+  geom_smooth() +
+  labs(
+    title = "Buoy wind speed ms",
+       x = "Date",
+       y = "Wind speed ms") +
+  theme_bw()
+
+
+print(Wind_buoy)

@@ -1,0 +1,162 @@
+---
+title: "Meterological Source Comparison"
+subtitle: "Rotorua demo"
+author: "Cady B"
+editor: visual
+bibliography: references.bib
+---
+
+## #Load necessary libraries
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(gt)
+library(slider)
+library(plotly)
+library(glue)
+library(reactable)
+library(htmltools)
+
+
+# Always resolve paths from project root
+library(here)
+
+# ---- source scripts ----
+source(here::here("scripts", "00_metrics_helpers.R"))
+source(here::here("scripts", "02_analysis_helpers.R"))
+
+# Fallback params for interactive runs
+if (!exists("params")) {
+  params <- list(
+    lake_id = "rotorua",
+    reference = "Airport_1770",
+    targets = c("ERA5", "Buoy", "Town_40177", "VCS_On"),
+    vars = c("Temp_C", "Precip_mm", "Wind_Spd_ms", "RadSWD_Wm2"),
+    wet_threshold_mm = 1,
+    windy_top_pct = 0.10,
+    windy_threshold_ms = 10,
+    window_days = 30
+  )
+}
+
+```
+
+# data
+
+```{r}
+file_map <- list(
+  ERA5         = here("data/processed/rotorua_era5_daily.csv"),
+  Buoy         = here("data/processed/rotorua_buoy_daily.csv"),
+  Town_40177   = here("data/processed/rotorua_town_40177_daily.csv"),
+  VCS_On       = here("data/processed/rotorua_vcs_on_daily.csv"),
+  Airport_1770 = here("data/processed/rotorua_airport_1770_daily.csv")
+)
+
+read_from_map <- function(name) {
+  readr::read_csv(file_map[[name]], show_col_types = FALSE) |>
+    mutate(Date = as.Date(Date))
+}
+
+ref_df <- read_from_map(params$reference)
+
+targets_list <- list(
+  ERA5        = read_from_map("ERA5"),
+  Buoy        = read_from_map("Buoy"),
+  Town_40177  = read_from_map("Town_40177"),
+  VCS_On      = read_from_map("VCS_On"),
+  Reference   = ref_df
+)
+
+vars <- params$vars
+
+```
+
+## Defaults (static view)
+
+```{r}
+selected_target_name <- params$targets[[1]]
+selected_var <- vars[[1]]
+
+plot_data <- bind_rows(
+  Reference = ref_df |> select(Date, all_of(selected_var)),
+  Target    = targets_list[[selected_target_name]] |> select(Date, all_of(selected_var)),
+  .id = "Series"
+)
+```
+
+## Latest snapshot cards
+
+```{r}
+latest_ref <- ref_df |> filter(!is.na(Date)) |> slice_max(Date, n = 1, with_ties = FALSE)
+
+card_badge <- function(label, value, suffix = "", status = c("secondary", "success", "warning", "danger")) {
+  status <- match.arg(status)
+  htmltools::div(
+    class = "card text-bg-dark mb-3",
+    style = "min-width: 14rem;",
+    htmltools::div(
+      class = "card-header d-flex justify-content-between align-items-center",
+      label,
+      htmltools::span(class = glue("badge text-bg-{status}"), glue("{round(value, 2)}{suffix}"))
+    )
+  )
+}
+
+precip_status <- if (latest_ref$Precip_mm >= params$wet_threshold_mm) "primary" else "secondary"
+wind_status <- if (latest_ref$Wind_Spd_ms >= params$windy_threshold_ms) "warning" else "secondary"
+
+div(
+  class = "d-flex flex-wrap gap-3",
+  card_badge("Temp (C)", latest_ref$Temp_C, status = "secondary"),
+  card_badge("Precip (mm)", latest_ref$Precip_mm, status = precip_status),
+  card_badge("Wind (m/s)", latest_ref$Wind_Spd_ms, status = wind_status),
+  card_badge("SW Rad (W/m2)", latest_ref$RadSWD_Wm2, status = "secondary")
+)
+```
+
+## Interactive plot
+
+```{r}
+p <- plot_data |>
+  ggplot(aes(Date, .data[[selected_var]], color = Series)) +
+  geom_line() +
+  labs(
+    x = NULL,
+    y = selected_var,
+    title = glue("Reference vs {selected_target_name}")
+  ) +
+  theme_minimal()
+
+ggplotly(p, tooltip = c("Date", "y", "Series"))
+```
+
+## Interactive table
+
+```{r}
+latest_table <- map_dfr(
+  setNames(c(params$reference, params$targets), c("Reference", params$targets)),
+  function(name) {
+    df <- read_from_map(name) |> filter(!is.na(Date))
+    last_row <- slice_max(df, Date, n = 1, with_ties = FALSE)
+    tibble(
+      Dataset    = name,
+      Date       = last_row$Date,
+      Temp_C     = last_row$Temp_C,
+      Precip_mm  = last_row$Precip_mm,
+      Wind_Spd_ms= last_row$Wind_Spd_ms,
+      RadSWD_Wm2 = last_row$RadSWD_Wm2
+    )
+  }
+)
+
+reactable(
+  latest_table,
+  searchable = TRUE,
+  sortable = TRUE,
+  pagination = TRUE,
+  striped = TRUE,
+  highlight = TRUE,
+  defaultPageSize = 5
+)
+```
