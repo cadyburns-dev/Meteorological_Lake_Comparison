@@ -389,15 +389,405 @@ print(plot_rolling_diagnostics(ref_df, era5, "ERA5", "Temp_C", window_days = 30)
 
 
 
+# ============================================================
+# EXTRA ANALYSIS: Event agreement + seasonal bias + climatology
+# Paste below your existing plotting code (no changes above)
+# ============================================================
+
+library(lubridate)
+library(dplyr)
+library(tidyr)
+library(purrr)
+library(ggplot2)
+
+# -----------------------------
+# 1) EVENT AGREEMENT (hits/misses/false alarms)
+# -----------------------------
+# Why: correlation can look "good" while the model is wrong on events (rain/wind).
+# This section quantifies:
+#   - Hits: ref event & target event
+#   - Misses: ref event & target no event
+#   - False alarms: ref no event & target event
+#   - Correct negatives: neither event
+# Plus skill scores:
+#   POD (prob detection), FAR (false alarm ratio), CSI (critical success index), Bias score.
+
+event_skill <- function(ref_df, target_df, var, threshold,
+                        direction = c(">", ">=", "<", "<=")) {
+  direction <- match.arg(direction)
+
+  joined <- inner_join(
+    ref_df    |> select(Date, ref = all_of(var)),
+    target_df |> select(Date, tgt = all_of(var)),
+    by = "Date"
+  ) |>
+    drop_na(ref, tgt)
+
+  ref_event <- switch(
+    direction,
+    ">"  = joined$ref >  threshold,
+    ">=" = joined$ref >= threshold,
+    "<"  = joined$ref <  threshold,
+    "<=" = joined$ref <= threshold
+  )
+
+  tgt_event <- switch(
+    direction,
+    ">"  = joined$tgt >  threshold,
+    ">=" = joined$tgt >= threshold,
+    "<"  = joined$tgt <  threshold,
+    "<=" = joined$tgt <= threshold
+  )
+
+  hits  <- sum(ref_event & tgt_event, na.rm = TRUE)
+  miss  <- sum(ref_event & !tgt_event, na.rm = TRUE)
+  fa    <- sum(!ref_event & tgt_event, na.rm = TRUE)
+  cn    <- sum(!ref_event & !tgt_event, na.rm = TRUE)
+
+  pod <- if ((hits + miss) > 0) hits / (hits + miss) else NA_real_
+  far <- if ((hits + fa)   > 0) fa   / (hits + fa)   else NA_real_
+  csi <- if ((hits + miss + fa) > 0) hits / (hits + miss + fa) else NA_real_
+  bias_score <- if ((hits + miss) > 0) (hits + fa) / (hits + miss) else NA_real_
+
+  tibble(
+    n = nrow(joined),
+    hits = hits, misses = miss, false_alarms = fa, correct_neg = cn,
+    POD = pod, FAR = far, CSI = csi, bias_score = bias_score
+  )
+}
+
+event_skill_all_targets <- function(ref_df, targets_list, var, threshold,
+                                   direction = ">=",
+                                   ref_name = "Airport_1770") {
+  imap_dfr(targets_list, ~ {
+    event_skill(ref_df, .x, var = var, threshold = threshold, direction = direction) |>
+      mutate(target = .y, var = var, threshold = threshold, ref = ref_name, .before = 1)
+  })
+}
+
+# --- Plot: stacked counts of event outcomes per target ---
+plot_event_outcomes <- function(skill_tbl, title = NULL) {
+  long <- skill_tbl |>
+    select(target, hits, misses, false_alarms, correct_neg) |>
+    pivot_longer(-target, names_to = "outcome", values_to = "count")
+
+  ggplot(long, aes(target, count, fill = outcome)) +
+    geom_col() +
+    coord_flip() +
+    labs(
+      title = title %||% "Event agreement outcomes",
+      x = NULL, y = "Count (days)", fill = NULL
+    ) +
+    theme_bw()
+}
+
+# --- Plot: POD/FAR/CSI per target (quick skill comparison) ---
+plot_event_skill_scores <- function(skill_tbl, title = NULL) {
+  long <- skill_tbl |>
+    select(target, POD, FAR, CSI, bias_score) |>
+    pivot_longer(-target, names_to = "metric", values_to = "value")
+
+  ggplot(long, aes(target, value)) +
+    geom_col() +
+    facet_wrap(~ metric, ncol = 2, scales = "free_y") +
+    coord_flip() +
+    labs(
+      title = title %||% "Event skill scores",
+      x = NULL, y = NULL
+    ) +
+    theme_bw()
+}
+
+# --- Magnitude when disagreement occurs (precip example) ---
+# "Ref dry but target wet": how much rain do they report?
+plot_false_alarm_magnitude <- function(ref_df, targets_list,
+                                      threshold_mm = 0.1,
+                                      ref_name = "Airport_1770") {
+
+  # Build paired dataset
+  paired <- imap_dfr(
+    targets_list,
+    ~ inner_join(
+      ref_df |> select(Date, ref = Precip_mm),
+      .x     |> select(Date, tgt = Precip_mm),
+      by = "Date"
+    ) |>
+      drop_na(ref, tgt) |>
+      mutate(target = .y)
+  )
+
+  fa <- paired |>
+    filter(ref <= threshold_mm, tgt > threshold_mm)
+
+  ggplot(fa, aes(tgt, fill = target)) +
+    geom_histogram(bins = 40, alpha = 0.6, position = "identity") +
+    scale_x_continuous(trans = "log1p") +
+    scale_fill_manual(values = target_colors) +
+    labs(
+      title = paste0("False alarms magnitude: ref ≤ ", threshold_mm, " mm but target > ", threshold_mm, " mm"),
+      x = "Target precip (mm/day) [log1p]", y = "Count", fill = "Dataset"
+    ) +
+    theme_bw()
+}
+
+# --- Example calls (precip threshold default = 0.1 mm; easy to change) ---
+precip_event_threshold <- 0.1  # change to 1 or 5 if you want sensitivity tests later
+
+skill_precip <- event_skill_all_targets(
+  ref_df, targets_list,
+  var = "Precip_mm",
+  threshold = precip_event_threshold,
+  direction = ">="
+)
+
+print(skill_precip)
+print(plot_event_outcomes(skill_precip,
+  title = paste0("Precip events (≥ ", precip_event_threshold, " mm/day): outcomes vs reference")
+))
+print(plot_event_skill_scores(skill_precip,
+  title = paste0("Precip events (≥ ", precip_event_threshold, " mm/day): skill vs reference")
+))
+print(plot_false_alarm_magnitude(ref_df, targets_list, threshold_mm = precip_event_threshold))
 
 
+# -----------------------------
+# 2) MONTHLY CLIMATOLOGY OVERLAY (mean + IQR)
+# -----------------------------
+# Why: shows systematic seasonal bias in mean AND variability.
+# Uses overlap with reference dates to ensure fair comparison.
+
+make_monthly_climatology <- function(ref_df, targets_list, var,
+                                     ref_name = "Airport_1770") {
+  df <- make_long_overlap(ref_df, targets_list, var, ref_name = ref_name) |>
+    mutate(
+      month = month(Date),
+      month_lab = factor(month.abb[month], levels = month.abb)
+    )
+
+  df |>
+    group_by(source, month, month_lab) |>
+    summarise(
+      n = n(),
+      mean = mean(value, na.rm = TRUE),
+      q25  = quantile(value, 0.25, na.rm = TRUE, type = 7),
+      q75  = quantile(value, 0.75, na.rm = TRUE, type = 7),
+      .groups = "drop"
+    )
+}
+
+plot_monthly_climatology <- function(ref_df, targets_list, var,
+                                     ref_name = "Airport_1770",
+                                     ribbon_alpha = 0.15) {
+
+  clim <- make_monthly_climatology(ref_df, targets_list, var, ref_name)
+
+  ggplot(clim, aes(month_lab, mean, group = source, color = source, fill = source)) +
+    geom_ribbon(aes(ymin = q25, ymax = q75), alpha = ribbon_alpha, color = NA) +
+    geom_line(linewidth = 0.9) +
+    geom_point(size = 2) +
+    scale_color_manual(values = c(setNames("black", ref_name), target_colors), breaks = NULL) +
+    scale_fill_manual(values = c(setNames("grey70", ref_name), target_colors), breaks = NULL) +
+    labs(
+      title = paste0("Monthly climatology: ", var, " (mean ± IQR)"),
+      x = NULL, y = var
+    ) +
+    theme_bw()
+}
+
+# --- Example calls ---
+print(plot_monthly_climatology(ref_df, targets_list, "Temp_C"))
+print(plot_monthly_climatology(ref_df, targets_list, "Wind_Spd_ms"))
+# Radiation only if you have decent overlap:
+# print(plot_monthly_climatology(ref_df, targets_list, "RadSWD_Wm2"))
 
 
+# -----------------------------
+# 3) SEASON DEFINITIONS (NZ / Southern Hemisphere) with editable month sets
+# -----------------------------
+# Default SH seasons:
+#   Summer = DJF (Dec-Jan-Feb)
+#   Autumn = MAM
+#   Winter = JJA
+#   Spring = SON
+#
+# For your "NZ warm vs cool season" style, you can set:
+#   warm = Oct–Mar, cool = Apr–Sep
+#
+# You can change these month vectors without touching anything else.
 
-#+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+season_defs_default <- list(
+  summer = c(12, 1, 2),
+  autumn = c(3, 4, 5),
+  winter = c(6, 7, 8),
+  spring = c(9, 10, 11)
+)
+
+season_defs_warmcool <- list(
+  warm = c(10, 11, 12, 1, 2, 3),
+  cool = c(4, 5, 6, 7, 8, 9)
+)
+
+assign_season <- function(date, season_defs = season_defs_default) {
+  m <- month(date)
+  out <- rep(NA_character_, length(m))
+  for (nm in names(season_defs)) {
+    out[m %in% season_defs[[nm]]] <- nm
+  }
+  factor(out, levels = names(season_defs))
+}
 
 
+# -----------------------------
+# 4) SEASONAL METRICS (calc_metrics_* within each season)
+# -----------------------------
+# Why: lets you claim "dataset X performs best in winter for wind" (defensible).
 
-# to do later --- add another script for seaons?? or maybe not use?
-filter_season <- function(date, season = c("summer", "winter")) { ... }
-# this will show something so we can see when it preforms best e.g (but not acurat would be) “ERA5 performs best in winter for wind, but buoy performs best during summer convective rainfall.”
+seasonal_metrics_vs_ref <- function(ref_df, target_df, target_name, var,
+                                    season_defs = season_defs_default,
+                                    wet_threshold_mm = 0.1,
+                                    ref_name = "Airport_1770") {
+
+  joined <- inner_join(
+    ref_df    |> select(Date, ref = all_of(var), ref_precip = Precip_mm),
+    target_df |> select(Date, tgt = all_of(var)),
+    by = "Date"
+  ) |>
+    drop_na(ref, tgt) |>
+    mutate(season = assign_season(Date, season_defs))
+
+  # Optional: for precip you might want wet-only seasonal metrics
+  # (zero inflation again). We keep both all-days and wet-days seasonal for precip.
+  if (var == "Precip_mm") {
+    out_all <- joined |>
+      group_by(season) |>
+      summarise(
+        calc_metrics_all_days(ref, tgt),
+        .groups = "drop"
+      ) |>
+      mutate(subset = "all_days")
+
+    out_wet <- joined |>
+      filter(ref > wet_threshold_mm) |>
+      group_by(season) |>
+      summarise(
+        calc_metrics_all_days(ref, tgt),
+        .groups = "drop"
+      ) |>
+      mutate(subset = paste0("wet_days_ref>", wet_threshold_mm, "mm"))
+
+    bind_rows(out_all, out_wet) |>
+      mutate(target = target_name, var = var, .before = 1)
+  } else {
+    joined |>
+      group_by(season) |>
+      summarise(
+        calc_metrics_all_days(ref, tgt),
+        .groups = "drop"
+      ) |>
+      mutate(target = target_name, var = var, subset = "all_days", .before = 1)
+  }
+}
+
+seasonal_metrics_all_targets <- function(ref_df, targets_list, var,
+                                        season_defs = season_defs_default,
+                                        wet_threshold_mm = 0.1) {
+  imap_dfr(targets_list, ~ seasonal_metrics_vs_ref(
+    ref_df = ref_df,
+    target_df = .x,
+    target_name = .y,
+    var = var,
+    season_defs = season_defs,
+    wet_threshold_mm = wet_threshold_mm
+  ))
+}
+
+# --- Plot: seasonal bias (mean(target - ref)) for summer vs winter (or all seasons) ---
+plot_seasonal_bias <- function(ref_df, targets_list, var,
+                              season_defs = season_defs_default,
+                              ref_name = "Airport_1770") {
+
+  paired <- imap_dfr(
+    targets_list,
+    ~ inner_join(
+      ref_df |> select(Date, ref = all_of(var)),
+      .x     |> select(Date, tgt = all_of(var)),
+      by = "Date"
+    ) |>
+      drop_na(ref, tgt) |>
+      mutate(target = .y, season = assign_season(Date, season_defs),
+             bias = tgt - ref)
+  )
+
+  summ <- paired |>
+    group_by(target, season) |>
+    summarise(
+      n = n(),
+      bias_mean = mean(bias, na.rm = TRUE),
+      bias_q25  = quantile(bias, 0.25, na.rm = TRUE),
+      bias_q75  = quantile(bias, 0.75, na.rm = TRUE),
+      .groups = "drop"
+    )
+
+  ggplot(summ, aes(season, bias_mean, fill = target)) +
+    geom_col(position = position_dodge(width = 0.8), width = 0.7) +
+    geom_errorbar(
+      aes(ymin = bias_q25, ymax = bias_q75),
+      position = position_dodge(width = 0.8),
+      width = 0.2
+    ) +
+    scale_fill_manual(values = target_colors) +
+    labs(
+      title = paste0("Seasonal bias: ", var, " (target - reference)"),
+      x = NULL, y = "Bias", fill = "Dataset"
+    ) +
+    theme_bw()
+}
+
+# --- Plot: seasonal scatter (faceted by season + target) ---
+plot_seasonal_scatter <- function(ref_df, targets_list, var,
+                                 season_defs = season_defs_default,
+                                 ref_name = "Airport_1770") {
+
+  paired <- imap_dfr(
+    targets_list,
+    ~ inner_join(
+      ref_df |> select(Date, ref = all_of(var)),
+      .x     |> select(Date, tgt = all_of(var)),
+      by = "Date"
+    ) |>
+      drop_na(ref, tgt) |>
+      mutate(target = .y, season = assign_season(Date, season_defs))
+  )
+
+  ggplot(paired, aes(ref, tgt)) +
+    geom_point(alpha = 0.25) +
+    geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+    geom_smooth(method = "lm", se = FALSE) +
+    facet_grid(season ~ target) +
+    coord_equal() +
+    labs(
+      title = paste0("Seasonal scatter: ", var, " (datasets vs reference)"),
+      x = paste0("Reference (", ref_name, ")"),
+      y = "Target"
+    ) +
+    theme_bw()
+}
+
+# --- Example calls: pick one season definition ---
+season_defs <- season_defs_default
+# season_defs <- season_defs_warmcool  # <- switch to warm/cool quickly
+
+# Seasonal bias plots
+print(plot_seasonal_bias(ref_df, targets_list, "Temp_C", season_defs = season_defs))
+print(plot_seasonal_bias(ref_df, targets_list, "Wind_Spd_ms", season_defs = season_defs))
+
+# Seasonal metrics tables (useful to print in Quarto later)
+season_metrics_wind <- seasonal_metrics_all_targets(ref_df, targets_list, "Wind_Spd_ms", season_defs = season_defs)
+season_metrics_precip <- seasonal_metrics_all_targets(ref_df, targets_list, "Precip_mm", season_defs = season_defs, wet_threshold_mm = precip_event_threshold)
+
+print(season_metrics_wind)
+print(season_metrics_precip)
+
+# Seasonal scatter (big figure, but very informative)
+print(plot_seasonal_scatter(ref_df, targets_list, "Wind_Spd_ms", season_defs = season_defs))
+# print(plot_seasonal_scatter(ref_df, targets_list, "Precip_mm", season_defs = season_defs))  # can be heavy; optional

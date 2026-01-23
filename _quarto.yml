@@ -18,7 +18,7 @@ metadata-files:
 
 format:
   html:
-    theme: cyborg
+    theme: lux
     css: custom.css
     toc: true
     toc-title: "Table of Content"
