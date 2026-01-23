@@ -13,6 +13,7 @@ renv::restore(prompt = FALSE)  # use the lockfile; idempotent
 renv::install("limnotrack/aemetools")
 renv::install("rLakeAnalyzer")
 renv::install("plotly")
+renv::install("airGR")
 
 
 renv::snapshot(prompt = FALSE, prune = TRUE)
