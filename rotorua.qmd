@@ -3,7 +3,7 @@ title: "Meterological Source Comparison"
 subtitle: "Rotorua demo"
 author: "Cady B"
 editor: visual
-bibliography: references.bib
+bibliography: reference.bib
 ---
 
 ## #Load necessary libraries

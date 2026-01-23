@@ -141,4 +141,3 @@ make_ts_plot <- function(var) {
 
 lapply(vars, make_ts_plot)
 ```
-c
