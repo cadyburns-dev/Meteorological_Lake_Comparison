@@ -4,3 +4,12 @@ subtitle: "Data wrangle"
 format: html
 ---
 
+## Data harmonisation - units and timestep
+
+## Metrics + wet/windy supsets
+
+## Data avalability / overlap
+
+= table here showing data time series and its overlap (coverage per dataset)
+
+##

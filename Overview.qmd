@@ -3,3 +3,18 @@ title: "Overview"
 format: html
 ---
 
+## Objective
+
+To analyse different meterological data avalable for a given location.
+
+## Data sources
+
+Limnotrack Buoy (lat: Long:) on lake, NIWA virtual climate station network (VCSN) grid NO:, ERA5 statlite data for Lat: and Long, Observational data Airport data (lat" long:), Obresvational data (lat: long:)
+
+Data source and station names will vary from location to location. Selecting stations from these websites is laid out in the data wrangling section
+
+## Study area
+
+Rotorua Lake North Island New Zealand
+
+-\> Incert map or figure

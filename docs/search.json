@@ -42,6 +42,20 @@
     "text": "Interactive table\n\n\nCode\nlatest_table &lt;- map_dfr(\n  setNames(c(params$reference, params$targets), c(\"Reference\", params$targets)),\n  function(name) {\n    df &lt;- read_from_map(name) |&gt; filter(!is.na(Date))\n    last_row &lt;- slice_max(df, Date, n = 1, with_ties = FALSE)\n    tibble(\n      Dataset    = name,\n      Date       = last_row$Date,\n      Temp_C     = last_row$Temp_C,\n      Precip_mm  = last_row$Precip_mm,\n      Wind_Spd_ms= last_row$Wind_Spd_ms,\n      RadSWD_Wm2 = last_row$RadSWD_Wm2\n    )\n  }\n)\n\nreactable(\n  latest_table,\n  searchable = TRUE,\n  sortable = TRUE,\n  pagination = TRUE,\n  striped = TRUE,\n  highlight = TRUE,\n  defaultPageSize = 5\n)"
   },
   {
+    "objectID": "methods.html#metrics-wetwindy-supsets",
+    "href": "methods.html#metrics-wetwindy-supsets",
+    "title": "Methods",
+    "section": "Metrics + wet/windy supsets",
+    "text": "Metrics + wet/windy supsets"
+  },
+  {
+    "objectID": "methods.html#data-avalability-overlap",
+    "href": "methods.html#data-avalability-overlap",
+    "title": "Methods",
+    "section": "Data avalability / overlap",
+    "text": "Data avalability / overlap\n= table here showing data time series and its overlap (coverage per dataset)"
+  },
+  {
     "objectID": "index.html#metrics-table-reference-vs-targets",
     "href": "index.html#metrics-table-reference-vs-targets",
     "title": "MET Lake Comparison",
@@ -54,5 +68,40 @@
     "title": "MET Lake Comparison",
     "section": "Time series overlays",
     "text": "Time series overlays\n\n\n[[1]]\n\n[[2]]\n\n[[3]]\n\n[[4]]"
+  },
+  {
+    "objectID": "Results.html",
+    "href": "Results.html",
+    "title": "Results",
+    "section": "",
+    "text": "note could call this variable diagnostics? then have sub sections in here or vars (temp, precip,rad and wind)"
+  },
+  {
+    "objectID": "Results.html#metrics-all-days",
+    "href": "Results.html#metrics-all-days",
+    "title": "Results",
+    "section": "Metrics (all days)",
+    "text": "Metrics (all days)"
+  },
+  {
+    "objectID": "Results.html#precipitation-wet-days-table",
+    "href": "Results.html#precipitation-wet-days-table",
+    "title": "Results",
+    "section": "Precipitation wet days table",
+    "text": "Precipitation wet days table"
+  },
+  {
+    "objectID": "Results.html#windy-days-table-top-10-threshold",
+    "href": "Results.html#windy-days-table-top-10-threshold",
+    "title": "Results",
+    "section": "Windy days table (top 10% + threshold)",
+    "text": "Windy days table (top 10% + threshold)"
+  },
+  {
+    "objectID": "Results.html#plots",
+    "href": "Results.html#plots",
+    "title": "Results",
+    "section": "Plots",
+    "text": "Plots\n\nScatter vs reference + 1:1 line\n\n\ntime series overlays\n\n\nDistribution (density/hits)"
   }
 ]

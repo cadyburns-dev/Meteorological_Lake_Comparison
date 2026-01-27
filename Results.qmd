@@ -3,3 +3,18 @@ title: "Results"
 format: html
 ---
 
+note could call this variable diagnostics? then have sub sections in here or vars (temp, precip,rad and wind)
+
+## Metrics (all days)
+
+## Precipitation wet days table
+
+## Windy days table (top 10% + threshold)
+
+## Plots
+
+### Scatter vs reference + 1:1 line
+
+### time series overlays
+
+### Distribution (density/hits)
