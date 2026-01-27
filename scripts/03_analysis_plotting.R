@@ -557,7 +557,7 @@ print(plot_false_alarm_magnitude(ref_df, targets_list, threshold_mm = precip_eve
 # Uses overlap with reference dates to ensure fair comparison.
 
 make_monthly_climatology <- function(ref_df, targets_list, var,
-                                     ref_name = "Airport_1770") {
+                                     ref_name = "Airport_1770", ribbon = 0.15) {
   df <- make_long_overlap(ref_df, targets_list, var, ref_name = ref_name) |>
     mutate(
       month = month(Date),
@@ -581,17 +581,24 @@ plot_monthly_climatology <- function(ref_df, targets_list, var,
 
   clim <- make_monthly_climatology(ref_df, targets_list, var, ref_name)
 
-  ggplot(clim, aes(month_lab, mean, group = source, color = source, fill = source)) +
-    geom_ribbon(aes(ymin = q25, ymax = q75), alpha = ribbon_alpha, color = NA) +
+  # Make one consistent palette including the reference
+  pal <- c(setNames("black", ref_name), target_colors)
+
+  ggplot(clim, aes(month_lab, mean, group = source, color = source)) +
+    # ribbon uses fill but we HIDE its legend so only one legend remains
+    geom_ribbon(aes(ymin = q25, ymax = q75, fill = source),
+                alpha = ribbon_alpha, color = NA, show.legend = FALSE) +
     geom_line(linewidth = 0.9) +
     geom_point(size = 2) +
-    scale_color_manual(values = c(setNames("black", ref_name), target_colors), breaks = NULL) +
-    scale_fill_manual(values = c(setNames("grey70", ref_name), target_colors), breaks = NULL) +
+    scale_color_manual(values = pal) +
+    scale_fill_manual(values = pal) +
     labs(
       title = paste0("Monthly climatology: ", var, " (mean ± IQR)"),
-      x = NULL, y = var
+      x = NULL, y = var,
+      color = "Dataset"
     ) +
-    theme_bw()
+    theme_bw() +
+    theme(legend.position = "right")
 }
 
 # --- Example calls ---
@@ -770,7 +777,8 @@ plot_seasonal_scatter <- function(ref_df, targets_list, var,
       x = paste0("Reference (", ref_name, ")"),
       y = "Target"
     ) +
-    theme_bw()
+    theme_bw() +
+    theme(legend.position = "none")
 }
 
 # --- Example calls: pick one season definition ---
