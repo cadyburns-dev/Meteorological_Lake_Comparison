@@ -5,13 +5,22 @@ project:
 website:
   title: "MET Lake Comparison"
   navbar:
+    type: tabs
     left:
       - text: "Home"
         href: index.qmd
+      - text: "Overview"
+        href: Overview.qmd
       - text: "Rotorua demo"
         href: rotorua.qmd
       - text: "Methods"
         href: methods.qmd
+      - text: "Behaviour"
+        href: Behaviour.qmd
+      - text: "Results"
+        href: Results.qmd
+      - text: "Reproducibility"
+        href: Reproducibility.qmd
 
 metadata-files:
   - params.yml
