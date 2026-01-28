@@ -4,12 +4,24 @@ subtitle: "Data wrangle"
 format: html
 ---
 
-## Data harmonisation - units and timestep
+note: can add schematic examples
 
-## Metrics + wet/windy supsets
+## Data harmonisation units and time step
+
+The four datasets
+
+## Reference site justification
+
+## Metrics 
+
+## Wet/windy supsets and logic
+
+wet-day logic
+
+windy extremes logic
 
 ## Data avalability / overlap
 
 = table here showing data time series and its overlap (coverage per dataset)
 
-##
+## Rolling diagnostics logic

@@ -1,13 +1,13 @@
----
+------------------------------------------------------------------------
 
-title: "Meterological Source Comparison"
-Subtitle: "Seasonal and event behaviour"
-format: html
----
+title: "Meterological Source Comparison" Subtitle: "Seasonal and event behaviour" format: html ---
 
 ## How do datasets behave relative to each other?
 
-Zero vs non-zero precipitation disagreement
-Wind detection mismach
-Timing offsets
-Over/under-capture of extremes
+## Zero vs non-zero precipitation disagreement 
+
+## Wind detection mismach 
+
+## Timing offsets 
+
+## Over/under-capture of extremes
