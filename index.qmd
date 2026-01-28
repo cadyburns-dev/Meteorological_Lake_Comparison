@@ -1,11 +1,22 @@
 ---
-title: "MET Lake Comparison"
+title: "Meterological Lake Comparison"
 subtitle: "Rotorua overview"
 author: "Cady B"
 ---
 
+![](images/update.png){fig-align="center"}
+
+## Project description
+
+This project aims to take meteorological data in close proximity from different sources and evaluate their validity across variables and time.
+
+It assesses four main meterological parameters (precipitation, wind, radiation, temperature) for accuracy, stability and usability. This was developed for the use of lymnologists with the purpose of selecting data sources for differing projects and attempts to answer the question "what data to use and when?". The data sources used are Limnotrack Buoy in-situ, NIWA virtual climate station network (VCSN), ERA5 statlite data and NIWAs Observational climate data.
+
+Lake Rotorua, North Island, New Zealand is used as a worked example thoughout.
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+
 ```
 
 ```{r}

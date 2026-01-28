@@ -56,18 +56,81 @@
     "text": "Data avalability / overlap\n= table here showing data time series and its overlap (coverage per dataset)"
   },
   {
+    "objectID": "Behaviour.html",
+    "href": "Behaviour.html",
+    "title": "MET Lake Comparison",
+    "section": "",
+    "text": "title: “Meterological Source Comparison” Subtitle: “Seasonal and event behaviour” format: html —"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Meterological Lake Comparison",
+    "section": "",
+    "text": "This project aims to take meterological data from close proximity and evaluate their validity across variables and time."
+  },
+  {
+    "objectID": "index.html#project-description",
+    "href": "index.html#project-description",
+    "title": "Meterological Lake Comparison",
+    "section": "",
+    "text": "This project aims to take meterological data from close proximity and evaluate their validity across variables and time."
+  },
+  {
+    "objectID": "index.html#data-coverage",
+    "href": "index.html#data-coverage",
+    "title": "Meterological Lake Comparison",
+    "section": "Data coverage",
+    "text": "Data coverage"
+  },
+  {
     "objectID": "index.html#metrics-table-reference-vs-targets",
     "href": "index.html#metrics-table-reference-vs-targets",
-    "title": "MET Lake Comparison",
+    "title": "Meterological Lake Comparison",
     "section": "Metrics table (reference vs targets)",
     "text": "Metrics table (reference vs targets)"
   },
   {
     "objectID": "index.html#time-series-overlays",
     "href": "index.html#time-series-overlays",
-    "title": "MET Lake Comparison",
+    "title": "Meterological Lake Comparison",
     "section": "Time series overlays",
     "text": "Time series overlays\n\n\n[[1]]\n\n[[2]]\n\n[[3]]\n\n[[4]]"
+  },
+  {
+    "objectID": "Overview.html",
+    "href": "Overview.html",
+    "title": "Meterological Source Comparison",
+    "section": "",
+    "text": "To analyse different meterological data avalable for a given location."
+  },
+  {
+    "objectID": "Overview.html#objective",
+    "href": "Overview.html#objective",
+    "title": "Meterological Source Comparison",
+    "section": "",
+    "text": "To analyse different meterological data avalable for a given location."
+  },
+  {
+    "objectID": "Overview.html#data-sources",
+    "href": "Overview.html#data-sources",
+    "title": "Meterological Source Comparison",
+    "section": "Data sources",
+    "text": "Data sources\nLimnotrack Buoy (lat: Long:) on lake, NIWA virtual climate station network (VCSN) grid NO:, ERA5 statlite data for Lat: and Long, Observational data Airport data (lat” long:), Obresvational data (lat: long:)\nData source and station names will vary from location to location. Selecting stations from these websites is laid out in the data wrangling section"
+  },
+  {
+    "objectID": "Overview.html#study-area",
+    "href": "Overview.html#study-area",
+    "title": "Meterological Source Comparison",
+    "section": "Study area",
+    "text": "Study area\n\n\nCode\nlibrary(leaflet)\n\n# Interactive overview map centred on the lake\nleaflet() |&gt;\n  addTiles() |&gt;\n  addCircles(\n    lng = params$lon,\n    lat = params$lat,\n    radius = params$buffer_km * 1000,\n    color = \"dodgerblue\",\n    fillOpacity = 0.25,\n    popup = params$lake_name\n  ) |&gt;\n  addCircleMarkers(\n    lng = params$lon,\n    lat = params$lat,\n    radius = 6,\n    color = \"navy\",\n    fillOpacity = 0.9,\n    popup = params$lake_name\n  ) |&gt;\n  setView(lng = params$lon, lat = params$lat, zoom = 11)"
+  },
+  {
+    "objectID": "Overview.html#polygon-and-plot",
+    "href": "Overview.html#polygon-and-plot",
+    "title": "Meterological Source Comparison",
+    "section": "Polygon and plot",
+    "text": "Polygon and plot\n\n\nCode\nlibrary(osmdata)\nlibrary(sf)\nlibrary(tmap)\n\n# Download nearby water polygons and plot as a static reference map\nbb &lt;- c(\n  params$lon - 0.1,\n  params$lat - 0.1,\n  params$lon + 0.1,\n  params$lat + 0.1\n)\n\nosm_lake &lt;- opq(bbox = bb) |&gt;\n  add_osm_feature(key = \"natural\", value = \"water\") |&gt;\n  osmdata_sf()\n\nlake_poly &lt;- osm_lake$osm_multipolygons |&gt;\n  st_make_valid()\n\ntmap_mode(\"plot\")\n\ntm_shape(lake_poly) +\n  tm_fill(col = \"steelblue\", alpha = 0.6) +\n  tm_borders(col = \"black\") +\n  tm_layout(\n    title = params$lake_name,\n    frame = FALSE\n  )\n\n\n\n\n\n\n\n\n\nRotorua Lake, North Island, New Zealand"
   },
   {
     "objectID": "Results.html",
@@ -103,33 +166,5 @@
     "title": "Results",
     "section": "Plots",
     "text": "Plots\n\nScatter vs reference + 1:1 line\n\n\ntime series overlays\n\n\nDistribution (density/hits)"
-  },
-  {
-    "objectID": "Overview.html",
-    "href": "Overview.html",
-    "title": "Overview",
-    "section": "",
-    "text": "To analyse different meterological data avalable for a given location."
-  },
-  {
-    "objectID": "Overview.html#objective",
-    "href": "Overview.html#objective",
-    "title": "Overview",
-    "section": "",
-    "text": "To analyse different meterological data avalable for a given location."
-  },
-  {
-    "objectID": "Overview.html#data-sources",
-    "href": "Overview.html#data-sources",
-    "title": "Overview",
-    "section": "Data sources",
-    "text": "Data sources\nLimnotrack Buoy (lat: Long:) on lake, NIWA virtual climate station network (VCSN) grid NO:, ERA5 statlite data for Lat: and Long, Observational data Airport data (lat” long:), Obresvational data (lat: long:)\nData source and station names will vary from location to location. Selecting stations from these websites is laid out in the data wrangling section"
-  },
-  {
-    "objectID": "Overview.html#study-area",
-    "href": "Overview.html#study-area",
-    "title": "Overview",
-    "section": "Study area",
-    "text": "Study area\n\n\nCode\nlibrary(leaflet)\n\n# Interactive overview map centred on the lake\nleaflet() |&gt;\n  addTiles() |&gt;\n  addCircles(\n    lng = params$lon,\n    lat = params$lat,\n    radius = params$buffer_km * 1000,\n    color = \"dodgerblue\",\n    fillOpacity = 0.25,\n    popup = params$lake_name\n  ) |&gt;\n  addCircleMarkers(\n    lng = params$lon,\n    lat = params$lat,\n    radius = 6,\n    color = \"navy\",\n    fillOpacity = 0.9,\n    popup = params$lake_name\n  ) |&gt;\n  setView(lng = params$lon, lat = params$lat, zoom = 11)\n\n\n\n\n\n\n\n\nCode\nlibrary(osmdata)\nlibrary(sf)\nlibrary(tmap)\n\n# Download nearby water polygons and plot as a static reference map\nbb &lt;- c(\n  params$lon - 0.1,\n  params$lat - 0.1,\n  params$lon + 0.1,\n  params$lat + 0.1\n)\n\nosm_lake &lt;- opq(bbox = bb) |&gt;\n  add_osm_feature(key = \"natural\", value = \"water\") |&gt;\n  osmdata_sf()\n\nlake_poly &lt;- osm_lake$osm_multipolygons |&gt;\n  st_make_valid()\n\ntmap_mode(\"plot\")\n\ntm_shape(lake_poly) +\n  tm_fill(col = \"steelblue\", alpha = 0.6) +\n  tm_borders(col = \"black\") +\n  tm_layout(\n    title = params$lake_name,\n    frame = FALSE\n  )\n\n\n\n\n\n\n\n\n\nRotorua Lake, North Island, New Zealand"
   }
 ]
