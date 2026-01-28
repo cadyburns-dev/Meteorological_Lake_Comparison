@@ -1,11 +1,11 @@
 ---
 title: "Meterological Source Comparison"
-Subtitle: "Overview"
+subtitle: "Overview"
 format: html
 params:
   lake_name: "Lake Rotorua"
-  lat: -38.055505
-  lon: 176.1653
+  lat: -38.114908
+  lon: 176.316662
   buffer_km: 10
 ---
 
@@ -88,29 +88,48 @@ osm_lake <- opq(bbox = bb) |>
   add_osm_feature(key = "natural", value = "water") |>
   osmdata_sf()
 
-lake_poly <- osm_lake$osm_multipolygons |>
-  st_make_valid()
+lake_poly <- osm_lake$osm_multipolygons |> st_make_valid()
+
+# Fallback: if no polygon returned, use the bounding box as a placeholder polygon
+if (nrow(lake_poly) == 0) {
+  lake_poly <- st_polygon(list(rbind(
+    c(bb[1], bb[2]),
+    c(bb[3], bb[2]),
+    c(bb[3], bb[4]),
+    c(bb[1], bb[4]),
+    c(bb[1], bb[2])
+  ))) |>
+    st_sfc(crs = 4326) |>
+    st_as_sf()
+}
+ 
+
 
 # Station metadata (decimal degrees)
 stations <- tribble(
   ~name,           ~lon,       ~lat,       
   "Airport_1770",  176.31481, -38.10592,  
   "ERA5",          176.316662,-38.114908,  
-  "Buoy",          176.2453,  -38.0650,    
+  "Buoy",          176.2653,  -38.0740,    
   "Town_40177",    176.2578,  -38.14635,   
   "VCS_On",        176.275,   -38.075
 )
 
 stations_sf <- st_as_sf(stations, coords = c("lon", "lat"), crs = 4326)
  
- map_extent <- st_as_sfc(st-bbox(lake_poly))
+
+# use station extent plus a small buffer (degrees)
+map_extent <- st_bbox(stations_sf) |>
+  st_as_sfc() |>
+  st_buffer(dist = 0.01)   # increase if you still clip points
+
 
  station_patette <- c(
-  "Airport_1770",    "black",
-  "ERA5",           "#d95f02",
-  "Buoy",           "#7570b3",
-  "Town_40177",     "#f0c400",
-  "VCS_On",         "#1b9e77"
+  Airport_1770    "black",
+  ERA5           "#d95f02",
+  Buoy           "#7570b3",
+  Town_40177     "#f0c400",
+  VCS_On         "#1b9e77"
  )
 
 # Inset: New Zealand with study extent box
@@ -122,7 +141,7 @@ inset <- tm_shape(nz) +
 
 tmap_mode("plot")
 
-tm_shape(lake_poly) +
+tm_shape(lake_poly, bbox = st_bbox(map_extent)) +
   tm_fill(col = "blue", alpha = 0.6) +
   tm_borders(col = "black") +
   tm_shape(stations_sf) +
