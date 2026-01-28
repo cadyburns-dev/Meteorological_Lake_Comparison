@@ -14,12 +14,16 @@ renv::install("limnotrack/aemetools")
 renv::install("rLakeAnalyzer")
 renv::install("plotly")
 renv::install("airGR")
-
+renv::install("knitr")
+renv::install("markdown")
+renv::install("curl")
+renv::install("httr2")
 
 renv::snapshot(prompt = FALSE, prune = TRUE)
 
 # optional: check versions/status interactively
 if (interactive()) renv::status()
+
 
 
 
