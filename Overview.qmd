@@ -42,6 +42,8 @@ The outputs of this project will show:
 ## Study area
 
 ```{r}
+
+# Note: Chage Quarto title Lat and lon to render your location of choice
 library(leaflet)
 
 # Interactive overview map centred on the lake
@@ -104,7 +106,8 @@ if (nrow(lake_poly) == 0) {
 }
  
 
-
+# Change lon and lat to render your location of choice 
+#change names to match locations
 # Station metadata (decimal degrees)
 stations <- tribble(
   ~name,           ~lon,       ~lat,       
@@ -124,7 +127,7 @@ map_extent <- st_union(lake_poly, st_geometry(stations_sf)) |>
   st_as_sfc() |>
   st_buffer(dist = 0.005)   # shrink/expand to taste
 
-
+#Change names to match your Data set where nessesary
 station_palette <- c(
   Airport_1770 = "black",
   ERA5         = "#d95f02",
@@ -152,6 +155,8 @@ tm_shape(lake_poly, bbox = st_bbox(map_extent)) +
     shape = 21,
     size = 1,
     border.col = "black",
+    colorNA = NA,
+    textNZ = NULL,
     legend.col.show = TRUE,
     legend.col.title = "Stations",
     title.col = "Stations"
