@@ -17,7 +17,7 @@ To analyse different meterological data avalable for a given location.
 
 note add what kindof lat long system used\_\_\_\_\_
 
-Limnotrack Buoy (lat:-380550S Lon:1761653E) on lake, NIWA virtual climate station network (VCSN) grid NO:27879 lat:-38.075 lon:176.275, ERA5 statlite data for Lat:-38.114908 and Lon:176.316662, Observational data "Airport" station 1770 (lat:-38.10592 lon:176.31481), Obresvational data "Town" station 41077 (lat:-38.14635 lon:176.2578).
+Limnotrack Buoy on lake, NIWA virtual climate station network (VCSN) , ERA5 statlite data, Observational data "Airport" station, Obresvational data "Town" station.
 
 Data source and station names will vary from location to location. Selecting stations from these websites is laid out in the data wrangling section
 
@@ -72,8 +72,6 @@ leaflet() |>
 library(osmdata)
 library(sf)
 library(tmap)
-library(rnaturalearth)
-library(rnaturalearthdata)
 
 # Download nearby water polygons and plot as a static reference map
 bb <- c(
@@ -90,58 +88,14 @@ osm_lake <- opq(bbox = bb) |>
 lake_poly <- osm_lake$osm_multipolygons |>
   st_make_valid()
 
-# Station metadata (decimal degrees)
-stations <- tribble(
-  ~name,           ~lon,       ~lat,        ~color,
-  "Airport_1770",  176.31481, -38.10592,   "black",
-  "ERA5",          176.316662,-38.114908,  "#d95f02",
-  "Buoy",          176.1653,  -38.0550,    "#7570b3",
-  "Town_40177",    176.2578,  -38.14635,   "#f0c400",
-  "VCS_On",        176.275,   -38.075,     "#1b9e77"
-)
-
-stations_sf <- st_as_sf(stations, coords = c("lon", "lat"), crs = 4326)
-
-map_extent <- st_as_sfc(st_bbox(lake_poly))
-
-# Inset: New Zealand with study extent box
-nz <- rnaturalearth::ne_countries(country = "New Zealand", scale = "medium", returnclass = "sf")
-inset <- tm_shape(nz) +
-  tm_polygons(col = "gray90", border.col = "gray60") +
-  tm_shape(map_extent) +
-  tm_borders(col = "red", lwd = 2)
-
 tmap_mode("plot")
 
 tm_shape(lake_poly) +
   tm_fill(col = "steelblue", alpha = 0.6) +
   tm_borders(col = "black") +
-  tm_shape(stations_sf) +
-  tm_symbols(
-    col = "color",
-    shape = 21,
-    size = 0.15,
-    border.col = "black",
-    legend.col.show = TRUE,
-    legend.shape.show = FALSE
-  ) +
-  tm_text("name", size = 0.6, just = "left", xmod = 0.01) +
-  tm_compass(
-    type = "arrow",
-    position = c("left", "top"),
-    color.dark = "black",
-    color.light = "gray80"
-  ) +
-  tm_scale_bar(position = c("left", "bottom")) +
   tm_layout(
     title = params$lake_name,
-    frame = FALSE,
-    legend.outside = TRUE,
-    legend.title.size = 0.8,
-    legend.text.size = 0.7,
-    legend.format = list(digits = 2),
-    inset_tm = inset,
-    inset_x = 0.72, inset_y = 0.05, inset_width = 0.25, inset_height = 0.25
+    frame = FALSE
   )
 ```
 
