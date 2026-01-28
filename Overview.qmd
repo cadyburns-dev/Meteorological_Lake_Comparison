@@ -116,21 +116,22 @@ stations <- tribble(
 )
 
 stations_sf <- st_as_sf(stations, coords = c("lon", "lat"), crs = 4326)
- 
 
-# use station extent plus a small buffer (degrees)
-map_extent <- st_bbox(stations_sf) |>
+
+# Use combined extent of lake + stations, with a small buffer (degrees)
+map_extent <- st_union(lake_poly, st_geometry(stations_sf)) |>
+  st_bbox() |>
   st_as_sfc() |>
-  st_buffer(dist = 0.01)   # increase if you still clip points
+  st_buffer(dist = 0.005)   # shrink/expand to taste
 
 
- station_patette <- c(
-  Airport_1770    "black",
-  ERA5           "#d95f02",
-  Buoy           "#7570b3",
-  Town_40177     "#f0c400",
-  VCS_On         "#1b9e77"
- )
+station_palette <- c(
+  Airport_1770 = "black",
+  ERA5         = "#d95f02",
+  Buoy         = "#7570b3",
+  Town_40177   = "#f0c400",
+  VCS_On       = "#1b9e77"
+)
 
 # Inset: New Zealand with study extent box
 nz <- rnaturalearth::ne_countries(country = "New Zealand", scale = "medium", returnclass = "sf")
@@ -150,9 +151,11 @@ tm_shape(lake_poly, bbox = st_bbox(map_extent)) +
     palette = station_palette,
     shape = 21,
     size = 1,
-border.col = "black",
-legend.col.show = TRUE,
-title.col = "Stations") +
+    border.col = "black",
+    legend.col.show = TRUE,
+    legend.col.title = "Stations",
+    title.col = "Stations"
+  ) +
   tm_compass(
     type = "arrow",
     position = c("left", "top"),
