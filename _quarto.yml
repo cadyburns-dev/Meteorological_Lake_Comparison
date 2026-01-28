@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 website:
-  title: "MET Lake Comparison"
+  title: "Meterological Lake Comparison"
   navbar:
     type: tabs
     left:

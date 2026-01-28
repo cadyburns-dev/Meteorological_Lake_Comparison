@@ -7,6 +7,8 @@ note could call this variable diagnostics? then have sub sections in here or var
 
 ## Metrics (all days)
 
+
+
 ## Precipitation wet days table
 
 ## Windy days table (top 10% + threshold)
