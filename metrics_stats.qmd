@@ -1,0 +1,197 @@
+---
+title: "Metrics and Statistics"
+format: html
+params:
+  lake_name: "Lake Rotorua"
+  lat: -38.114908
+  lon: 176.316662
+  buffer_km: 10
+  lake_id: "rotorua"
+  reference: "Airport_1770"
+  targets: ["ERA5", "Buoy", "Town_40177", "VCS_On"]
+  vars: ["Temp_C", "Precip_mm", "Wind_Spd_ms", "RadSWD_Wm2"]
+  wet_threshold_mm: 1
+  precip_event_threshold: 0.1
+  windy_top_pct: 0.10
+  windy_threshold_ms: 10
+  window_days: 30
+---
+
+This tab gathers the quantitative diagnostics (coverage, MAE/RMSE/CCC/bias, distributions, scatter, rolling drift). Use it when you want numbers and concise plots for statistical agreement.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  fig.width = 10,
+  fig.height = 6
+)
+```
+
+```{r}
+#| echo: false
+library(glue)
+library(htmltools)
+library(gt)
+library(plotly)
+library(here)
+library(tidyverse)
+library(lubridate)
+library(slider)
+library(reactable)
+
+source(here("scripts", "01_metrics_helpers.R"))
+source(here("scripts", "03_analysis_helpers.R"))
+source(here("scripts", "04_analysis_plotting.R"))
+```
+
+```{r}
+#| echo: false
+# Data setup (same as rotorua.qmd)
+file_map <- list(
+  ERA5         = here("data/processed/rotorua_era5_daily.csv"),
+  Buoy         = here("data/processed/rotorua_buoy_daily.csv"),
+  Town_40177   = here("data/processed/rotorua_town_40177_daily.csv"),
+  VCS_On       = here("data/processed/rotorua_vcs_on_daily.csv"),
+  Airport_1770 = here("data/processed/rotorua_airport_1770_daily.csv")
+)
+
+read_from_map <- function(name) {
+  readr::read_csv(file_map[[name]], show_col_types = FALSE) |>
+    mutate(Date = as.Date(Date))
+}
+
+ref_name <- params$reference
+target_names <- params$targets
+
+ref_df <- read_from_map(ref_name)
+targets_list <- setNames(lapply(target_names, read_from_map), target_names)
+
+wet_threshold_mm <- params$wet_threshold_mm
+windy_top_pct <- params$windy_top_pct
+windy_threshold_ms <- params$windy_threshold_ms
+window_days <- params$window_days
+
+vars_requested <- params$vars
+vars_available <- Reduce(
+  intersect,
+  c(list(names(ref_df)), lapply(targets_list, names))
+)
+vars <- intersect(vars_requested, vars_available)
+```
+
+## Coverage summary
+
+Shows the available date range and count per dataset.
+
+```{r}
+coverage <- bind_rows(
+  Reference = ref_df,
+  !!!targets_list,
+  .id = "Dataset"
+) |>
+  group_by(Dataset) |>
+  summarise(
+    first_date = min(Date, na.rm = TRUE),
+    last_date  = max(Date, na.rm = TRUE),
+    n_days     = sum(!is.na(Date)),
+    .groups = "drop"
+  )
+
+reactable(
+  coverage,
+  sortable = TRUE,
+  striped = TRUE,
+  pagination = FALSE
+)
+```
+
+## Metrics table (MAE, RMSE, CCC, bias)
+
+Includes all days plus wet-day and windy-day subsets where relevant. Sort/filter to focus on a variable or subset.
+
+```{r}
+metrics_all <- purrr::imap_dfr(
+  targets_list,
+  ~ metrics_vs_ref(
+    ref_df      = ref_df,
+    target_df   = .x,
+    target_name = .y,
+    vars = vars,
+    wet_threshold_mm = wet_threshold_mm,
+    windy_threshold_ms = windy_threshold_ms,
+    windy_top_pct = windy_top_pct
+  )
+)
+
+reactable(
+  metrics_all,
+  searchable = TRUE,
+  sortable = TRUE,
+  highlight = TRUE,
+  defaultPageSize = 12,
+  columns = list(
+    cor = colDef(format = colFormat(digits = 2)),
+    slope = colDef(format = colFormat(digits = 2)),
+    intercept = colDef(format = colFormat(digits = 2)),
+    mae = colDef(format = colFormat(digits = 2)),
+    rmse = colDef(format = colFormat(digits = 2)),
+    ccc = colDef(format = colFormat(digits = 2)),
+    bias = colDef(format = colFormat(digits = 2)),
+    rel_bias = colDef(format = colFormat(digits = 1))
+  )
+)
+```
+
+## Distribution and bias shape
+
+Kernel density overlays show bias or spread differences; look for shifts or heavier tails.
+
+```{r}
+plot_distribution(ref_df, targets_list, "Temp_C")
+```
+
+```{r}
+plot_distribution(ref_df, targets_list, "Wind_Spd_ms")
+```
+
+```{r}
+plot_distribution(ref_df, targets_list, "Precip_mm")
+```
+
+## Scatter vs reference (1:1)
+
+Check linear agreement and systematic bias; points should cluster along the 1:1 line.
+
+```{r}
+plot_scatter_faceted(ref_df, targets_list, "Temp_C", ncol = 2)
+```
+
+```{r}
+plot_scatter_faceted(ref_df, targets_list, "Wind_Spd_ms", ncol = 2)
+```
+
+```{r}
+plot_scatter_faceted(ref_df, targets_list, "Precip_mm", ncol = 2)
+```
+
+```{r}
+if ("RadSWD_Wm2" %in% vars) plot_scatter_faceted(ref_df, targets_list, "RadSWD_Wm2", ncol = 2)
+```
+
+## Rolling diagnostics (drift through time)
+
+These track moving-window bias/CCC to surface gradual timing offsets or seasonal drifts.
+
+```{r}
+purrr::iwalk(targets_list, ~ print(plot_rolling_diagnostics(ref_df, .x, .y, "Temp_C", window_days = window_days)))
+```
+
+```{r}
+purrr::iwalk(targets_list, ~ print(plot_rolling_diagnostics(ref_df, .x, .y, "Wind_Spd_ms", window_days = window_days)))
+```
+
+```{r}
+purrr::iwalk(targets_list, ~ print(plot_rolling_diagnostics(ref_df, .x, .y, "Precip_mm", window_days = window_days)))
+```
