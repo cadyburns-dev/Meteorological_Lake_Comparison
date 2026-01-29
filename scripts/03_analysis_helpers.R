@@ -189,7 +189,9 @@ metrics_era5 <- metrics_vs_ref(ap1770, era5, "ERA5", wet_threshold_mm = 1, windy
 metrics_buoy <- metrics_vs_ref(ap1770, buoy, "Buoy", wet_threshold_mm = 1, windy_top_pct = 0.10)
 metrics_vcsn <- metrics_vs_ref(ap1770, vcs_on, "vcs_on", wet_threshold_mm = 1, windy_top_pct = 0.10 )
 metrics_all <- bind_rows(metrics_era5, metrics_buoy, metrics_vcsn)
-metrics_all
+
+# Leave a ready-made example without printing during `source()` to avoid clutter in Quarto renders.
+# use metrics_all in an interactive session as needed, e.g. View(metrics_all)
 
 #Note radiation only found in two datasets, and has very little points for this reason it is not used
 #Add extra code for RAD if yu have the nessesary data for analysis

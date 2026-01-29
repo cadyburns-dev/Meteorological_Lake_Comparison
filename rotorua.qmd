@@ -55,7 +55,7 @@ source(here("scripts", "04_analysis_plotting.R"))
 ```
 
 ```{r}
-#| echo: true
+#| echo: False
 # --- Load processed daily data for Rotorua (project-standard) ---
 file_map <- list(
   ERA5         = here("data/processed/rotorua_era5_daily.csv"),
@@ -102,8 +102,6 @@ vars <- intersect(vars_requested, vars_available)
 
 vars
 ```
-
-
 
 ## Data coverage
 

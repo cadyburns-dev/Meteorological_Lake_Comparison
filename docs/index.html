@@ -21,6 +21,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -204,13 +239,56 @@ ul.task-list li input[type="checkbox"] {
 <p>This project aims to take meteorological data in close proximity from different sources and evaluate their validity across variables and time.</p>
 <p>It assesses four main meterological parameters (precipitation, wind, radiation, temperature) for accuracy, stability and usability. This was developed for the use of lymnologists with the purpose of selecting data sources for differing projects and attempts to answer the question “what data to use and when?”. The data sources used are Limnotrack Buoy in-situ, NIWA virtual climate station network (VCSN), ERA5 statlite data and NIWAs Observational climate data.</p>
 <p>Lake Rotorua, North Island, New Zealand is used as a worked example thoughout.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 13
+   target var     subset     n   cor slope intercept    mae   rmse    ccc   bias
+   &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+ 1 ERA5   Temp_C  all_d…  5873 0.950 0.882     0.990   1.15   1.42 0.940  -0.533
+ 2 ERA5   Precip… all_d…  5829 0.741 0.873     3.12    4.16   8.87 0.713   2.62 
+ 3 ERA5   Precip… wet_d…  1799 0.674 0.745     7.33    9.05  14.2  0.652   4.10 
+ 4 ERA5   Wind_S… all_d…  5854 0.606 0.413     0.650   1.58   1.95 0.352  -1.49 
+ 5 ERA5   Wind_S… windy…   588 0.202 0.210     2.00    3.46   3.71 0.0310 -3.46 
+ 6 ERA5   RadSWD… all_d…    44 0.365 0.117   154.    197.   252.   0.212  -1.89 
+ 7 Buoy   Temp_C  all_d…  1225 0.934 0.806     3.58    1.39   1.82 0.892   1.03 
+ 8 Buoy   Precip… all_d…  1246 0.611 0.337     0.281   3.93  10.0  0.493  -2.99 
+ 9 Buoy   Precip… wet_d…   417 0.556 0.337     0.257  11.0   17.1  0.404  -9.41 
+10 Buoy   Wind_S… all_d…  1223 0.810 0.871     1.26    1.04   1.30 0.733   0.765
+# ℹ 14 more rows
+# ℹ 2 more variables: rel_bias &lt;dbl&gt;, wind_threshold &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Load processed daily data for Rotorua (project-standard) ---</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>file_map <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ERA5         =</span> <span class="fu">here</span>(<span class="st">"data/processed/rotorua_era5_daily.csv"</span>),</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Buoy         =</span> <span class="fu">here</span>(<span class="st">"data/processed/rotorua_buoy_daily.csv"</span>),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Town_40177   =</span> <span class="fu">here</span>(<span class="st">"data/processed/rotorua_town_40177_daily.csv"</span>),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">VCS_On       =</span> <span class="fu">here</span>(<span class="st">"data/processed/rotorua_vcs_on_daily.csv"</span>),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Airport_1770 =</span> <span class="fu">here</span>(<span class="st">"data/processed/rotorua_airport_1770_daily.csv"</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>read_from_map <span class="ot">&lt;-</span> <span class="cf">function</span>(name) {</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  readr<span class="sc">::</span><span class="fu">read_csv</span>(file_map[[name]], <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Date =</span> <span class="fu">as.Date</span>(Date))</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>ref_name <span class="ot">&lt;-</span> params<span class="sc">$</span>reference</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>target_names <span class="ot">&lt;-</span> params<span class="sc">$</span>targets</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>ref_df <span class="ot">&lt;-</span> <span class="fu">read_from_map</span>(ref_name)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>targets_list <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">lapply</span>(target_names, read_from_map), target_names)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 </section>
 <section id="data-coverage" class="level2">
 <h2 class="anchored" data-anchor-id="data-coverage">Data coverage</h2>
 <div class="cell">
 <div class="cell-output-display">
-<div class="reactable html-widget html-fill-item" id="htmlwidget-dbc7811f31056e31c9e9" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-dbc7811f31056e31c9e9">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Dataset":["Reference","ERA5","Buoy","Town_40177","VCS_On"],"first_date":["2009-06-29","1990-01-01","2022-02-21","2015-09-24","1960-01-01"],"last_date":["2025-07-27","2025-08-31","2025-09-01","2025-11-28","2025-06-30"],"n_days":[5873,13027,1285,3654,23923]},"columns":[{"id":"Dataset","name":"Dataset","type":"character"},{"id":"first_date","name":"first_date","type":"Date"},{"id":"last_date","name":"last_date","type":"Date"},{"id":"n_days","name":"n_days","type":"numeric"}],"pagination":false,"striped":true,"dataKey":"d8d2af7c3801244e7aa77b03b185eae8"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+<div class="reactable html-widget html-fill-item" id="htmlwidget-7d76b58a3ccc1bc26ef0" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-7d76b58a3ccc1bc26ef0">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Dataset":["Reference","ERA5","Buoy","Town_40177","VCS_On"],"first_date":["2009-06-29","1990-01-01","2022-02-21","2015-09-24","1960-01-01"],"last_date":["2025-07-27","2025-08-31","2025-09-01","2025-11-28","2025-06-30"],"n_days":[5873,13027,1285,3654,23923]},"columns":[{"id":"Dataset","name":"Dataset","type":"character"},{"id":"first_date","name":"first_date","type":"Date"},{"id":"last_date","name":"last_date","type":"Date"},{"id":"n_days","name":"n_days","type":"numeric"}],"pagination":false,"striped":true,"dataKey":"d8d2af7c3801244e7aa77b03b185eae8"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
@@ -218,8 +296,8 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="metrics-table-reference-vs-targets">Metrics table (reference vs targets)</h2>
 <div class="cell">
 <div class="cell-output-display">
-<div class="reactable html-widget html-fill-item" id="htmlwidget-607eebbf0e4a592e1081" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-607eebbf0e4a592e1081">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"target":["ERA5","ERA5","ERA5","ERA5","ERA5","ERA5","Buoy","Buoy","Buoy","Buoy","Buoy","Buoy","Town_40177","Town_40177","Town_40177","Town_40177","Town_40177","Town_40177","VCS_On","VCS_On","VCS_On","VCS_On","VCS_On","VCS_On"],"var":["Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","RadSWD_Wm2","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","RadSWD_Wm2","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","RadSWD_Wm2","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","RadSWD_Wm2"],"subset":["all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days"],"n":[5873,5829,1799,5854,588,44,1225,1246,417,1223,126,0,3519,3462,1101,3512,355,0,5846,5802,1789,5827,586,44],"cor":[0.950252726263742,0.741249024236475,0.67431636909125,0.606393155341196,0.202352666779504,0.364617968323766,0.933598027178203,0.610776596436927,0.555737937323425,0.809926695344059,0.512131858540458,"NA",0.993523541694969,0.927727505844174,0.908752364819289,0.884974987196444,0.727268238915944,"NA",0.914770965293676,0.947898015007699,0.928074207258292,0.822134183330596,0.425332331613507,0.44154862873394],"slope":[0.882440597429375,0.873042895451712,0.74450910126041,0.413238038168765,0.209763580348193,0.116928207015896,0.805782942997428,0.336701182510668,0.337291395166382,0.870599182210333,0.868163449925056,"NA",1.00166451159841,0.830816719267625,0.795081195311294,0.597634516035904,0.74585101846782,"NA",0.90166498186377,1.02463410075137,0.991222656419513,0.777390508576691,0.584731478239795,0.149533613745995],"intercept":[0.990114265176521,3.12251727307789,7.32500023937001,0.650308415288529,2.00137814653436,154.324194920862,3.58134103102643,0.280888326973165,0.256896363571603,1.2624352833042,1.15436469613406,"NA",-0.013860360669776,0.487804562202073,1.67307840471515,0.684516044231292,-0.31724627206801,"NA",1.75419784752098,0.38475932953196,1.47974123074671,0.947923136517395,2.19211560546403,145.10632308558],"mae":[1.15386341645304,4.16337519300051,9.04532406892718,1.57904988042364,3.46403401360544,196.981805861647,1.38759702315078,3.93232143739968,11.0438369868106,1.03966835946834,1.17274062017934,"NA",0.354806576606159,1.45684575389948,4.12706630336058,0.891480637813212,2.09729577464789,"NA",1.41336360519805,1.36356428817649,3.98026830631638,0.700401578857045,1.20085324232082,191.522229874503],"rmse":[1.41555448747477,8.86946127120353,14.2341676187537,1.95487627601514,3.70517131169121,252.487176222961,1.82489677872555,10.0334222233155,17.1156148511674,1.30002817661153,1.42882604383569,"NA",0.479666914260097,4.0831868423009,6.82779687546213,1.1471362530857,2.23439590726947,"NA",1.78540246223107,3.67696698070302,6.47907281733944,0.932972445285637,1.50448306181108,244.663533148108],"ccc":[0.939515902763934,0.713125950941946,0.651607296459391,0.352113960138051,0.0309773822460065,0.212040058841475,0.891663919382223,0.493187885727772,0.404469167514134,0.733170186549662,0.443303489207647,"NA",0.99348864500982,0.921905693753109,0.898860629964187,0.697054538771047,0.241273601778792,"NA",0.90869487971212,0.944125926435051,0.92287924486931,0.817678222425936,0.35120818455802,0.268205091208166],"bias":[-0.53343589580586,2.62003808543489,4.10320177876598,-1.48949538776905,-3.46403401360544,-1.89430019895929,1.03079606831477,-2.99248601391118,-9.40593543285372,0.76525046661573,0.201678210350431,"NA",0.00803602166618504,-0.217331022530329,-0.970299727520436,-0.809578587699317,-2.09712676056338,"NA",0.477827095145039,0.482040675629093,1.36920067076579,0.135802299639609,-0.679317406143345,-5.3441613100704],"rel_bias":[-4.11607092609458,66.1982540398086,32.5386805843303,-40.8438958103125,-50.0859908869824,-1.07080987552854,7.84923150482587,-60.6381130807177,-64.5089812094997,19.9169469521525,2.79090339525698,"NA",0.0610879508001442,-5.2144263022205,-7.52191515578243,-21.8022656185899,-29.9448549375143,"NA",3.68130780022946,12.2064908084705,10.8719774171786,3.72246092996606,-9.82433279532475,-3.02094710774189],"wind_threshold":["NA","NA","NA","NA",5.78,"NA","NA","NA","NA","NA",6.06,"NA","NA","NA","NA","NA",5.84,"NA","NA","NA","NA","NA",5.78,"NA"]},"columns":[{"id":"target","name":"target","type":"character"},{"id":"var","name":"var","type":"character"},{"id":"subset","name":"subset","type":"character"},{"id":"n","name":"n","type":"numeric"},{"id":"cor","name":"cor","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"slope","name":"slope","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"intercept","name":"intercept","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"mae","name":"mae","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"rmse","name":"rmse","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"ccc","name":"ccc","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"bias","name":"bias","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"rel_bias","name":"rel_bias","type":"numeric","format":{"cell":{"digits":1},"aggregated":{"digits":1}}},{"id":"wind_threshold","name":"wind_threshold","type":"numeric"}],"searchable":true,"defaultPageSize":8,"highlight":true,"dataKey":"e870b65dae71061104875f052e748759"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+<div class="reactable html-widget html-fill-item" id="htmlwidget-d4321302bc52a929f5b3" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-d4321302bc52a929f5b3">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"target":["ERA5","ERA5","ERA5","ERA5","ERA5","ERA5","Buoy","Buoy","Buoy","Buoy","Buoy","Buoy","Town_40177","Town_40177","Town_40177","Town_40177","Town_40177","Town_40177","VCS_On","VCS_On","VCS_On","VCS_On","VCS_On","VCS_On"],"var":["Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","RadSWD_Wm2","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","RadSWD_Wm2","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","RadSWD_Wm2","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","RadSWD_Wm2"],"subset":["all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days"],"n":[5873,5829,1799,5854,588,44,1225,1246,417,1223,126,0,3519,3462,1101,3512,355,0,5846,5802,1789,5827,586,44],"cor":[0.950252726263742,0.741249024236475,0.67431636909125,0.606393155341196,0.202352666779504,0.364617968323766,0.933598027178203,0.610776596436927,0.555737937323425,0.809926695344059,0.512131858540458,"NA",0.993523541694969,0.927727505844174,0.908752364819289,0.884974987196444,0.727268238915944,"NA",0.914770965293676,0.947898015007699,0.928074207258292,0.822134183330596,0.425332331613507,0.44154862873394],"slope":[0.882440597429375,0.873042895451712,0.74450910126041,0.413238038168765,0.209763580348193,0.116928207015896,0.805782942997428,0.336701182510668,0.337291395166382,0.870599182210333,0.868163449925056,"NA",1.00166451159841,0.830816719267625,0.795081195311294,0.597634516035904,0.74585101846782,"NA",0.90166498186377,1.02463410075137,0.991222656419513,0.777390508576691,0.584731478239795,0.149533613745995],"intercept":[0.990114265176521,3.12251727307789,7.32500023937001,0.650308415288529,2.00137814653436,154.324194920862,3.58134103102643,0.280888326973165,0.256896363571603,1.2624352833042,1.15436469613406,"NA",-0.013860360669776,0.487804562202073,1.67307840471515,0.684516044231292,-0.31724627206801,"NA",1.75419784752098,0.38475932953196,1.47974123074671,0.947923136517395,2.19211560546403,145.10632308558],"mae":[1.15386341645304,4.16337519300051,9.04532406892718,1.57904988042364,3.46403401360544,196.981805861647,1.38759702315078,3.93232143739968,11.0438369868106,1.03966835946834,1.17274062017934,"NA",0.354806576606159,1.45684575389948,4.12706630336058,0.891480637813212,2.09729577464789,"NA",1.41336360519805,1.36356428817649,3.98026830631638,0.700401578857045,1.20085324232082,191.522229874503],"rmse":[1.41555448747477,8.86946127120353,14.2341676187537,1.95487627601514,3.70517131169121,252.487176222961,1.82489677872555,10.0334222233155,17.1156148511674,1.30002817661153,1.42882604383569,"NA",0.479666914260097,4.0831868423009,6.82779687546213,1.1471362530857,2.23439590726947,"NA",1.78540246223107,3.67696698070302,6.47907281733944,0.932972445285637,1.50448306181108,244.663533148108],"ccc":[0.939515902763934,0.713125950941946,0.651607296459391,0.352113960138051,0.0309773822460065,0.212040058841475,0.891663919382223,0.493187885727772,0.404469167514134,0.733170186549662,0.443303489207647,"NA",0.99348864500982,0.921905693753109,0.898860629964187,0.697054538771047,0.241273601778792,"NA",0.90869487971212,0.944125926435051,0.92287924486931,0.817678222425936,0.35120818455802,0.268205091208166],"bias":[-0.53343589580586,2.62003808543489,4.10320177876598,-1.48949538776905,-3.46403401360544,-1.89430019895929,1.03079606831477,-2.99248601391118,-9.40593543285372,0.76525046661573,0.201678210350431,"NA",0.00803602166618504,-0.217331022530329,-0.970299727520436,-0.809578587699317,-2.09712676056338,"NA",0.477827095145039,0.482040675629093,1.36920067076579,0.135802299639609,-0.679317406143345,-5.3441613100704],"rel_bias":[-4.11607092609458,66.1982540398086,32.5386805843303,-40.8438958103125,-50.0859908869824,-1.07080987552854,7.84923150482587,-60.6381130807177,-64.5089812094997,19.9169469521525,2.79090339525698,"NA",0.0610879508001442,-5.2144263022205,-7.52191515578243,-21.8022656185899,-29.9448549375143,"NA",3.68130780022946,12.2064908084705,10.8719774171786,3.72246092996606,-9.82433279532475,-3.02094710774189],"wind_threshold":["NA","NA","NA","NA",5.78,"NA","NA","NA","NA","NA",6.06,"NA","NA","NA","NA","NA",5.84,"NA","NA","NA","NA","NA",5.78,"NA"]},"columns":[{"id":"target","name":"target","type":"character"},{"id":"var","name":"var","type":"character"},{"id":"subset","name":"subset","type":"character"},{"id":"n","name":"n","type":"numeric"},{"id":"cor","name":"cor","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"slope","name":"slope","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"intercept","name":"intercept","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"mae","name":"mae","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"rmse","name":"rmse","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"ccc","name":"ccc","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"bias","name":"bias","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"rel_bias","name":"rel_bias","type":"numeric","format":{"cell":{"digits":1},"aggregated":{"digits":1}}},{"id":"wind_threshold","name":"wind_threshold","type":"numeric"}],"searchable":true,"defaultPageSize":8,"highlight":true,"dataKey":"e870b65dae71061104875f052e748759"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>

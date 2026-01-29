@@ -23,12 +23,20 @@ It assesses four main meterological parameters (precipitation, wind, radiation, 
 
 Lake Rotorua, North Island, New Zealand is used as a worked example thoughout.
 
+## Guide 
+
+This project takes your though......
+Following the logical flow of.....
+Desision of what data sets to use will depend on intended outcome. 
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 ```
 
 ```{r}
-# | echo: true
+# | echo: false
+# | message: false
+# | warning: false
 library(glue)
 library(htmltools)
 library(gt)
@@ -47,7 +55,7 @@ source(here("scripts", "04_analysis_plotting.R"))
 ```
 
 ```{r}
-#| echo: true
+#| echo: false
 # --- Load processed daily data for Rotorua (project-standard) ---
 file_map <- list(
   ERA5         = here("data/processed/rotorua_era5_daily.csv"),
