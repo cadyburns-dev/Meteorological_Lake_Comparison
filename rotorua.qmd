@@ -35,7 +35,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-
 ```{r}
 # | echo: true
 library(glue)
@@ -130,7 +129,6 @@ tm_shape(water) +
   tm_borders()
 ```
 
-
 ## Data coverage
 
 ```{r}
@@ -210,7 +208,6 @@ plot_precip_hydrograph(ref_df, targets_list, show_7day_sum = TRUE)
 plot_precip_cdf(ref_df, targets_list)
 ```
 
-
 ```{r}
 plot_precip_wetday_distribution(ref_df, targets_list, threshold_mm = wet_threshold_mm)
 ```
@@ -228,7 +225,6 @@ plot_distribution(ref_df, targets_list, "wind_Spd_ms")
 ```{r}
 plot_distribution(ref_df, targets_list, "Precip_mm")
 ```
-
 
 ## Scatter vs reference
 
@@ -262,7 +258,7 @@ purrr::iwalk(targets_list, ~ print(plot_rolling_diagnostics(ref_df, .x, .y, "Win
 purrr::iwalk(targets_list, ~ print(plot_rolling_diagnostics(ref_df, .x, .y, "Precip_mm", window_days = window_days)))
 ```
 
-## Precipitation event agreement 
+## Precipitation event agreement
 
 ```{r}
 #| echo: false
@@ -322,7 +318,6 @@ plot_seasonal_scatter(ref_df, targets_list, "Wind_Spd_ms", season_defs = season_
 ```{r}
 plot_seasonal_scatter(ref_df, targets_list, "Precip_mm", season_defs = season_defs)
 ```
-
 
 ## Interactive table
 
