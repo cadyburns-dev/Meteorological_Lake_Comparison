@@ -2,6 +2,15 @@
 title: "Meterological Lake Comparison"
 subtitle: "Rotorua overview"
 author: "Cady B"
+params:
+  lake_name: "Lake Rotorua"
+  lat: -38.114908
+  lon: 176.316662
+  buffer_km: 10
+  lake_id: "rotorua"
+  reference: "Airport_1770"
+  targets: ["ERA5", "Buoy", "Town_40177", "VCS_On"]
+  vars: ["Temp_C", "Precip_mm", "Wind_Spd_ms", "RadSWD_Wm2"]
 ---
 
 ![](images/update.png){fig-align="center"}
@@ -16,39 +25,45 @@ Lake Rotorua, North Island, New Zealand is used as a worked example thoughout.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
-
 ```
 
 ```{r}
+# | echo: true
+library(glue)
+library(htmltools)
+library(gt)
+library(plotly)
+library(here)
 library(tidyverse)
 library(lubridate)
 library(slider)
-library(gt)
-library(reactable)
-library(plotly)
 library(here)
+library(reactable)
 
-# Load helpers
+# ---- Source scripts (from project root) ----
 source(here("scripts", "01_metrics_helpers.R"))
 source(here("scripts", "03_analysis_helpers.R"))
+source(here("scripts", "04_analysis_plotting.R"))
+```
 
-# Map dataset names to processed files
+```{r}
+#| echo: true
+# --- Load processed daily data for Rotorua (project-standard) ---
 file_map <- list(
-  "ERA5"         = "data/processed/rotorua_era5_daily.csv",
-  "Buoy"         = "data/processed/rotorua_buoy_daily.csv",
-  "Town_40177"   = "data/processed/rotorua_town_40177_daily.csv",
-  "VCS_On"       = "data/processed/rotorua_vcs_on_daily.csv",
-  "Airport_1770" = "data/processed/rotorua_airport_1770_daily.csv"
+  ERA5         = here("data/processed/rotorua_era5_daily.csv"),
+  Buoy         = here("data/processed/rotorua_buoy_daily.csv"),
+  Town_40177   = here("data/processed/rotorua_town_40177_daily.csv"),
+  VCS_On       = here("data/processed/rotorua_vcs_on_daily.csv"),
+  Airport_1770 = here("data/processed/rotorua_airport_1770_daily.csv")
 )
 
 read_from_map <- function(name) {
-  readr::read_csv(here(file_map[[name]]), show_col_types = FALSE) |>
+  readr::read_csv(file_map[[name]], show_col_types = FALSE) |>
     mutate(Date = as.Date(Date))
 }
 
-ref_name <- "Airport_1770"
-target_names <- c("ERA5", "Buoy", "Town_40177", "VCS_On")
-vars <- c("Temp_C", "Precip_mm", "Wind_Spd_ms", "RadSWD_Wm2")
+ref_name <- params$reference
+target_names <- params$targets
 
 ref_df <- read_from_map(ref_name)
 targets_list <- setNames(lapply(target_names, read_from_map), target_names)
@@ -138,11 +153,11 @@ make_ts_plot <- function(var) {
     labs(title = var, x = NULL, y = var) +
     scale_color_manual(
       values = c(
-        "Buoy" = "#1f77b4",       # blue
-        "ERA5" = "#d95f02",       # dark orange
-        "Reference" = "#000000",  # black
-        "Town_40177" = "#7570b3", # purple
-        "VCS_On" = "#1b9e77"      # green
+        Airport_1770 = "black",
+        ERA5         = "#d95f02",
+        Buoy         = "#7570b3",
+        Town_40177   = "#f0c400",
+        VCS_On       = "#1b9e77"
       )
     ) +
     theme_minimal() +

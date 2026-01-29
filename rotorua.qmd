@@ -103,7 +103,7 @@ vars <- intersect(vars_requested, vars_available)
 vars
 ```
 
-## Map
+
 
 ## Data coverage
 
