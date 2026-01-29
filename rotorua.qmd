@@ -11,49 +11,84 @@ params:
 ---
 
 ## Site data sources
-note add what kindof lat long system used_____
+
+note add what kindof lat long system used\_\_\_\_\_
 
 Limnotrack Buoy (lat:-380550S Lon:1761653E) on lake, NIWA virtual climate station network (VCSN) grid NO:27879 lat:-38.075 lon:176.275, ERA5 statlite data for Lat:-38.114908 and Lon:176.316662, Observational data "Airport" station 1770 (lat:-38.10592 lon:176.31481), Obresvational data "Town" station 41077 (lat:-38.14635 lon:176.2578).
 
+
+
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(
+  echo = FALSE,        # show code on website (you can set FALSE later)
+  message = FALSE,
+  warning = FALSE,
+  fig.width = 10,
+  fig.height = 6
+)
 
-```
-
-```{r}
+library(glue)
+library(htmltools)
+library(gt)
+library(plotly)
+library(here)
 library(tidyverse)
 library(lubridate)
 library(slider)
-library(gt)
-library(reactable)
-library(plotly)
 library(here)
+library(reactable)
 
-# Load helpers
-source(here("scripts", "00_metrics_helpers.R"))
-source(here("scripts", "02_analysis_helpers.R"))
+# ---- Source scripts (from project root) ----
+source(here("scripts", "01_metrics_helpers.R"))
+source(here("scripts", "03_analysis_helpers.R"))
+source(here("scripts", "04_analysis_plotting.R"))
 
-# Map dataset names to processed files
+# ---- Params safety (so render works even if someone runs the file directly) ----
+default_params <- list(
+  lake_name = "Lake Rotorua",
+  lake_id = "rotorua",
+  reference = "Airport_1770",
+  targets = c("ERA5", "Buoy", "Town_40177", "VCS_On"),
+  vars = c("Temp_C", "Precip_mm", "Wind_Spd_ms", "RadSWD_Wm2"),
+  wet_threshold_mm = 1,
+  windy_top_pct = 0.10,
+  windy_threshold_ms = 10,
+  window_days = 30
+)
+
+if (!exists("params")) params <- list()
+params <- modifyList(default_params, params)
+
+# ---- File map (Rotorua demo uses rotorua_*.csv; other lakes can swap lake_id later) ----
 file_map <- list(
-  "ERA5"         = "data/processed/rotorua_era5_daily.csv",
-  "Buoy"         = "data/processed/rotorua_buoy_daily.csv",
-  "Town_40177"   = "data/processed/rotorua_town_40177_daily.csv",
-  "VCS_On"       = "data/processed/rotorua_vcs_on_daily.csv",
-  "Airport_1770" = "data/processed/rotorua_airport_1770_daily.csv"
+  ERA5         = here("data/processed/rotorua_era5_daily.csv"),
+  Buoy         = here("data/processed/rotorua_buoy_daily.csv"),
+  Town_40177   = here("data/processed/rotorua_town_40177_daily.csv"),
+  VCS_On       = here("data/processed/rotorua_vcs_on_daily.csv"),
+  Airport_1770 = here("data/processed/rotorua_airport_1770_daily.csv")
 )
 
 read_from_map <- function(name) {
-  readr::read_csv(here(file_map[[name]]), show_col_types = FALSE) |>
+  readr::read_csv(file_map[[name]], show_col_types = FALSE) |>
     mutate(Date = as.Date(Date))
 }
 
-ref_name <- "Airport_1770"
-target_names <- c("ERA5", "Buoy", "Town_40177", "VCS_On")
-vars <- c("Temp_C", "Precip_mm", "Wind_Spd_ms", "RadSWD_Wm2")
+# ---- Data ----
+ref_df <- read_from_map(params$reference)
+targets_list <- setNames(lapply(params$targets, read_from_map), params$targets)
+vars <- params$vars
 
-ref_df <- read_from_map(ref_name)
-targets_list <- setNames(lapply(target_names, read_from_map), target_names)
+# ---- Colours (must match source names in plots) ----
+target_colors <- c(
+  Airport_1770 = "black",
+  ERA5         = "#d95f02",
+  Buoy         = "#7570b3",
+  Town_40177   = "#f0c400",
+  VCS_On       = "#1b9e77"
+)
+
 ```
+
 
 ## Data coverage
 
@@ -63,11 +98,12 @@ coverage <- bind_rows(
   !!!targets_list,
   .id = "Dataset"
 ) |>
+  group_by(Dataset) |>
   summarise(
     first_date = min(Date, na.rm = TRUE),
     last_date  = max(Date, na.rm = TRUE),
     n_days     = n(),
-    .by = Dataset
+    .groups = "drop"
   )
 
 reactable(
@@ -154,71 +190,9 @@ make_ts_plot <- function(var) {
 lapply(vars, make_ts_plot)
 ```
 
-## #Load necessary libraries
-
-```{r}
-library(tidyverse)
-library(lubridate)
-library(gt)
-library(slider)
-library(plotly)
-library(glue)
-library(reactable)
-library(htmltools)
 
 
-# Always resolve paths from project root
-library(here)
 
-# ---- source scripts ----
-source(here::here("scripts", "00_metrics_helpers.R"))
-source(here::here("scripts", "02_analysis_helpers.R"))
-
-# Fallback params for interactive runs
-if (!exists("params")) {
-  params <- list(
-    lake_id = "rotorua",
-    reference = "Airport_1770",
-    targets = c("ERA5", "Buoy", "Town_40177", "VCS_On"),
-    vars = c("Temp_C", "Precip_mm", "Wind_Spd_ms", "RadSWD_Wm2"),
-    wet_threshold_mm = 1,
-    windy_top_pct = 0.10,
-    windy_threshold_ms = 10,
-    window_days = 30
-  )
-}
-
-```
-
-# data
-
-```{r}
-file_map <- list(
-  ERA5         = here("data/processed/rotorua_era5_daily.csv"),
-  Buoy         = here("data/processed/rotorua_buoy_daily.csv"),
-  Town_40177   = here("data/processed/rotorua_town_40177_daily.csv"),
-  VCS_On       = here("data/processed/rotorua_vcs_on_daily.csv"),
-  Airport_1770 = here("data/processed/rotorua_airport_1770_daily.csv")
-)
-
-read_from_map <- function(name) {
-  readr::read_csv(file_map[[name]], show_col_types = FALSE) |>
-    mutate(Date = as.Date(Date))
-}
-
-ref_df <- read_from_map(params$reference)
-
-targets_list <- list(
-  ERA5        = read_from_map("ERA5"),
-  Buoy        = read_from_map("Buoy"),
-  Town_40177  = read_from_map("Town_40177"),
-  VCS_On      = read_from_map("VCS_On"),
-  Reference   = ref_df
-)
-
-vars <- params$vars
-
-```
 
 ## Defaults (static view)
 
@@ -263,21 +237,7 @@ div(
 )
 ```
 
-## Interactive plot
 
-```{r}
-p <- plot_data |>
-  ggplot(aes(Date, .data[[selected_var]], color = Series)) +
-  geom_line() +
-  labs(
-    x = NULL,
-    y = selected_var,
-    title = glue("Reference vs {selected_target_name}")
-  ) +
-  theme_minimal()
-
-ggplotly(p, tooltip = c("Date", "y", "Series"))
-```
 
 ## Interactive table
 

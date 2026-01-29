@@ -26,7 +26,7 @@ print(plot_precip_wetday_distribution(ref_df, targets_list, threshold_mm = 1))
 print(plot_scatter_faceted(ref_df, targets_list, "Temp_C", ncol = 2))
 print(plot_scatter_faceted(ref_df, targets_list, "Wind_Spd_ms", ncol = 2))
 print(plot_scatter_faceted(ref_df, targets_list, "Precip_mm", ncol = 2))
-print(plot_scatter_faceted(ref_df, targets_list, "RadSWD_Wm2", ncol = 2))
+#print(plot_scatter_faceted(ref_df, targets_list, "RadSWD_Wm2", ncol = 2))
 
 # Rolling (30 day) plots
 
@@ -38,7 +38,7 @@ print(plot_rolling_diagnostics(ref_df, vcs_on, "VCS_On", "Temp_C", window_days =
 print(plot_rolling_diagnostics(ref_df, era5, "ERA5", "Wind_Spd_ms", window_days = 30))
 print(plot_rolling_diagnostics(ref_df, buoy, "Buoy", "Wind_Spd_ms", window_days = 30))
 print(plot_rolling_diagnostics(ref_df, twn40177, "Town_40177", "Wind_Spd_ms", window_days = 30))
-print(plot_rolling_diagnostics(ref_df, vcs_on, "ERA5", "Wind_Spd_ms", window_days = 30))
+print(plot_rolling_diagnostics(ref_df, vcs_on, "VCS_On", "Wind_Spd_ms", window_days = 30))
 
 print(plot_rolling_diagnostics(ref_df, era5, "ERA5", "Precip_mm", window_days = 30))
 print(plot_rolling_diagnostics(ref_df, buoy, "Buoy", "Precip_mm", window_days = 30))
