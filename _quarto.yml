@@ -17,7 +17,7 @@ website:
         href: methods.qmd
       - text: "Seasonal and event behaviour"
         href: Behaviour.qmd
-      - text: "Results"
+      - text: "Variable diagnostics"
         href: Results.qmd
       - text: "Reproducibility"
         href: Reproducibility.qmd
