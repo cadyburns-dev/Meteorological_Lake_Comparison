@@ -1,9 +1,35 @@
 ---
-title: "Results"
+title: "Variable diagnostics"
 format: html
+editor: visual
+params:
+  lake_name: "Lake Rotorua"
+  lat: -38.114908
+  lon: 176.316662
+  buffer_km: 10
+  lake_id: "rotorua"
+  reference: "Airport_1770"
+  targets: ["ERA5", "Buoy", "Town_40177", "VCS_On"]
+  vars: ["Temp_C", "Precip_mm", "Wind_Spd_ms", "RadSWD_Wm2"]
+  wet_threshold_mm: 1
+  precip_event_threshold: 0.1
+  windy_top_pct: 0.10
+  windy_threshold_ms: 10
+  window_days: 30
 ---
 
-note could call this variable diagnostics? then have sub sections in here or vars (temp, precip,rad and wind)
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,        # show code on website (you can set FALSE later)
+  message = FALSE,
+  warning = FALSE,
+  fig.width = 10,
+  fig.height = 6
+)
+```
 
 ## Metrics (all days)
 
