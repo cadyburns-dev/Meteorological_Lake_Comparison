@@ -8,6 +8,15 @@ params:
   lat: -38.114908
   lon: 176.316662
   buffer_km: 10
+  lake_id: "rotorua"
+  reference: "Airport_1770"
+  targets: ["ERA5", "Buoy", "Town_40177", "VCS_On"]
+  vars: ["Temp_C", "Precip_mm", "Wind_Spd_ms", "RadSWD_Wm2"]
+  wet_threshold_mm: 1
+  precip_event_threshold: 0.1
+  windy_top_pct: 0.10
+  windy_threshold_ms: 10
+  window_days: 30
 ---
 
 ## Site data sources
@@ -15,8 +24,6 @@ params:
 note add what kindof lat long system used\_\_\_\_\_
 
 Limnotrack Buoy (lat:-380550S Lon:1761653E) on lake, NIWA virtual climate station network (VCSN) grid NO:27879 lat:-38.075 lon:176.275, ERA5 statlite data for Lat:-38.114908 and Lon:176.316662, Observational data "Airport" station 1770 (lat:-38.10592 lon:176.31481), Obresvational data "Town" station 41077 (lat:-38.14635 lon:176.2578).
-
-
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
@@ -26,7 +33,11 @@ knitr::opts_chunk$set(
   fig.width = 10,
   fig.height = 6
 )
+```
 
+
+```{r}
+# | echo: true
 library(glue)
 library(htmltools)
 library(gt)
@@ -42,24 +53,11 @@ library(reactable)
 source(here("scripts", "01_metrics_helpers.R"))
 source(here("scripts", "03_analysis_helpers.R"))
 source(here("scripts", "04_analysis_plotting.R"))
+```
 
-# ---- Params safety (so render works even if someone runs the file directly) ----
-default_params <- list(
-  lake_name = "Lake Rotorua",
-  lake_id = "rotorua",
-  reference = "Airport_1770",
-  targets = c("ERA5", "Buoy", "Town_40177", "VCS_On"),
-  vars = c("Temp_C", "Precip_mm", "Wind_Spd_ms", "RadSWD_Wm2"),
-  wet_threshold_mm = 1,
-  windy_top_pct = 0.10,
-  windy_threshold_ms = 10,
-  window_days = 30
-)
-
-if (!exists("params")) params <- list()
-params <- modifyList(default_params, params)
-
-# ---- File map (Rotorua demo uses rotorua_*.csv; other lakes can swap lake_id later) ----
+```{r}
+#| echo: true
+# --- Load processed daily data for Rotorua (project-standard) ---
 file_map <- list(
   ERA5         = here("data/processed/rotorua_era5_daily.csv"),
   Buoy         = here("data/processed/rotorua_buoy_daily.csv"),
@@ -73,12 +71,13 @@ read_from_map <- function(name) {
     mutate(Date = as.Date(Date))
 }
 
-# ---- Data ----
-ref_df <- read_from_map(params$reference)
-targets_list <- setNames(lapply(params$targets, read_from_map), params$targets)
-vars <- params$vars
+ref_name <- params$reference
+target_names <- params$targets
 
-# ---- Colours (must match source names in plots) ----
+ref_df <- read_from_map(ref_name)
+targets_list <- setNames(lapply(target_names, read_from_map), target_names)
+
+# --- Colors used by plot functions ---
 target_colors <- c(
   Airport_1770 = "black",
   ERA5         = "#d95f02",
@@ -87,12 +86,55 @@ target_colors <- c(
   VCS_On       = "#1b9e77"
 )
 
+# --- Thresholds ---
+wet_threshold_mm <- params$wet_threshold_mm
+precip_event_threshold <- params$precip_event_threshold
+windy_top_pct <- params$windy_top_pct
+windy_threshold_ms <- params$windy_threshold_ms
+window_days <- params$window_days
+
+# --- Safe vars: only keep variables that exist in ref + ALL targets (prevents render errors) ---
+vars_requested <- params$vars
+vars_available <- Reduce(
+  intersect,
+  c(list(names(ref_df)), lapply(targets_list, names))
+)
+vars <- intersect(vars_requested, vars_available)
+
+vars
+```
+
+## Map
+
+```{r}
+
+library(osmdata)
+library(sf)
+library(tmap)
+
+lat <- params$lat
+lon <- params$lon
+
+# buffer box (very rough)
+bb <- c(lon - 0.08, lat - 0.05, lon + 0.08, lat + 0.05)
+
+osm_data <- opq(bbox = bb) |>
+  add_osm_feature(key = "natural", value = "water") |>
+  osmdata_sf()
+
+water <- osm_data$osm_multipolygons |> st_make_valid()
+
+tmap_mode("plot")
+tm_shape(water) +
+  tm_fill(alpha = 0.5) +
+  tm_borders()
 ```
 
 
 ## Data coverage
 
 ```{r}
+#| echo: false
 coverage <- bind_rows(
   Reference = ref_df,
   !!!targets_list,
@@ -102,7 +144,7 @@ coverage <- bind_rows(
   summarise(
     first_date = min(Date, na.rm = TRUE),
     last_date  = max(Date, na.rm = TRUE),
-    n_days     = n(),
+    n_days     = sum(!is.na(Date)),
     .groups = "drop"
   )
 
@@ -117,15 +159,17 @@ reactable(
 ## Metrics table (reference vs targets)
 
 ```{r}
+#| echo: false
 metrics_all <- purrr::imap_dfr(
   targets_list,
   ~ metrics_vs_ref(
-    ref_df = ref_df,
-    target_df = .x,
+    ref_df      = ref_df,
+    target_df   = .x,
     target_name = .y,
     vars = vars,
-    wet_threshold_mm = 1,
-    windy_top_pct = 0.10
+    wet_threshold_mm = wet_threshold_mm,
+    windy_threshold_ms = windy_threshold_ms,
+    windy_top_pct = windy_top_pct
   )
 )
 
@@ -134,109 +178,150 @@ reactable(
   searchable = TRUE,
   sortable = TRUE,
   highlight = TRUE,
-  defaultPageSize = 8,
-  pagination = TRUE,
-  columns = list(
-    cor = colDef(format = colFormat(digits = 2)),
-    slope = colDef(format = colFormat(digits = 2)),
-    intercept = colDef(format = colFormat(digits = 2)),
-    mae = colDef(format = colFormat(digits = 2)),
-    rmse = colDef(format = colFormat(digits = 2)),
-    ccc = colDef(format = colFormat(digits = 2)),
-    bias = colDef(format = colFormat(digits = 2)),
-    rel_bias = colDef(format = colFormat(digits = 1))
-  )
+  defaultPageSize = 12
 )
 ```
 
 ## Time series overlays
 
 ```{r}
-ts_long <- bind_rows(
-  Reference = ref_df,
-  !!!targets_list,
-  .id = "Dataset"
-) |>
-  pivot_longer(
-    cols = all_of(vars),
-    names_to = "Variable",
-    values_to = "Value"
-  ) |>
-  drop_na(Value)
+plot_timeseries_line(ref_df, targets_list, "Temp_C")
+```
 
-make_ts_plot <- function(var) {
-  df <- ts_long |> filter(Variable == var)
-  x_rng <- range(df$Date, na.rm = TRUE)
-  y_rng <- range(df$Value, na.rm = TRUE)
-  p <- ggplot(df, aes(Date, Value, color = Dataset)) +
-    geom_line() +
-    facet_wrap(~Dataset, ncol = 1, scales = "fixed") +
-    coord_cartesian(xlim = x_rng, ylim = y_rng) +
-    labs(title = var, x = NULL, y = var) +
-    scale_color_manual(
-      values = c(
-        "Buoy" = "#1f77b4",       # blue
-        "ERA5" = "#d95f02",       # dark orange
-        "Reference" = "#000000",  # black
-        "Town_40177" = "#7570b3", # purple
-        "VCS_On" = "#1b9e77"      # green
-      )
-    ) +
-    theme_minimal() +
-    theme(legend.position = "none")
-  ggplotly(p, tooltip = c("Date", "Value", "Dataset"))
-}
+```{r}
+plot_timeseries_line(ref_df, targets_list, "Wind_Spd_ms")
+```
 
-lapply(vars, make_ts_plot)
+```{r}
+plot_timeseries_line(ref_df, targets_list, "Precip_mm")
+```
+
+```{r}
+if ("RadSWD_Wm2" %in% vars) plot_timeseries_line(ref_df, targets_list, "RadSWD_Wm2")
+```
+
+## Precipitation event structure
+
+```{r}
+plot_precip_hydrograph(ref_df, targets_list, show_7day_sum = TRUE)
+```
+
+```{r}
+plot_precip_cdf(ref_df, targets_list)
 ```
 
 
+```{r}
+plot_precip_wetday_distribution(ref_df, targets_list, threshold_mm = wet_threshold_mm)
+```
 
-
-
-## Defaults (static view)
+## Distribution (variability / bias)
 
 ```{r}
-selected_target_name <- params$targets[[1]]
-selected_var <- vars[[1]]
+plot_distribution(ref_df, targets_list, "Temp_C")
+```
 
-plot_data <- bind_rows(
-  Reference = ref_df |> select(Date, all_of(selected_var)),
-  Target    = targets_list[[selected_target_name]] |> select(Date, all_of(selected_var)),
-  .id = "Series"
+```{r}
+plot_distribution(ref_df, targets_list, "wind_Spd_ms")
+```
+
+```{r}
+plot_distribution(ref_df, targets_list, "Precip_mm")
+```
+
+
+## Scatter vs reference
+
+```{r}
+plot_scatter_faceted(ref_df, targets_list, "Temp_C", ncol = 2)
+```
+
+```{r}
+plot_scatter_faceted(ref_df, targets_list, "Wind_Spd_ms", ncol = 2)
+```
+
+```{r}
+plot_scatter_faceted(ref_df, targets_list, "Precip_mm", ncol = 2)
+```
+
+```{r}
+if ("RadSWD_Wm2" %in% vars) plot_scatter_faceted(ref_df, targets_list, "RadSWD_Wm2", ncol = 2)
+```
+
+## Rolling diagnostics (drift thrugh time)
+
+```{r}
+purrr::iwalk(targets_list, ~ print(plot_rolling_diagnostics(ref_df, .x, .y, "Temp_C", window_days = window_days)))
+```
+
+```{r}
+purrr::iwalk(targets_list, ~ print(plot_rolling_diagnostics(ref_df, .x, .y, "Wind_Spd_ms", window_days = window_days)))
+```
+
+```{r}
+purrr::iwalk(targets_list, ~ print(plot_rolling_diagnostics(ref_df, .x, .y, "Precip_mm", window_days = window_days)))
+```
+
+## Precipitation event agreement 
+
+```{r}
+#| echo: false
+skill_precip <- event_skill_all_targets(
+  ref_df, targets_list,
+  var = "Precip_mm",
+  threshold = precip_event_threshold,
+  direction = ">="
+)
+
+reactable(skill_precip, sortable = TRUE, striped = TRUE)
+```
+
+```{r}
+plot_event_outcomes(
+  skill_precip,
+  title = paste0("Precip events (≥ ", precip_event_threshold, " mm/day): outcomes vs reference")
 )
 ```
 
-## Latest snapshot cards
-
 ```{r}
-latest_ref <- ref_df |> filter(!is.na(Date)) |> slice_max(Date, n = 1, with_ties = FALSE)
-
-card_badge <- function(label, value, suffix = "", status = c("secondary", "success", "warning", "danger")) {
-  status <- match.arg(status)
-  htmltools::div(
-    class = "card text-bg-dark mb-3",
-    style = "min-width: 14rem;",
-    htmltools::div(
-      class = "card-header d-flex justify-content-between align-items-center",
-      label,
-      htmltools::span(class = glue("badge text-bg-{status}"), glue("{round(value, 2)}{suffix}"))
-    )
-  )
-}
-
-precip_status <- if (latest_ref$Precip_mm >= params$wet_threshold_mm) "primary" else "secondary"
-wind_status <- if (latest_ref$Wind_Spd_ms >= params$windy_threshold_ms) "warning" else "secondary"
-
-div(
-  class = "d-flex flex-wrap gap-3",
-  card_badge("Temp (C)", latest_ref$Temp_C, status = "secondary"),
-  card_badge("Precip (mm)", latest_ref$Precip_mm, status = precip_status),
-  card_badge("Wind (m/s)", latest_ref$Wind_Spd_ms, status = wind_status),
-  card_badge("SW Rad (W/m2)", latest_ref$RadSWD_Wm2, status = "secondary")
+plot_event_skill_scores(
+  skill_precip,
+  title = paste0("Precip events (≥ ", precip_event_threshold, " mm/day): skill vs reference")
 )
 ```
 
+```{r}
+plot_false_alarm_magnitude(ref_df, targets_list, threshold_mm = precip_event_threshold)
+```
+
+## Monthly climatology (seasonal structure)
+
+```{r}
+plot_monthly_climatology(ref_df, targets_list, "Temp_C")
+```
+
+```{r}
+plot_monthly_climatology(ref_df, targets_list, "Temp_C")
+```
+
+```{r}
+plot_monthly_climatology(ref_df, targets_list, "Precip_mm")
+```
+
+## Seasonal performance (NZ/Southern Hemisphere)
+
+```{r}
+season_defs <- season_defs_default
+plot_seasonal_bias(ref_df, targets_list, "Temp_C", season_defs = season_defs)
+```
+
+```{r}
+plot_seasonal_scatter(ref_df, targets_list, "Wind_Spd_ms", season_defs = season_defs)
+```
+
+```{r}
+plot_seasonal_scatter(ref_df, targets_list, "Precip_mm", season_defs = season_defs)
+```
 
 
 ## Interactive table
