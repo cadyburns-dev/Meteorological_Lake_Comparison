@@ -8,7 +8,7 @@
 
 <meta name="author" content="Cady B">
 
-<title>Meterological Lake Comparison</title>
+<title>Rotorua demo – Meterological Lake Comparison</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -112,7 +112,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="./index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
@@ -120,7 +120,7 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Overview</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./rotorua.html"> 
+    <a class="nav-link active" href="./rotorua.html" aria-current="page"> 
 <span class="menu-text">Rotorua demo</span></a>
   </li>  
   <li class="nav-item">
@@ -154,11 +154,18 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of Content</h2>
    
   <ul>
-  <li><a href="#project-description" id="toc-project-description" class="nav-link active" data-scroll-target="#project-description">Project description</a></li>
-  <li><a href="#guide" id="toc-guide" class="nav-link" data-scroll-target="#guide">Guide</a></li>
+  <li><a href="#site-data-sources" id="toc-site-data-sources" class="nav-link active" data-scroll-target="#site-data-sources">Site data sources</a></li>
   <li><a href="#data-coverage" id="toc-data-coverage" class="nav-link" data-scroll-target="#data-coverage">Data coverage</a></li>
   <li><a href="#metrics-table-reference-vs-targets" id="toc-metrics-table-reference-vs-targets" class="nav-link" data-scroll-target="#metrics-table-reference-vs-targets">Metrics table (reference vs targets)</a></li>
   <li><a href="#time-series-overlays" id="toc-time-series-overlays" class="nav-link" data-scroll-target="#time-series-overlays">Time series overlays</a></li>
+  <li><a href="#precipitation-event-structure" id="toc-precipitation-event-structure" class="nav-link" data-scroll-target="#precipitation-event-structure">Precipitation event structure</a></li>
+  <li><a href="#distribution-variability-bias" id="toc-distribution-variability-bias" class="nav-link" data-scroll-target="#distribution-variability-bias">Distribution (variability / bias)</a></li>
+  <li><a href="#scatter-vs-reference" id="toc-scatter-vs-reference" class="nav-link" data-scroll-target="#scatter-vs-reference">Scatter vs reference</a></li>
+  <li><a href="#rolling-diagnostics-drift-thrugh-time" id="toc-rolling-diagnostics-drift-thrugh-time" class="nav-link" data-scroll-target="#rolling-diagnostics-drift-thrugh-time">Rolling diagnostics (drift thrugh time)</a></li>
+  <li><a href="#precipitation-event-agreement" id="toc-precipitation-event-agreement" class="nav-link" data-scroll-target="#precipitation-event-agreement">Precipitation event agreement</a></li>
+  <li><a href="#monthly-climatology-seasonal-structure" id="toc-monthly-climatology-seasonal-structure" class="nav-link" data-scroll-target="#monthly-climatology-seasonal-structure">Monthly climatology (seasonal structure)</a></li>
+  <li><a href="#seasonal-performance-nzsouthern-hemisphere" id="toc-seasonal-performance-nzsouthern-hemisphere" class="nav-link" data-scroll-target="#seasonal-performance-nzsouthern-hemisphere">Seasonal performance (NZ/Southern Hemisphere)</a></li>
+  <li><a href="#interactive-table" id="toc-interactive-table" class="nav-link" data-scroll-target="#interactive-table">Interactive table</a></li>
   </ul>
 </nav>
 </nav>
@@ -171,8 +178,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Meterological Lake Comparison</h1>
-<p class="subtitle lead">Rotorua overview</p>
+<h1 class="title">Rotorua demo</h1>
 </div>
 
 
@@ -195,27 +201,36 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/update.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
-</figure>
+<section id="site-data-sources" class="level2">
+<h2 class="anchored" data-anchor-id="site-data-sources">Site data sources</h2>
+<p>note add what kindof lat long system used_____</p>
+<p>Limnotrack Buoy (lat:-380550S Lon:1761653E) on lake, NIWA virtual climate station network (VCSN) grid NO:27879 lat:-38.075 lon:176.275, ERA5 statlite data for Lat:-38.114908 and Lon:176.316662, Observational data “Airport” station 1770 (lat:-38.10592 lon:176.31481), Obresvational data “Town” station 41077 (lat:-38.14635 lon:176.2578).</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 13
+   target var     subset     n   cor slope intercept    mae   rmse    ccc   bias
+   &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+ 1 ERA5   Temp_C  all_d…  5873 0.950 0.882     0.990   1.15   1.42 0.940  -0.533
+ 2 ERA5   Precip… all_d…  5829 0.741 0.873     3.12    4.16   8.87 0.713   2.62 
+ 3 ERA5   Precip… wet_d…  1799 0.674 0.745     7.33    9.05  14.2  0.652   4.10 
+ 4 ERA5   Wind_S… all_d…  5854 0.606 0.413     0.650   1.58   1.95 0.352  -1.49 
+ 5 ERA5   Wind_S… windy…   588 0.202 0.210     2.00    3.46   3.71 0.0310 -3.46 
+ 6 ERA5   RadSWD… all_d…    44 0.365 0.117   154.    197.   252.   0.212  -1.89 
+ 7 Buoy   Temp_C  all_d…  1225 0.934 0.806     3.58    1.39   1.82 0.892   1.03 
+ 8 Buoy   Precip… all_d…  1246 0.611 0.337     0.281   3.93  10.0  0.493  -2.99 
+ 9 Buoy   Precip… wet_d…   417 0.556 0.337     0.257  11.0   17.1  0.404  -9.41 
+10 Buoy   Wind_S… all_d…  1223 0.810 0.871     1.26    1.04   1.30 0.733   0.765
+# ℹ 14 more rows
+# ℹ 2 more variables: rel_bias &lt;dbl&gt;, wind_threshold &lt;dbl&gt;</code></pre>
 </div>
-<section id="project-description" class="level2">
-<h2 class="anchored" data-anchor-id="project-description">Project description</h2>
-<p>This project aims to take meteorological data in close proximity from different sources and evaluate their validity across variables and time.</p>
-<p>It assesses four main meterological parameters (precipitation, wind, radiation, temperature) for accuracy, stability and usability. This was developed for the use of lymnologists with the purpose of selecting data sources for differing projects and attempts to answer the question “what data to use and when?”. The data sources used are Limnotrack Buoy in-situ, NIWA virtual climate station network (VCSN), ERA5 statlite data and NIWAs Observational climate data.</p>
-<p>Lake Rotorua, North Island, New Zealand is used as a worked example thoughout.</p>
-</section>
-<section id="guide" class="level2">
-<h2 class="anchored" data-anchor-id="guide">Guide</h2>
-<p>This project takes your though…… Following the logical flow of….. Desision of what data sets to use will depend on intended outcome.</p>
+</div>
 </section>
 <section id="data-coverage" class="level2">
 <h2 class="anchored" data-anchor-id="data-coverage">Data coverage</h2>
 <div class="cell">
 <div class="cell-output-display">
-<div class="reactable html-widget html-fill-item" id="htmlwidget-42490db436c7331a2aed" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-42490db436c7331a2aed">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Dataset":["Reference","ERA5","Buoy","Town_40177","VCS_On"],"first_date":["2009-06-29","1990-01-01","2022-02-21","2015-09-24","1960-01-01"],"last_date":["2025-07-27","2025-08-31","2025-09-01","2025-11-28","2025-06-30"],"n_days":[5873,13027,1285,3654,23923]},"columns":[{"id":"Dataset","name":"Dataset","type":"character"},{"id":"first_date","name":"first_date","type":"Date"},{"id":"last_date","name":"last_date","type":"Date"},{"id":"n_days","name":"n_days","type":"numeric"}],"pagination":false,"striped":true,"dataKey":"d8d2af7c3801244e7aa77b03b185eae8"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+<div class="reactable html-widget html-fill-item" id="htmlwidget-b0c684a73f0027e56740" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-b0c684a73f0027e56740">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Dataset":["Buoy","ERA5","Reference","Town_40177","VCS_On"],"first_date":["2022-02-21","1990-01-01","2009-06-29","2015-09-24","1960-01-01"],"last_date":["2025-09-01","2025-08-31","2025-07-27","2025-11-28","2025-06-30"],"n_days":[1285,13027,5873,3654,23923]},"columns":[{"id":"Dataset","name":"Dataset","type":"character"},{"id":"first_date","name":"first_date","type":"Date"},{"id":"last_date","name":"last_date","type":"Date"},{"id":"n_days","name":"n_days","type":"numeric"}],"pagination":false,"striped":true,"dataKey":"94aff4237e95a73c1f91d12cb498a752"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
@@ -223,20 +238,326 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="metrics-table-reference-vs-targets">Metrics table (reference vs targets)</h2>
 <div class="cell">
 <div class="cell-output-display">
-<div class="reactable html-widget html-fill-item" id="htmlwidget-fd430eb6f4db7dcf027f" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-fd430eb6f4db7dcf027f">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"target":["ERA5","ERA5","ERA5","ERA5","ERA5","Buoy","Buoy","Buoy","Buoy","Buoy","Town_40177","Town_40177","Town_40177","Town_40177","Town_40177","VCS_On","VCS_On","VCS_On","VCS_On","VCS_On"],"var":["Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms"],"subset":["all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs"],"n":[5873,5829,1799,5854,588,1225,1246,417,1223,126,3519,3462,1101,3512,355,5846,5802,1789,5827,586],"cor":[0.950252726263742,0.741249024236475,0.67431636909125,0.606393155341196,0.202352666779504,0.933598027178203,0.610776596436927,0.555737937323425,0.809926695344059,0.512131858540458,0.993523541694969,0.927727505844174,0.908752364819289,0.884974987196444,0.727268238915944,0.914770965293676,0.947898015007699,0.928074207258292,0.822134183330596,0.425332331613507],"slope":[0.882440597429375,0.873042895451712,0.74450910126041,0.413238038168765,0.209763580348193,0.805782942997428,0.336701182510668,0.337291395166382,0.870599182210333,0.868163449925056,1.00166451159841,0.830816719267625,0.795081195311294,0.597634516035904,0.74585101846782,0.90166498186377,1.02463410075137,0.991222656419513,0.777390508576691,0.584731478239795],"intercept":[0.990114265176521,3.12251727307789,7.32500023937001,0.650308415288529,2.00137814653436,3.58134103102643,0.280888326973165,0.256896363571603,1.2624352833042,1.15436469613406,-0.013860360669776,0.487804562202073,1.67307840471515,0.684516044231292,-0.31724627206801,1.75419784752098,0.38475932953196,1.47974123074671,0.947923136517395,2.19211560546403],"mae":[1.15386341645304,4.16337519300051,9.04532406892718,1.57904988042364,3.46403401360544,1.38759702315078,3.93232143739968,11.0438369868106,1.03966835946834,1.17274062017934,0.354806576606159,1.45684575389948,4.12706630336058,0.891480637813212,2.09729577464789,1.41336360519805,1.36356428817649,3.98026830631638,0.700401578857045,1.20085324232082],"rmse":[1.41555448747477,8.86946127120353,14.2341676187537,1.95487627601514,3.70517131169121,1.82489677872555,10.0334222233155,17.1156148511674,1.30002817661153,1.42882604383569,0.479666914260097,4.0831868423009,6.82779687546213,1.1471362530857,2.23439590726947,1.78540246223107,3.67696698070302,6.47907281733944,0.932972445285637,1.50448306181108],"ccc":[0.939515902763934,0.713125950941946,0.651607296459391,0.352113960138051,0.0309773822460065,0.891663919382223,0.493187885727772,0.404469167514134,0.733170186549662,0.443303489207647,0.99348864500982,0.921905693753109,0.898860629964187,0.697054538771047,0.241273601778792,0.90869487971212,0.944125926435051,0.92287924486931,0.817678222425936,0.35120818455802],"bias":[-0.53343589580586,2.62003808543489,4.10320177876598,-1.48949538776905,-3.46403401360544,1.03079606831477,-2.99248601391118,-9.40593543285372,0.76525046661573,0.201678210350431,0.00803602166618504,-0.217331022530329,-0.970299727520436,-0.809578587699317,-2.09712676056338,0.477827095145039,0.482040675629093,1.36920067076579,0.135802299639609,-0.679317406143345],"rel_bias":[-4.11607092609458,66.1982540398086,32.5386805843303,-40.8438958103125,-50.0859908869824,7.84923150482587,-60.6381130807177,-64.5089812094997,19.9169469521525,2.79090339525698,0.0610879508001442,-5.2144263022205,-7.52191515578243,-21.8022656185899,-29.9448549375143,3.68130780022946,12.2064908084705,10.8719774171786,3.72246092996606,-9.82433279532475],"wind_threshold":["NA","NA","NA","NA",5.78,"NA","NA","NA","NA",6.06,"NA","NA","NA","NA",5.84,"NA","NA","NA","NA",5.78]},"columns":[{"id":"target","name":"target","type":"character"},{"id":"var","name":"var","type":"character"},{"id":"subset","name":"subset","type":"character"},{"id":"n","name":"n","type":"numeric"},{"id":"cor","name":"cor","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"slope","name":"slope","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"intercept","name":"intercept","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"mae","name":"mae","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"rmse","name":"rmse","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"ccc","name":"ccc","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"bias","name":"bias","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"rel_bias","name":"rel_bias","type":"numeric","format":{"cell":{"digits":1},"aggregated":{"digits":1}}},{"id":"wind_threshold","name":"wind_threshold","type":"numeric"}],"searchable":true,"defaultPageSize":8,"highlight":true,"dataKey":"6b62525af2c7009b803b32a6e75a4f46"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+<div class="reactable html-widget html-fill-item" id="htmlwidget-a4fd9d1023958da97e03" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-a4fd9d1023958da97e03">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"target":["ERA5","ERA5","ERA5","ERA5","ERA5","Buoy","Buoy","Buoy","Buoy","Buoy","Town_40177","Town_40177","Town_40177","Town_40177","Town_40177","VCS_On","VCS_On","VCS_On","VCS_On","VCS_On"],"var":["Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms"],"subset":["all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs"],"n":[5873,5829,1799,5854,588,1225,1246,417,1223,126,3519,3462,1101,3512,355,5846,5802,1789,5827,586],"cor":[0.950252726263742,0.741249024236475,0.67431636909125,0.606393155341196,0.202352666779504,0.933598027178203,0.610776596436927,0.555737937323425,0.809926695344059,0.512131858540458,0.993523541694969,0.927727505844174,0.908752364819289,0.884974987196444,0.727268238915944,0.914770965293676,0.947898015007699,0.928074207258292,0.822134183330596,0.425332331613507],"slope":[0.882440597429375,0.873042895451712,0.74450910126041,0.413238038168765,0.209763580348193,0.805782942997428,0.336701182510668,0.337291395166382,0.870599182210333,0.868163449925056,1.00166451159841,0.830816719267625,0.795081195311294,0.597634516035904,0.74585101846782,0.90166498186377,1.02463410075137,0.991222656419513,0.777390508576691,0.584731478239795],"intercept":[0.990114265176521,3.12251727307789,7.32500023937001,0.650308415288529,2.00137814653436,3.58134103102643,0.280888326973165,0.256896363571603,1.2624352833042,1.15436469613406,-0.013860360669776,0.487804562202073,1.67307840471515,0.684516044231292,-0.31724627206801,1.75419784752098,0.38475932953196,1.47974123074671,0.947923136517395,2.19211560546403],"mae":[1.15386341645304,4.16337519300051,9.04532406892718,1.57904988042364,3.46403401360544,1.38759702315078,3.93232143739968,11.0438369868106,1.03966835946834,1.17274062017934,0.354806576606159,1.45684575389948,4.12706630336058,0.891480637813212,2.09729577464789,1.41336360519805,1.36356428817649,3.98026830631638,0.700401578857045,1.20085324232082],"rmse":[1.41555448747477,8.86946127120353,14.2341676187537,1.95487627601514,3.70517131169121,1.82489677872555,10.0334222233155,17.1156148511674,1.30002817661153,1.42882604383569,0.479666914260097,4.0831868423009,6.82779687546213,1.1471362530857,2.23439590726947,1.78540246223107,3.67696698070302,6.47907281733944,0.932972445285637,1.50448306181108],"ccc":[0.939515902763934,0.713125950941946,0.651607296459391,0.352113960138051,0.0309773822460065,0.891663919382223,0.493187885727772,0.404469167514134,0.733170186549662,0.443303489207647,0.99348864500982,0.921905693753109,0.898860629964187,0.697054538771047,0.241273601778792,0.90869487971212,0.944125926435051,0.92287924486931,0.817678222425936,0.35120818455802],"bias":[-0.53343589580586,2.62003808543489,4.10320177876598,-1.48949538776905,-3.46403401360544,1.03079606831477,-2.99248601391118,-9.40593543285372,0.76525046661573,0.201678210350431,0.00803602166618504,-0.217331022530329,-0.970299727520436,-0.809578587699317,-2.09712676056338,0.477827095145039,0.482040675629093,1.36920067076579,0.135802299639609,-0.679317406143345],"rel_bias":[-4.11607092609458,66.1982540398086,32.5386805843303,-40.8438958103125,-50.0859908869824,7.84923150482587,-60.6381130807177,-64.5089812094997,19.9169469521525,2.79090339525698,0.0610879508001442,-5.2144263022205,-7.52191515578243,-21.8022656185899,-29.9448549375143,3.68130780022946,12.2064908084705,10.8719774171786,3.72246092996606,-9.82433279532475],"wind_threshold":["NA","NA","NA","NA",5.78,"NA","NA","NA","NA",6.06,"NA","NA","NA","NA",5.84,"NA","NA","NA","NA",5.78]},"columns":[{"id":"target","name":"target","type":"character"},{"id":"var","name":"var","type":"character"},{"id":"subset","name":"subset","type":"character"},{"id":"n","name":"n","type":"numeric"},{"id":"cor","name":"cor","type":"numeric"},{"id":"slope","name":"slope","type":"numeric"},{"id":"intercept","name":"intercept","type":"numeric"},{"id":"mae","name":"mae","type":"numeric"},{"id":"rmse","name":"rmse","type":"numeric"},{"id":"ccc","name":"ccc","type":"numeric"},{"id":"bias","name":"bias","type":"numeric"},{"id":"rel_bias","name":"rel_bias","type":"numeric"},{"id":"wind_threshold","name":"wind_threshold","type":"numeric"}],"searchable":true,"defaultPageSize":12,"highlight":true,"dataKey":"d36ca72d0804e2bbcceba58d26f7c52b"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
 <section id="time-series-overlays" class="level2">
 <h2 class="anchored" data-anchor-id="time-series-overlays">Time series overlays</h2>
 <div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>[[1]]
-
-[[2]]
-
-[[3]]</code></pre>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="precipitation-event-structure" class="level2">
+<h2 class="anchored" data-anchor-id="precipitation-event-structure">Precipitation event structure</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="distribution-variability-bias" class="level2">
+<h2 class="anchored" data-anchor-id="distribution-variability-bias">Distribution (variability / bias)</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="scatter-vs-reference" class="level2">
+<h2 class="anchored" data-anchor-id="scatter-vs-reference">Scatter vs reference</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="rolling-diagnostics-drift-thrugh-time" class="level2">
+<h2 class="anchored" data-anchor-id="rolling-diagnostics-drift-thrugh-time">Rolling diagnostics (drift thrugh time)</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-19-2.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-19-3.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-19-4.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-20-2.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-20-3.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-20-4.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-21-2.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-21-3.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-21-4.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="precipitation-event-agreement" class="level2">
+<h2 class="anchored" data-anchor-id="precipitation-event-agreement">Precipitation event agreement</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div class="reactable html-widget html-fill-item" id="htmlwidget-96fa511f55a79310e2a1" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-96fa511f55a79310e2a1">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"target":["ERA5","Buoy","Town_40177","VCS_On"],"var":["Precip_mm","Precip_mm","Precip_mm","Precip_mm"],"threshold":[0.1,0.1,0.1,0.1],"ref":["Airport_1770","Airport_1770","Airport_1770","Airport_1770"],"n":[5829,1246,3462,5802],"hits":[2562,356,1392,1985],"misses":[123,241,234,679],"false_alarms":[1832,53,125,49],"correct_neg":[1312,596,1711,3089],"POD":[0.954189944134078,0.596314907872697,0.856088560885609,0.74512012012012],"FAR":[0.41693218024579,0.12958435207824,0.0823994726433751,0.0240904621435595],"CSI":[0.567190613238875,0.547692307692308,0.794974300399772,0.731662366384077],"bias_score":[1.6364990689013,0.685092127303183,0.932964329643296,0.763513513513513]},"columns":[{"id":"target","name":"target","type":"character"},{"id":"var","name":"var","type":"character"},{"id":"threshold","name":"threshold","type":"numeric"},{"id":"ref","name":"ref","type":"character"},{"id":"n","name":"n","type":"numeric"},{"id":"hits","name":"hits","type":"numeric"},{"id":"misses","name":"misses","type":"numeric"},{"id":"false_alarms","name":"false_alarms","type":"numeric"},{"id":"correct_neg","name":"correct_neg","type":"numeric"},{"id":"POD","name":"POD","type":"numeric"},{"id":"FAR","name":"FAR","type":"numeric"},{"id":"CSI","name":"CSI","type":"numeric"},{"id":"bias_score","name":"bias_score","type":"numeric"}],"striped":true,"dataKey":"dfb76af3607b91fc7df4355b14125e53"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="monthly-climatology-seasonal-structure" class="level2">
+<h2 class="anchored" data-anchor-id="monthly-climatology-seasonal-structure">Monthly climatology (seasonal structure)</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="seasonal-performance-nzsouthern-hemisphere" class="level2">
+<h2 class="anchored" data-anchor-id="seasonal-performance-nzsouthern-hemisphere">Seasonal performance (NZ/Southern Hemisphere)</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="interactive-table" class="level2">
+<h2 class="anchored" data-anchor-id="interactive-table">Interactive table</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div class="reactable html-widget html-fill-item" id="htmlwidget-71cb0b811a785d378b19" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-71cb0b811a785d378b19">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Dataset":["Airport_1770","ERA5","Buoy","Town_40177","VCS_On"],"Date":["2025-07-27","2025-08-31","2025-09-01","2025-11-28","2025-06-30"],"Temp_C":[11.5857142857143,8.231,9.80763859722222,22.1,10.5],"Precip_mm":[0.2,24.029,0,"NA",0],"Wind_Spd_ms":[2.54,5.689,9.64310825442118,"NA",4.4],"RadSWD_Wm2":["NA",57.449,164.054703333333,"NA",63.6574074074074]},"columns":[{"id":"Dataset","name":"Dataset","type":"character"},{"id":"Date","name":"Date","type":"Date"},{"id":"Temp_C","name":"Temp_C","type":"numeric"},{"id":"Precip_mm","name":"Precip_mm","type":"numeric"},{"id":"Wind_Spd_ms","name":"Wind_Spd_ms","type":"numeric"},{"id":"RadSWD_Wm2","name":"RadSWD_Wm2","type":"numeric"}],"searchable":true,"defaultPageSize":5,"highlight":true,"striped":true,"dataKey":"a53f2081c9725cc1c19eca7798f704c5"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 

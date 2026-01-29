@@ -75,7 +75,7 @@ metrics_all <- purrr::imap_dfr(
   )
 )
 
-print(metrics_all)
+#print(metrics_all)
 
 # ============================================================
 # Plot helpers

@@ -34,9 +34,9 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 ```
 
 ```{r}
-# | echo: false
-# | message: false
-# | warning: false
+#| echo: false
+#| message: false
+#| warning: false
 library(glue)
 library(htmltools)
 library(gt)
@@ -75,6 +75,14 @@ target_names <- params$targets
 
 ref_df <- read_from_map(ref_name)
 targets_list <- setNames(lapply(target_names, read_from_map), target_names)
+
+# keep only variables present in reference and every target to avoid render errors
+vars_requested <- params$vars
+vars_available <- Reduce(
+  intersect,
+  c(list(names(ref_df)), lapply(targets_list, names))
+)
+vars <- intersect(vars_requested, vars_available)
 ```
 
 ## Data coverage

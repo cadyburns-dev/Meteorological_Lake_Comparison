@@ -99,8 +99,6 @@ vars_available <- Reduce(
   c(list(names(ref_df)), lapply(targets_list, names))
 )
 vars <- intersect(vars_requested, vars_available)
-
-vars
 ```
 
 ## Data coverage
