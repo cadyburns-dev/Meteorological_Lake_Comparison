@@ -105,30 +105,6 @@ vars
 
 ## Map
 
-```{r}
-
-library(osmdata)
-library(sf)
-library(tmap)
-
-lat <- params$lat
-lon <- params$lon
-
-# buffer box (very rough)
-bb <- c(lon - 0.08, lat - 0.05, lon + 0.08, lat + 0.05)
-
-osm_data <- opq(bbox = bb) |>
-  add_osm_feature(key = "natural", value = "water") |>
-  osmdata_sf()
-
-water <- osm_data$osm_multipolygons |> st_make_valid()
-
-tmap_mode("plot")
-tm_shape(water) +
-  tm_fill(alpha = 0.5) +
-  tm_borders()
-```
-
 ## Data coverage
 
 ```{r}
@@ -219,7 +195,7 @@ plot_distribution(ref_df, targets_list, "Temp_C")
 ```
 
 ```{r}
-plot_distribution(ref_df, targets_list, "wind_Spd_ms")
+plot_distribution(ref_df, targets_list, "Wind_Spd_ms")
 ```
 
 ```{r}
@@ -275,14 +251,14 @@ reactable(skill_precip, sortable = TRUE, striped = TRUE)
 ```{r}
 plot_event_outcomes(
   skill_precip,
-  title = paste0("Precip events (≥ ", precip_event_threshold, " mm/day): outcomes vs reference")
+  title = paste0("Precip events (≥= ", precip_event_threshold, " mm/day): outcomes vs reference")
 )
 ```
 
 ```{r}
 plot_event_skill_scores(
   skill_precip,
-  title = paste0("Precip events (≥ ", precip_event_threshold, " mm/day): skill vs reference")
+  title = paste0("Precip events (≥= ", precip_event_threshold, " mm/day): skill vs reference")
 )
 ```
 
@@ -297,7 +273,7 @@ plot_monthly_climatology(ref_df, targets_list, "Temp_C")
 ```
 
 ```{r}
-plot_monthly_climatology(ref_df, targets_list, "Temp_C")
+plot_monthly_climatology(ref_df, targets_list, "Wind_Spd_ms")
 ```
 
 ```{r}
