@@ -32,7 +32,7 @@ knitr::opts_chunk$set(
   warning = FALSE,
   fig.width = 10,
   fig.height = 6
-quarto render )
+)
 ```
 
 ```{r}

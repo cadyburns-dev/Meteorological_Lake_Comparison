@@ -18,8 +18,7 @@ params:
   window_days: 30
 ---
 
-
-
+This tab focuses on time-series comparisons so you can visually check alignment and stability across datasets.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
@@ -31,16 +30,101 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Metrics (all days)
+```{r}
+#| echo: false
+library(glue)
+library(htmltools)
+library(gt)
+library(plotly)
+library(here)
+library(tidyverse)
+library(lubridate)
+library(slider)
+library(reactable)
 
-## Precipitation wet days table
+source(here("scripts", "01_metrics_helpers.R"))
+source(here("scripts", "03_analysis_helpers.R"))
+source(here("scripts", "04_analysis_plotting.R"))
+```
 
-## Windy days table (top 10% + threshold)
+```{r}
+#| echo: false
+# Data setup shared with rotorua.qmd
+file_map <- list(
+  ERA5         = here("data/processed/rotorua_era5_daily.csv"),
+  Buoy         = here("data/processed/rotorua_buoy_daily.csv"),
+  Town_40177   = here("data/processed/rotorua_town_40177_daily.csv"),
+  VCS_On       = here("data/processed/rotorua_vcs_on_daily.csv"),
+  Airport_1770 = here("data/processed/rotorua_airport_1770_daily.csv")
+)
 
-## Plots
+read_from_map <- function(name) {
+  readr::read_csv(file_map[[name]], show_col_types = FALSE) |>
+    mutate(Date = as.Date(Date))
+}
 
-### Scatter vs reference + 1:1 line
+ref_name <- params$reference
+target_names <- params$targets
 
-### time series overlays
+ref_df <- read_from_map(ref_name)
+targets_list <- setNames(lapply(target_names, read_from_map), target_names)
 
-### Distribution (density/hits)
+vars_requested <- params$vars
+vars_available <- Reduce(
+  intersect,
+  c(list(names(ref_df)), lapply(targets_list, names))
+)
+vars <- intersect(vars_requested, vars_available)
+```
+
+## Time-series overlays
+
+Each plot shows the reference (Airport) against targets for a single variable; use hover tooltips to inspect dates and values.
+
+```{r}
+plot_timeseries_line(ref_df, targets_list, "Temp_C")
+```
+
+```{r}
+plot_timeseries_line(ref_df, targets_list, "Wind_Spd_ms")
+```
+
+```{r}
+plot_timeseries_line(ref_df, targets_list, "Precip_mm")
+```
+
+```{r}
+if ("RadSWD_Wm2" %in% vars) plot_timeseries_line(ref_df, targets_list, "RadSWD_Wm2")
+```
+
+## Latest daily snapshot
+
+Quick look at the most recent reported day from each dataset.
+
+```{r}
+latest_table <- map_dfr(
+  setNames(c(params$reference, params$targets), c("Reference", params$targets)),
+  function(name) {
+    df <- read_from_map(name) |> filter(!is.na(Date))
+    last_row <- slice_max(df, Date, n = 1, with_ties = FALSE)
+    tibble(
+      Dataset    = name,
+      Date       = last_row$Date,
+      Temp_C     = last_row$Temp_C,
+      Precip_mm  = last_row$Precip_mm,
+      Wind_Spd_ms= last_row$Wind_Spd_ms,
+      RadSWD_Wm2 = last_row$RadSWD_Wm2
+    )
+  }
+)
+
+reactable(
+  latest_table,
+  searchable = TRUE,
+  sortable = TRUE,
+  pagination = TRUE,
+  striped = TRUE,
+  highlight = TRUE,
+  defaultPageSize = 5
+)
+```

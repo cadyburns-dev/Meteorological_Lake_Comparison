@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Variable diagnostics – Meterological Lake Comparison</title>
+<title>Metrics and Statistics – Meterological Lake Comparison</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -131,11 +131,11 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Seasonal and event behaviour</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./Results.html" aria-current="page"> 
+    <a class="nav-link" href="./Results.html"> 
 <span class="menu-text">Variable diagnostics</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./metrics_stats.html"> 
+    <a class="nav-link active" href="./metrics_stats.html" aria-current="page"> 
 <span class="menu-text">Metrics &amp; stats</span></a>
   </li>  
   <li class="nav-item">
@@ -157,8 +157,11 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of Content</h2>
    
   <ul>
-  <li><a href="#time-series-overlays" id="toc-time-series-overlays" class="nav-link active" data-scroll-target="#time-series-overlays">Time-series overlays</a></li>
-  <li><a href="#latest-daily-snapshot" id="toc-latest-daily-snapshot" class="nav-link" data-scroll-target="#latest-daily-snapshot">Latest daily snapshot</a></li>
+  <li><a href="#coverage-summary" id="toc-coverage-summary" class="nav-link active" data-scroll-target="#coverage-summary">Coverage summary</a></li>
+  <li><a href="#metrics-table-mae-rmse-ccc-bias" id="toc-metrics-table-mae-rmse-ccc-bias" class="nav-link" data-scroll-target="#metrics-table-mae-rmse-ccc-bias">Metrics table (MAE, RMSE, CCC, bias)</a></li>
+  <li><a href="#distribution-and-bias-shape" id="toc-distribution-and-bias-shape" class="nav-link" data-scroll-target="#distribution-and-bias-shape">Distribution and bias shape</a></li>
+  <li><a href="#scatter-vs-reference-11" id="toc-scatter-vs-reference-11" class="nav-link" data-scroll-target="#scatter-vs-reference-11">Scatter vs reference (1:1)</a></li>
+  <li><a href="#rolling-diagnostics-drift-through-time" id="toc-rolling-diagnostics-drift-through-time" class="nav-link" data-scroll-target="#rolling-diagnostics-drift-through-time">Rolling diagnostics (drift through time)</a></li>
   </ul>
 </nav>
 </nav>
@@ -171,7 +174,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Variable diagnostics</h1>
+<h1 class="title">Metrics and Statistics</h1>
 </div>
 
 
@@ -188,15 +191,35 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This tab focuses on time-series comparisons so you can visually check alignment and stability across datasets.</p>
-<section id="time-series-overlays" class="level2">
-<h2 class="anchored" data-anchor-id="time-series-overlays">Time-series overlays</h2>
-<p>Each plot shows the reference (Airport) against targets for a single variable; use hover tooltips to inspect dates and values.</p>
+<p>This tab gathers the quantitative diagnostics (coverage, MAE/RMSE/CCC/bias, distributions, scatter, rolling drift). Use it when you want numbers and concise plots for statistical agreement.</p>
+<section id="coverage-summary" class="level2">
+<h2 class="anchored" data-anchor-id="coverage-summary">Coverage summary</h2>
+<p>Shows the available date range and count per dataset.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="reactable html-widget html-fill-item" id="htmlwidget-333bc2f2a813ed7685b3" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-333bc2f2a813ed7685b3">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Dataset":["Buoy","ERA5","Reference","Town_40177","VCS_On"],"first_date":["2022-02-21","1990-01-01","2009-06-29","2015-09-24","1960-01-01"],"last_date":["2025-09-01","2025-08-31","2025-07-27","2025-11-28","2025-06-30"],"n_days":[1285,13027,5873,3654,23923]},"columns":[{"id":"Dataset","name":"Dataset","type":"character"},{"id":"first_date","name":"first_date","type":"Date"},{"id":"last_date","name":"last_date","type":"Date"},{"id":"n_days","name":"n_days","type":"numeric"}],"pagination":false,"striped":true,"dataKey":"94aff4237e95a73c1f91d12cb498a752"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="metrics-table-mae-rmse-ccc-bias" class="level2">
+<h2 class="anchored" data-anchor-id="metrics-table-mae-rmse-ccc-bias">Metrics table (MAE, RMSE, CCC, bias)</h2>
+<p>Includes all days plus wet-day and windy-day subsets where relevant. Sort/filter to focus on a variable or subset.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="reactable html-widget html-fill-item" id="htmlwidget-18b3c7663d8e2779b79a" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-18b3c7663d8e2779b79a">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"target":["ERA5","ERA5","ERA5","ERA5","ERA5","Buoy","Buoy","Buoy","Buoy","Buoy","Town_40177","Town_40177","Town_40177","Town_40177","Town_40177","VCS_On","VCS_On","VCS_On","VCS_On","VCS_On"],"var":["Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms"],"subset":["all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs"],"n":[5873,5829,1799,5854,588,1225,1246,417,1223,126,3519,3462,1101,3512,355,5846,5802,1789,5827,586],"cor":[0.950252726263742,0.741249024236475,0.67431636909125,0.606393155341196,0.202352666779504,0.933598027178203,0.610776596436927,0.555737937323425,0.809926695344059,0.512131858540458,0.993523541694969,0.927727505844174,0.908752364819289,0.884974987196444,0.727268238915944,0.914770965293676,0.947898015007699,0.928074207258292,0.822134183330596,0.425332331613507],"slope":[0.882440597429375,0.873042895451712,0.74450910126041,0.413238038168765,0.209763580348193,0.805782942997428,0.336701182510668,0.337291395166382,0.870599182210333,0.868163449925056,1.00166451159841,0.830816719267625,0.795081195311294,0.597634516035904,0.74585101846782,0.90166498186377,1.02463410075137,0.991222656419513,0.777390508576691,0.584731478239795],"intercept":[0.990114265176521,3.12251727307789,7.32500023937001,0.650308415288529,2.00137814653436,3.58134103102643,0.280888326973165,0.256896363571603,1.2624352833042,1.15436469613406,-0.013860360669776,0.487804562202073,1.67307840471515,0.684516044231292,-0.31724627206801,1.75419784752098,0.38475932953196,1.47974123074671,0.947923136517395,2.19211560546403],"mae":[1.15386341645304,4.16337519300051,9.04532406892718,1.57904988042364,3.46403401360544,1.38759702315078,3.93232143739968,11.0438369868106,1.03966835946834,1.17274062017934,0.354806576606159,1.45684575389948,4.12706630336058,0.891480637813212,2.09729577464789,1.41336360519805,1.36356428817649,3.98026830631638,0.700401578857045,1.20085324232082],"rmse":[1.41555448747477,8.86946127120353,14.2341676187537,1.95487627601514,3.70517131169121,1.82489677872555,10.0334222233155,17.1156148511674,1.30002817661153,1.42882604383569,0.479666914260097,4.0831868423009,6.82779687546213,1.1471362530857,2.23439590726947,1.78540246223107,3.67696698070302,6.47907281733944,0.932972445285637,1.50448306181108],"ccc":[0.939515902763934,0.713125950941946,0.651607296459391,0.352113960138051,0.0309773822460065,0.891663919382223,0.493187885727772,0.404469167514134,0.733170186549662,0.443303489207647,0.99348864500982,0.921905693753109,0.898860629964187,0.697054538771047,0.241273601778792,0.90869487971212,0.944125926435051,0.92287924486931,0.817678222425936,0.35120818455802],"bias":[-0.53343589580586,2.62003808543489,4.10320177876598,-1.48949538776905,-3.46403401360544,1.03079606831477,-2.99248601391118,-9.40593543285372,0.76525046661573,0.201678210350431,0.00803602166618504,-0.217331022530329,-0.970299727520436,-0.809578587699317,-2.09712676056338,0.477827095145039,0.482040675629093,1.36920067076579,0.135802299639609,-0.679317406143345],"rel_bias":[-4.11607092609458,66.1982540398086,32.5386805843303,-40.8438958103125,-50.0859908869824,7.84923150482587,-60.6381130807177,-64.5089812094997,19.9169469521525,2.79090339525698,0.0610879508001442,-5.2144263022205,-7.52191515578243,-21.8022656185899,-29.9448549375143,3.68130780022946,12.2064908084705,10.8719774171786,3.72246092996606,-9.82433279532475],"wind_threshold":["NA","NA","NA","NA",5.78,"NA","NA","NA","NA",6.06,"NA","NA","NA","NA",5.84,"NA","NA","NA","NA",5.78]},"columns":[{"id":"target","name":"target","type":"character"},{"id":"var","name":"var","type":"character"},{"id":"subset","name":"subset","type":"character"},{"id":"n","name":"n","type":"numeric"},{"id":"cor","name":"cor","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"slope","name":"slope","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"intercept","name":"intercept","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"mae","name":"mae","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"rmse","name":"rmse","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"ccc","name":"ccc","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"bias","name":"bias","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"rel_bias","name":"rel_bias","type":"numeric","format":{"cell":{"digits":1},"aggregated":{"digits":1}}},{"id":"wind_threshold","name":"wind_threshold","type":"numeric"}],"searchable":true,"defaultPageSize":12,"highlight":true,"dataKey":"6b62525af2c7009b803b32a6e75a4f46"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="distribution-and-bias-shape" class="level2">
+<h2 class="anchored" data-anchor-id="distribution-and-bias-shape">Distribution and bias shape</h2>
+<p>Kernel density overlays show bias or spread differences; look for shifts or heavier tails.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Results_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="960"></p>
+<p><img src="metrics_stats_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -205,7 +228,7 @@ ul.task-list li input[type="checkbox"] {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Results_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="960"></p>
+<p><img src="metrics_stats_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -214,19 +237,134 @@ ul.task-list li input[type="checkbox"] {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Results_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="960"></p>
+<p><img src="metrics_stats_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="latest-daily-snapshot" class="level2">
-<h2 class="anchored" data-anchor-id="latest-daily-snapshot">Latest daily snapshot</h2>
-<p>Quick look at the most recent reported day from each dataset.</p>
+<section id="scatter-vs-reference-11" class="level2">
+<h2 class="anchored" data-anchor-id="scatter-vs-reference-11">Scatter vs reference (1:1)</h2>
+<p>Check linear agreement and systematic bias; points should cluster along the 1:1 line.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div class="reactable html-widget html-fill-item" id="htmlwidget-11b4e928cc19d4115fd9" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-11b4e928cc19d4115fd9">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Dataset":["Airport_1770","ERA5","Buoy","Town_40177","VCS_On"],"Date":["2025-07-27","2025-08-31","2025-09-01","2025-11-28","2025-06-30"],"Temp_C":[11.5857142857143,8.231,9.80763859722222,22.1,10.5],"Precip_mm":[0.2,24.029,0,"NA",0],"Wind_Spd_ms":[2.54,5.689,9.64310825442118,"NA",4.4],"RadSWD_Wm2":["NA",57.449,164.054703333333,"NA",63.6574074074074]},"columns":[{"id":"Dataset","name":"Dataset","type":"character"},{"id":"Date","name":"Date","type":"Date"},{"id":"Temp_C","name":"Temp_C","type":"numeric"},{"id":"Precip_mm","name":"Precip_mm","type":"numeric"},{"id":"Wind_Spd_ms","name":"Wind_Spd_ms","type":"numeric"},{"id":"RadSWD_Wm2","name":"RadSWD_Wm2","type":"numeric"}],"searchable":true,"defaultPageSize":5,"highlight":true,"striped":true,"dataKey":"a53f2081c9725cc1c19eca7798f704c5"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+<div>
+<figure class="figure">
+<p><img src="metrics_stats_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="metrics_stats_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="metrics_stats_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="rolling-diagnostics-drift-through-time" class="level2">
+<h2 class="anchored" data-anchor-id="rolling-diagnostics-drift-through-time">Rolling diagnostics (drift through time)</h2>
+<p>These track moving-window bias/CCC to surface gradual timing offsets or seasonal drifts.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="metrics_stats_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="metrics_stats_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="metrics_stats_files/figure-html/unnamed-chunk-12-3.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="metrics_stats_files/figure-html/unnamed-chunk-12-4.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="metrics_stats_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="metrics_stats_files/figure-html/unnamed-chunk-13-2.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="metrics_stats_files/figure-html/unnamed-chunk-13-3.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="metrics_stats_files/figure-html/unnamed-chunk-13-4.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="metrics_stats_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="metrics_stats_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="metrics_stats_files/figure-html/unnamed-chunk-14-3.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="metrics_stats_files/figure-html/unnamed-chunk-14-4.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
 </div>
 </div>
 

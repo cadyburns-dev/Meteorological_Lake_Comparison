@@ -1,14 +1,183 @@
 ---
-title: "Seasonal and event behaviour"
+title: "Seasonal and Event Behaviour"
 format: html
+params:
+  lake_name: "Lake Rotorua"
+  lat: -38.114908
+  lon: 176.316662
+  buffer_km: 10
+  lake_id: "rotorua"
+  reference: "Airport_1770"
+  targets: ["ERA5", "Buoy", "Town_40177", "VCS_On"]
+  vars: ["Temp_C", "Precip_mm", "Wind_Spd_ms", "RadSWD_Wm2"]
+  wet_threshold_mm: 1
+  precip_event_threshold: 0.1
+  windy_top_pct: 0.10
+  windy_threshold_ms: 10
+  window_days: 30
 ---
 
-## How do datasets behave relative to each other?
+This page focuses on behaviour: when datasets agree on events, where they miss each other (zeros vs non-zeros, timing offsets, extremes), and how seasonality shows up.
 
-## Zero vs non-zero precipitation disagreement 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  fig.width = 10,
+  fig.height = 6
+)
+```
 
-## Wind detection mismach 
+```{r}
+#| echo: false
+library(glue)
+library(htmltools)
+library(gt)
+library(plotly)
+library(here)
+library(tidyverse)
+library(lubridate)
+library(slider)
+library(reactable)
 
-## Timing offsets 
+# Source shared helpers
+source(here("scripts", "01_metrics_helpers.R"))
+source(here("scripts", "03_analysis_helpers.R"))
+source(here("scripts", "04_analysis_plotting.R"))
+```
 
-## Over/under-capture of extremes
+```{r}
+#| echo: false
+# Data setup (mirrors rotorua.qmd)
+file_map <- list(
+  ERA5         = here("data/processed/rotorua_era5_daily.csv"),
+  Buoy         = here("data/processed/rotorua_buoy_daily.csv"),
+  Town_40177   = here("data/processed/rotorua_town_40177_daily.csv"),
+  VCS_On       = here("data/processed/rotorua_vcs_on_daily.csv"),
+  Airport_1770 = here("data/processed/rotorua_airport_1770_daily.csv")
+)
+
+read_from_map <- function(name) {
+  readr::read_csv(file_map[[name]], show_col_types = FALSE) |>
+    mutate(Date = as.Date(Date))
+}
+
+ref_name <- params$reference
+target_names <- params$targets
+
+ref_df <- read_from_map(ref_name)
+targets_list <- setNames(lapply(target_names, read_from_map), target_names)
+
+wet_threshold_mm <- params$wet_threshold_mm
+precip_event_threshold <- params$precip_event_threshold
+windy_top_pct <- params$windy_top_pct
+windy_threshold_ms <- params$windy_threshold_ms
+window_days <- params$window_days
+
+# only keep variables present in all datasets to prevent render errors
+vars_requested <- params$vars
+vars_available <- Reduce(
+  intersect,
+  c(list(names(ref_df)), lapply(targets_list, names))
+)
+vars <- intersect(vars_requested, vars_available)
+```
+
+## Precipitation event structure
+
+These plots show how precipitation volumes and timing align across datasets.
+
+```{r}
+plot_precip_hydrograph(ref_df, targets_list, show_7day_sum = TRUE)
+```
+
+```{r}
+plot_precip_cdf(ref_df, targets_list)
+```
+
+```{r}
+plot_precip_wetday_distribution(ref_df, targets_list, threshold_mm = wet_threshold_mm)
+```
+
+## Event detection and mismatches
+
+Use these to spot zero vs non‑zero disagreements, misses/false alarms, and timing offsets during wet events.
+
+```{r}
+#| echo: false
+skill_precip <- event_skill_all_targets(
+  ref_df, targets_list,
+  var = "Precip_mm",
+  threshold = precip_event_threshold,
+  direction = ">="
+)
+
+reactable(
+  skill_precip,
+  sortable = TRUE,
+  striped = TRUE,
+  pagination = FALSE,
+  highlight = TRUE,
+  defaultPageSize = 10
+)
+```
+
+```{r}
+plot_event_outcomes(
+  skill_precip,
+  title = paste0("Precip events (\u2265 ", precip_event_threshold, " mm/day): outcomes vs reference")
+)
+```
+
+```{r}
+plot_event_skill_scores(
+  skill_precip,
+  title = paste0("Precip events (\u2265 ", precip_event_threshold, " mm/day): skill vs reference")
+)
+```
+
+```{r}
+plot_false_alarm_magnitude(ref_df, targets_list, threshold_mm = precip_event_threshold)
+```
+
+## Wind and precipitation timing drifts
+
+Rolling diagnostics reveal gradual offsets or drift through time (look for breaks away from 0 bias or changing correlation).
+
+```{r}
+purrr::iwalk(targets_list, ~ print(plot_rolling_diagnostics(ref_df, .x, .y, "Wind_Spd_ms", window_days = window_days)))
+```
+
+```{r}
+purrr::iwalk(targets_list, ~ print(plot_rolling_diagnostics(ref_df, .x, .y, "Precip_mm", window_days = window_days)))
+```
+
+## Seasonal behaviour
+
+Climatology and seasonal bias plots highlight over/under-capture of extremes across the year.
+
+```{r}
+plot_monthly_climatology(ref_df, targets_list, "Temp_C")
+```
+
+```{r}
+plot_monthly_climatology(ref_df, targets_list, "Wind_Spd_ms")
+```
+
+```{r}
+plot_monthly_climatology(ref_df, targets_list, "Precip_mm")
+```
+
+```{r}
+season_defs <- season_defs_default
+plot_seasonal_bias(ref_df, targets_list, "Temp_C", season_defs = season_defs)
+```
+
+```{r}
+plot_seasonal_scatter(ref_df, targets_list, "Wind_Spd_ms", season_defs = season_defs)
+```
+
+```{r}
+plot_seasonal_scatter(ref_df, targets_list, "Precip_mm", season_defs = season_defs)
+```

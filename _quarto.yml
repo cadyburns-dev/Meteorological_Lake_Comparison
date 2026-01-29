@@ -19,6 +19,8 @@ website:
         href: Behaviour.qmd
       - text: "Variable diagnostics"
         href: Results.qmd
+      - text: "Metrics & stats"
+        href: metrics_stats.qmd
       - text: "Reproducibility"
         href: Reproducibility.qmd
 

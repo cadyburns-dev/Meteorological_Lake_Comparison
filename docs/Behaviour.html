@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Seasonal and event behaviour – Meterological Lake Comparison</title>
+<title>Seasonal and Event Behaviour – Meterological Lake Comparison</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -68,6 +68,26 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script src="site_libs/core-js-2.5.3/shim.min.js"></script>
+
+<script src="site_libs/react-18.2.0/react.min.js"></script>
+
+<script src="site_libs/react-18.2.0/react-dom.min.js"></script>
+
+<script src="site_libs/reactwidget-2.0.0/react-tools.js"></script>
+
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+<link href="site_libs/reactable-0.4.5/reactable.css" rel="stylesheet">
+
+<script src="site_libs/reactable-binding-0.4.5/reactable.js"></script>
+
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
 
 
 <link rel="stylesheet" href="custom.css">
@@ -112,7 +132,11 @@ ul.task-list li input[type="checkbox"] {
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./Results.html"> 
-<span class="menu-text">Results</span></a>
+<span class="menu-text">Variable diagnostics</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./metrics_stats.html"> 
+<span class="menu-text">Metrics &amp; stats</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./Reproducibility.html"> 
@@ -133,11 +157,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of Content</h2>
    
   <ul>
-  <li><a href="#how-do-datasets-behave-relative-to-each-other" id="toc-how-do-datasets-behave-relative-to-each-other" class="nav-link active" data-scroll-target="#how-do-datasets-behave-relative-to-each-other">How do datasets behave relative to each other?</a></li>
-  <li><a href="#zero-vs-non-zero-precipitation-disagreement" id="toc-zero-vs-non-zero-precipitation-disagreement" class="nav-link" data-scroll-target="#zero-vs-non-zero-precipitation-disagreement">Zero vs non-zero precipitation disagreement</a></li>
-  <li><a href="#wind-detection-mismach" id="toc-wind-detection-mismach" class="nav-link" data-scroll-target="#wind-detection-mismach">Wind detection mismach</a></li>
-  <li><a href="#timing-offsets" id="toc-timing-offsets" class="nav-link" data-scroll-target="#timing-offsets">Timing offsets</a></li>
-  <li><a href="#overunder-capture-of-extremes" id="toc-overunder-capture-of-extremes" class="nav-link" data-scroll-target="#overunder-capture-of-extremes">Over/under-capture of extremes</a></li>
+  <li><a href="#precipitation-event-structure" id="toc-precipitation-event-structure" class="nav-link active" data-scroll-target="#precipitation-event-structure">Precipitation event structure</a></li>
+  <li><a href="#event-detection-and-mismatches" id="toc-event-detection-and-mismatches" class="nav-link" data-scroll-target="#event-detection-and-mismatches">Event detection and mismatches</a></li>
+  <li><a href="#wind-and-precipitation-timing-drifts" id="toc-wind-and-precipitation-timing-drifts" class="nav-link" data-scroll-target="#wind-and-precipitation-timing-drifts">Wind and precipitation timing drifts</a></li>
+  <li><a href="#seasonal-behaviour" id="toc-seasonal-behaviour" class="nav-link" data-scroll-target="#seasonal-behaviour">Seasonal behaviour</a></li>
   </ul>
 </nav>
 </nav>
@@ -150,7 +173,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Seasonal and event behaviour</h1>
+<h1 class="title">Seasonal and Event Behaviour</h1>
 </div>
 
 
@@ -167,20 +190,196 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="how-do-datasets-behave-relative-to-each-other" class="level2">
-<h2 class="anchored" data-anchor-id="how-do-datasets-behave-relative-to-each-other">How do datasets behave relative to each other?</h2>
+<p>This page focuses on behaviour: when datasets agree on events, where they miss each other (zeros vs non-zeros, timing offsets, extremes), and how seasonality shows up.</p>
+<section id="precipitation-event-structure" class="level2">
+<h2 class="anchored" data-anchor-id="precipitation-event-structure">Precipitation event structure</h2>
+<p>These plots show how precipitation volumes and timing align across datasets.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Behaviour_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Behaviour_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Behaviour_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="zero-vs-non-zero-precipitation-disagreement" class="level2">
-<h2 class="anchored" data-anchor-id="zero-vs-non-zero-precipitation-disagreement">Zero vs non-zero precipitation disagreement</h2>
+<section id="event-detection-and-mismatches" class="level2">
+<h2 class="anchored" data-anchor-id="event-detection-and-mismatches">Event detection and mismatches</h2>
+<p>Use these to spot zero vs non‑zero disagreements, misses/false alarms, and timing offsets during wet events.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="reactable html-widget html-fill-item" id="htmlwidget-e24a4d42d465875b5bc8" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-e24a4d42d465875b5bc8">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"target":["ERA5","Buoy","Town_40177","VCS_On"],"var":["Precip_mm","Precip_mm","Precip_mm","Precip_mm"],"threshold":[0.1,0.1,0.1,0.1],"ref":["Airport_1770","Airport_1770","Airport_1770","Airport_1770"],"n":[5829,1246,3462,5802],"hits":[2562,356,1392,1985],"misses":[123,241,234,679],"false_alarms":[1832,53,125,49],"correct_neg":[1312,596,1711,3089],"POD":[0.954189944134078,0.596314907872697,0.856088560885609,0.74512012012012],"FAR":[0.41693218024579,0.12958435207824,0.0823994726433751,0.0240904621435595],"CSI":[0.567190613238875,0.547692307692308,0.794974300399772,0.731662366384077],"bias_score":[1.6364990689013,0.685092127303183,0.932964329643296,0.763513513513513]},"columns":[{"id":"target","name":"target","type":"character"},{"id":"var","name":"var","type":"character"},{"id":"threshold","name":"threshold","type":"numeric"},{"id":"ref","name":"ref","type":"character"},{"id":"n","name":"n","type":"numeric"},{"id":"hits","name":"hits","type":"numeric"},{"id":"misses","name":"misses","type":"numeric"},{"id":"false_alarms","name":"false_alarms","type":"numeric"},{"id":"correct_neg","name":"correct_neg","type":"numeric"},{"id":"POD","name":"POD","type":"numeric"},{"id":"FAR","name":"FAR","type":"numeric"},{"id":"CSI","name":"CSI","type":"numeric"},{"id":"bias_score","name":"bias_score","type":"numeric"}],"pagination":false,"defaultPageSize":10,"highlight":true,"striped":true,"dataKey":"dfb76af3607b91fc7df4355b14125e53"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Behaviour_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Behaviour_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Behaviour_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="wind-detection-mismach" class="level2">
-<h2 class="anchored" data-anchor-id="wind-detection-mismach">Wind detection mismach</h2>
+<section id="wind-and-precipitation-timing-drifts" class="level2">
+<h2 class="anchored" data-anchor-id="wind-and-precipitation-timing-drifts">Wind and precipitation timing drifts</h2>
+<p>Rolling diagnostics reveal gradual offsets or drift through time (look for breaks away from 0 bias or changing correlation).</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Behaviour_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Behaviour_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Behaviour_files/figure-html/unnamed-chunk-10-3.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Behaviour_files/figure-html/unnamed-chunk-10-4.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Behaviour_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Behaviour_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Behaviour_files/figure-html/unnamed-chunk-11-3.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Behaviour_files/figure-html/unnamed-chunk-11-4.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="timing-offsets" class="level2">
-<h2 class="anchored" data-anchor-id="timing-offsets">Timing offsets</h2>
-</section>
-<section id="overunder-capture-of-extremes" class="level2">
-<h2 class="anchored" data-anchor-id="overunder-capture-of-extremes">Over/under-capture of extremes</h2>
+<section id="seasonal-behaviour" class="level2">
+<h2 class="anchored" data-anchor-id="seasonal-behaviour">Seasonal behaviour</h2>
+<p>Climatology and seasonal bias plots highlight over/under-capture of extremes across the year.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Behaviour_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Behaviour_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Behaviour_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Behaviour_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Behaviour_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Behaviour_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
 
 
 </section>
