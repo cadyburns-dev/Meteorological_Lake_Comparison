@@ -1,6 +1,7 @@
-------------------------------------------------------------------------
-
-title: "Meterological Source Comparison" Subtitle: "Seasonal and event behaviour" format: html ---
+---
+title: "Seasonal and event behaviour"
+format: html
+---
 
 ## How do datasets behave relative to each other?
 

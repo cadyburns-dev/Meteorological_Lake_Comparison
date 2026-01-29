@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Seasonal and event behaviour – Meterological Lake Comparison</title>
+<title>Results – Meterological Lake Comparison</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -107,11 +107,11 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Methods</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./Behaviour.html" aria-current="page"> 
+    <a class="nav-link" href="./Behaviour.html"> 
 <span class="menu-text">Behaviour</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./Results.html"> 
+    <a class="nav-link active" href="./Results.html" aria-current="page"> 
 <span class="menu-text">Results</span></a>
   </li>  
   <li class="nav-item">
@@ -133,11 +133,15 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of Content</h2>
    
   <ul>
-  <li><a href="#how-do-datasets-behave-relative-to-each-other" id="toc-how-do-datasets-behave-relative-to-each-other" class="nav-link active" data-scroll-target="#how-do-datasets-behave-relative-to-each-other">How do datasets behave relative to each other?</a></li>
-  <li><a href="#zero-vs-non-zero-precipitation-disagreement" id="toc-zero-vs-non-zero-precipitation-disagreement" class="nav-link" data-scroll-target="#zero-vs-non-zero-precipitation-disagreement">Zero vs non-zero precipitation disagreement</a></li>
-  <li><a href="#wind-detection-mismach" id="toc-wind-detection-mismach" class="nav-link" data-scroll-target="#wind-detection-mismach">Wind detection mismach</a></li>
-  <li><a href="#timing-offsets" id="toc-timing-offsets" class="nav-link" data-scroll-target="#timing-offsets">Timing offsets</a></li>
-  <li><a href="#overunder-capture-of-extremes" id="toc-overunder-capture-of-extremes" class="nav-link" data-scroll-target="#overunder-capture-of-extremes">Over/under-capture of extremes</a></li>
+  <li><a href="#metrics-all-days" id="toc-metrics-all-days" class="nav-link active" data-scroll-target="#metrics-all-days">Metrics (all days)</a></li>
+  <li><a href="#precipitation-wet-days-table" id="toc-precipitation-wet-days-table" class="nav-link" data-scroll-target="#precipitation-wet-days-table">Precipitation wet days table</a></li>
+  <li><a href="#windy-days-table-top-10-threshold" id="toc-windy-days-table-top-10-threshold" class="nav-link" data-scroll-target="#windy-days-table-top-10-threshold">Windy days table (top 10% + threshold)</a></li>
+  <li><a href="#plots" id="toc-plots" class="nav-link" data-scroll-target="#plots">Plots</a>
+  <ul class="collapse">
+  <li><a href="#scatter-vs-reference-11-line" id="toc-scatter-vs-reference-11-line" class="nav-link" data-scroll-target="#scatter-vs-reference-11-line">Scatter vs reference + 1:1 line</a></li>
+  <li><a href="#time-series-overlays" id="toc-time-series-overlays" class="nav-link" data-scroll-target="#time-series-overlays">time series overlays</a></li>
+  <li><a href="#distribution-densityhits" id="toc-distribution-densityhits" class="nav-link" data-scroll-target="#distribution-densityhits">Distribution (density/hits)</a></li>
+  </ul></li>
   </ul>
 </nav>
 </nav>
@@ -150,7 +154,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Seasonal and event behaviour</h1>
+<h1 class="title">Results</h1>
 </div>
 
 
@@ -167,22 +171,29 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="how-do-datasets-behave-relative-to-each-other" class="level2">
-<h2 class="anchored" data-anchor-id="how-do-datasets-behave-relative-to-each-other">How do datasets behave relative to each other?</h2>
+<p>note could call this variable diagnostics? then have sub sections in here or vars (temp, precip,rad and wind)</p>
+<section id="metrics-all-days" class="level2">
+<h2 class="anchored" data-anchor-id="metrics-all-days">Metrics (all days)</h2>
 </section>
-<section id="zero-vs-non-zero-precipitation-disagreement" class="level2">
-<h2 class="anchored" data-anchor-id="zero-vs-non-zero-precipitation-disagreement">Zero vs non-zero precipitation disagreement</h2>
+<section id="precipitation-wet-days-table" class="level2">
+<h2 class="anchored" data-anchor-id="precipitation-wet-days-table">Precipitation wet days table</h2>
 </section>
-<section id="wind-detection-mismach" class="level2">
-<h2 class="anchored" data-anchor-id="wind-detection-mismach">Wind detection mismach</h2>
+<section id="windy-days-table-top-10-threshold" class="level2">
+<h2 class="anchored" data-anchor-id="windy-days-table-top-10-threshold">Windy days table (top 10% + threshold)</h2>
 </section>
-<section id="timing-offsets" class="level2">
-<h2 class="anchored" data-anchor-id="timing-offsets">Timing offsets</h2>
+<section id="plots" class="level2">
+<h2 class="anchored" data-anchor-id="plots">Plots</h2>
+<section id="scatter-vs-reference-11-line" class="level3">
+<h3 class="anchored" data-anchor-id="scatter-vs-reference-11-line">Scatter vs reference + 1:1 line</h3>
 </section>
-<section id="overunder-capture-of-extremes" class="level2">
-<h2 class="anchored" data-anchor-id="overunder-capture-of-extremes">Over/under-capture of extremes</h2>
+<section id="time-series-overlays" class="level3">
+<h3 class="anchored" data-anchor-id="time-series-overlays">time series overlays</h3>
+</section>
+<section id="distribution-densityhits" class="level3">
+<h3 class="anchored" data-anchor-id="distribution-densityhits">Distribution (density/hits)</h3>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

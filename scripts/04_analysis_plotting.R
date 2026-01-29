@@ -5,17 +5,18 @@
 # If any dataset lacks a variable, remove it from vars or handle with tryCatch.
 
 
-# 03_analysis_plotting.R
-# Purpose: Create publication-quality comparison plots + rolling diagnostics
-# Inputs: processed daily CSVs + metrics_vs_ref() from 02_analysis_helpers.R
+# 04_analysis_plotting.R
+# Purpose: Create  comparison plots + rolling diagnostics
+# Inputs: processed daily CSVs + metrics_vs_ref() from 03_analysis_helpers.R
 # Outputs: plots (for Quarto + optional saving)
 
 library(tidyverse)
 library(slider)
 
 # --- Source helpers (must exist relative to project root) ---
-source("scripts/00_metrics_helpers.R")
-source("scripts/02_analysis_helpers.R")
+# run source below if not using quarto file
+#source("scripts/01_metrics_helpers.R")
+#source("scripts/03_analysis_helpers.R")
 
 # -----------------------------
 # Load processed daily data
@@ -26,6 +27,10 @@ ap1770   <- read_csv("data/processed/rotorua_airport_1770_daily.csv", show_col_t
 twn40177 <- read_csv("data/processed/rotorua_town_40177_daily.csv", show_col_types = FALSE)
 vcs_on   <- read_csv("data/processed/rotorua_vcs_on_daily.csv", show_col_types = FALSE)
 
+#----------------------------------------
+# Creating additional functions for plotting and later use in quarto
+#----------------------------------------
+
 # Enforce Date type (prevents join issues)
 to_date <- function(df) { df$Date <- as.Date(df$Date); df }
 era5     <- to_date(era5)
@@ -33,7 +38,6 @@ buoy     <- to_date(buoy)
 ap1770   <- to_date(ap1770)
 twn40177 <- to_date(twn40177)
 vcs_on   <- to_date(vcs_on)
-
 # -----------------------------
 # Reference + targets
 # -----------------------------
@@ -369,22 +373,22 @@ plot_rolling_diagnostics <- function(ref_df, target_df, target_name, var, window
 # Example calls (keep these minimal for script testing)
 # ============================================================
 
-print(plot_timeseries_line(ref_df, targets_list, "Temp_C"))
-print(plot_timeseries_line(ref_df, targets_list, "Wind_Spd_ms"))
+#print(plot_timeseries_line(ref_df, targets_list, "Temp_C"))
+#print(plot_timeseries_line(ref_df, targets_list, "Wind_Spd_ms"))
 # only plot timeseries is enough data avalable
 # p_ts_rad  <- plot_timeseries_line(ref_df, targets_list, "RadSWD_Wm2")
 
-print(plot_precip_hydrograph(ref_df, targets_list, show_7day_sum = TRUE))
+#print(plot_precip_hydrograph(ref_df, targets_list, show_7day_sum = TRUE))
 #p_hydro can be shown either with a running weekly total (show_7day_sum = TRUE or not (=FALSE)
 #be sure to know the difference because the output plot is very different
-print(plot_precip_cdf(ref_df, targets_list))
-print(plot_precip_wetday_distribution(ref_df, targets_list, threshold_mm = 1))
+#print(plot_precip_cdf(ref_df, targets_list))
+#print(plot_precip_wetday_distribution(ref_df, targets_list, threshold_mm = 1))
 
-print(plot_scatter_faceted(ref_df, targets_list, "Temp_C", ncol = 2))
-print(plot_scatter_faceted(ref_df, targets_list, "Wind_Spd_ms", ncol = 2))
-print(plot_scatter_faceted(ref_df, targets_list, "Precip_mm", ncol = 2))
+#print(plot_scatter_faceted(ref_df, targets_list, "Temp_C", ncol = 2))
+#print(plot_scatter_faceted(ref_df, targets_list, "Wind_Spd_ms", ncol = 2))
+#print(plot_scatter_faceted(ref_df, targets_list, "Precip_mm", ncol = 2))
 
-print(plot_rolling_diagnostics(ref_df, era5, "ERA5", "Temp_C", window_days = 30))
+#print(plot_rolling_diagnostics(ref_df, era5, "ERA5", "Temp_C", window_days = 30))
 
 
 
@@ -537,17 +541,14 @@ skill_precip <- event_skill_all_targets(
   ref_df, targets_list,
   var = "Precip_mm",
   threshold = precip_event_threshold,
-  direction = ">="
-)
+  direction = ">=")
 
-print(skill_precip)
-print(plot_event_outcomes(skill_precip,
-  title = paste0("Precip events (≥ ", precip_event_threshold, " mm/day): outcomes vs reference")
-))
-print(plot_event_skill_scores(skill_precip,
-  title = paste0("Precip events (≥ ", precip_event_threshold, " mm/day): skill vs reference")
-))
-print(plot_false_alarm_magnitude(ref_df, targets_list, threshold_mm = precip_event_threshold))
+#print(skill_precip)
+#print(plot_event_outcomes(skill_precip,
+#  title = paste0("Precip events (≥ ", precip_event_threshold, " mm/day): outcomes vs reference")))
+#print(plot_event_skill_scores(skill_precip,
+#  title = paste0("Precip events (≥ ", precip_event_threshold, " mm/day): skill vs reference")))
+#print(plot_false_alarm_magnitude(ref_df, targets_list, threshold_mm = precip_event_threshold))
 
 
 # -----------------------------
@@ -602,8 +603,8 @@ plot_monthly_climatology <- function(ref_df, targets_list, var,
 }
 
 # --- Example calls ---
-print(plot_monthly_climatology(ref_df, targets_list, "Temp_C"))
-print(plot_monthly_climatology(ref_df, targets_list, "Wind_Spd_ms"))
+#print(plot_monthly_climatology(ref_df, targets_list, "Temp_C"))
+#print(plot_monthly_climatology(ref_df, targets_list, "Wind_Spd_ms"))
 # Radiation only if you have decent overlap:
 # print(plot_monthly_climatology(ref_df, targets_list, "RadSWD_Wm2"))
 
@@ -786,16 +787,16 @@ season_defs <- season_defs_default
 # season_defs <- season_defs_warmcool  # <- switch to warm/cool quickly
 
 # Seasonal bias plots
-print(plot_seasonal_bias(ref_df, targets_list, "Temp_C", season_defs = season_defs))
-print(plot_seasonal_bias(ref_df, targets_list, "Wind_Spd_ms", season_defs = season_defs))
+#print(plot_seasonal_bias(ref_df, targets_list, "Temp_C", season_defs = season_defs))
+#print(plot_seasonal_bias(ref_df, targets_list, "Wind_Spd_ms", season_defs = season_defs))
 
 # Seasonal metrics tables (useful to print in Quarto later)
-season_metrics_wind <- seasonal_metrics_all_targets(ref_df, targets_list, "Wind_Spd_ms", season_defs = season_defs)
-season_metrics_precip <- seasonal_metrics_all_targets(ref_df, targets_list, "Precip_mm", season_defs = season_defs, wet_threshold_mm = precip_event_threshold)
+#season_metrics_wind <- seasonal_metrics_all_targets(ref_df, targets_list, "Wind_Spd_ms", season_defs = season_defs)
+#season_metrics_precip <- seasonal_metrics_all_targets(ref_df, targets_list, "Precip_mm", season_defs = season_defs, wet_threshold_mm = precip_event_threshold)
 
-print(season_metrics_wind)
-print(season_metrics_precip)
+#print(season_metrics_wind)
+#print(season_metrics_precip)
 
 # Seasonal scatter (big figure, but very informative)
-print(plot_seasonal_scatter(ref_df, targets_list, "Wind_Spd_ms", season_defs = season_defs))
+#print(plot_seasonal_scatter(ref_df, targets_list, "Wind_Spd_ms", season_defs = season_defs))
 # print(plot_seasonal_scatter(ref_df, targets_list, "Precip_mm", season_defs = season_defs))  # can be heavy; optional

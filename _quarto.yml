@@ -15,7 +15,7 @@ website:
         href: rotorua.qmd
       - text: "Methods"
         href: methods.qmd
-      - text: "Behaviour"
+      - text: "Seasonal and event behaviour"
         href: Behaviour.qmd
       - text: "Results"
         href: Results.qmd

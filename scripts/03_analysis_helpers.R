@@ -1,8 +1,8 @@
 
-
 # Load metric_helper_functions
-source("scripts/00_metrics_helpers.R")
-stopifnot(file.exists("scripts/00_metrics_helpers.R"))
+# run source below if not using quarto file
+#source("scripts/01_metrics_helpers.R")
+#stopifnot(file.exists("scripts/01_metrics_helpers.R"))
 
 
 
@@ -32,6 +32,7 @@ save_fig <- function(plot_obj, filename, width = 8, height = 5, dpi = 150) {
     dpi = dpi
   )
 }
+
 
 #----------------------------------------
 # Load processed daily data
@@ -192,5 +193,9 @@ metrics_all
 
 #Note radiation only found in two datasets, and has very little points for this reason it is not used
 #Add extra code for RAD if yu have the nessesary data for analysis
+
+
+
+
 
 
