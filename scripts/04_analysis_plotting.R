@@ -15,8 +15,8 @@ library(slider)
 
 # --- Source helpers (must exist relative to project root) ---
 # run source below if not using quarto file
-#source("scripts/01_metrics_helpers.R")
-#source("scripts/03_analysis_helpers.R")
+source("scripts/01_metrics_helpers.R")
+source("scripts/03_analysis_helpers.R")
 
 # -----------------------------
 # Load processed daily data

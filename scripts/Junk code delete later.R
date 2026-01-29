@@ -676,3 +676,36 @@ Wind_buoy <- ggplot(buoy, aes(x = Date, y = Wind_Spd_ms)) +
 
 
 print(Wind_buoy)
+
+
+
+
+###  MAP MAKING for rotorua.qmd
+
+library(osmdata)
+library(sf)
+library(tmap)
+
+lat <- params$lat
+lon <- params$lon
+
+bb <- c(min_lon = lon - 0.08, min_lat = lat - 0.05,
+        max_lon = lon + 0.08, max_lat = lat + 0.05)
+
+water <- tryCatch({
+  opq(bbox = bb, timeout = 60,
+      base_url = "https://overpass-api.de/api/interpreter") |>
+    add_osm_feature(key = "natural", value = "water") |>
+    osmdata_sf()$osm_multipolygons |>
+    st_make_valid()
+}, error = function(e) {
+  message("Skipping map chunk (Overpass error): ", e$message)
+  NULL
+})
+
+if (!is.null(water)) {
+  tmap_mode("plot")
+  tm_shape(water) + tm_fill(alpha = 0.5) + tm_borders()
+} else {
+  cat("Map unavailable due to Overpass error.")
+}

@@ -1,7 +1,7 @@
 
 # Load metric_helper_functions
 # run source below if not using quarto file
-#source("scripts/01_metrics_helpers.R")
+source("scripts/01_metrics_helpers.R")
 #stopifnot(file.exists("scripts/01_metrics_helpers.R"))
 
 
