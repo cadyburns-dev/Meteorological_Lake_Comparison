@@ -140,9 +140,10 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#data-harmonisation-units-and-time-step" id="toc-data-harmonisation-units-and-time-step" class="nav-link active" data-scroll-target="#data-harmonisation-units-and-time-step">Data harmonisation units and time step</a></li>
   <li><a href="#reference-site-justification" id="toc-reference-site-justification" class="nav-link" data-scroll-target="#reference-site-justification">Reference site justification</a></li>
   <li><a href="#metrics" id="toc-metrics" class="nav-link" data-scroll-target="#metrics">Metrics</a></li>
-  <li><a href="#wetwindy-supsets-and-logic" id="toc-wetwindy-supsets-and-logic" class="nav-link" data-scroll-target="#wetwindy-supsets-and-logic">Wet/windy supsets and logic</a></li>
+  <li><a href="#wetwindy-subsets-and-logic" id="toc-wetwindy-subsets-and-logic" class="nav-link" data-scroll-target="#wetwindy-subsets-and-logic">Wet/windy subsets and logic</a></li>
   <li><a href="#data-avalability-overlap" id="toc-data-avalability-overlap" class="nav-link" data-scroll-target="#data-avalability-overlap">Data avalability / overlap</a></li>
   <li><a href="#rolling-diagnostics-logic" id="toc-rolling-diagnostics-logic" class="nav-link" data-scroll-target="#rolling-diagnostics-logic">Rolling diagnostics logic</a></li>
+  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">Limitations</a></li>
   </ul>
 </nav>
 </nav>
@@ -173,28 +174,51 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>note: can add schematic examples</p>
+<p>This section documents how the meteorological datasets were prepared, aligned, and compared so the workflow is transparent and repeatable.</p>
 <section id="data-harmonisation-units-and-time-step" class="level2">
 <h2 class="anchored" data-anchor-id="data-harmonisation-units-and-time-step">Data harmonisation units and time step</h2>
-<p>The four datasets Limnotrack Buoy on lake, NIWA virtual climate station network (VCSN), ERA5 statlite data, Observational data “Airport” from cliflo, and additional cliflo Obresvational data was downloaded for comparison. Data sets chosen we the closest possible to the reference site. Where nessesary hourly datasets were downloaede</p>
+<p>We used four sources: ERA5 reanalysis, buoy in-situ station, airport observations, and NIWA Virtual Climate Station Network (VCSN). All inputs were standardised to a daily time step and common units before any comparisons:</p>
+<ul>
+<li>Temperature (°C), wind speed (m/s), and shortwave radiation (W/m²) were aggregated as daily means; precipitation (mm) as daily totals.</li>
+<li>Sub-daily records (e.g., 5‑minute buoy, hourly stations) were first converted to UTC, then aggregated with sums for fluxes (precip) and means for state variables (temp, wind, radiation).</li>
+<li>Radiation in energy units (MJ/m²) was converted to power (W/m²) using <code>Rad_MJm2 * 1e6 / 86400</code> for daily totals and <code>* 1e6 / 3600</code> (hourly) before daily means, matching the reporting interval.</li>
+<li>Variable names were standardised to <code>Temp_C</code>, <code>Precip_mm</code>, <code>Wind_Spd_ms</code>, <code>RadSWD_Wm2</code>, plus a <code>Date</code> column for joins.</li>
+</ul>
 </section>
 <section id="reference-site-justification" class="level2">
 <h2 class="anchored" data-anchor-id="reference-site-justification">Reference site justification</h2>
+<p>Airport station data were used as the primary reference because they are maintained, quality-controlled, and co-located near the lake with minimal missingness. All alternative sources (ERA5, VCSN, buoy, Town) were evaluated against this reference over their overlapping dates.</p>
 </section>
 <section id="metrics" class="level2">
 <h2 class="anchored" data-anchor-id="metrics">Metrics</h2>
+<p>Performance was quantified with Pearson correlation (r), regression slope and intercept (sim ~ obs), mean absolute error (MAE), root mean squared error (RMSE), Lin’s concordance correlation coefficient (CCC), bias (sim − obs), and relative bias (percent of observed mean). Metrics are computed after dropping NA pairs.</p>
 </section>
-<section id="wetwindy-supsets-and-logic" class="level2">
-<h2 class="anchored" data-anchor-id="wetwindy-supsets-and-logic">Wet/windy supsets and logic</h2>
-<p>wet-day logic</p>
-<p>windy extremes logic</p>
+<section id="wetwindy-subsets-and-logic" class="level2">
+<h2 class="anchored" data-anchor-id="wetwindy-subsets-and-logic">Wet/windy subsets and logic</h2>
+<ul>
+<li><strong>Wet days:</strong> Precipitation metrics were recomputed on days with observed precip above a threshold (default 0.1–1 mm) to avoid zero-inflation masking disagreement.</li>
+<li><strong>Windy days:</strong> Wind metrics were optionally recomputed for high-wind conditions, defined either by a fixed threshold (default 10 m/s) or by the top 10% of observed winds in the reference record.</li>
+</ul>
+<p>These subsets surface performance during hydrologically and operationally important conditions.</p>
 </section>
 <section id="data-avalability-overlap" class="level2">
 <h2 class="anchored" data-anchor-id="data-avalability-overlap">Data avalability / overlap</h2>
-<p>= table here showing data time series and its overlap (coverage per dataset)</p>
+<p>Only dates present in both the reference and the compared dataset are used. Coverage tables (rendered in the site) report first/last date and number of overlapping days for transparency.</p>
 </section>
 <section id="rolling-diagnostics-logic" class="level2">
 <h2 class="anchored" data-anchor-id="rolling-diagnostics-logic">Rolling diagnostics logic</h2>
+<p>To detect drift through time, moving-window diagnostics (window = 30 days by default) track metrics such as bias and CCC. Plots of these rolling statistics help identify regime shifts, seasonal dependence, or gradual timing offsets.</p>
+</section>
+<section id="limitations" class="level2">
+<h2 class="anchored" data-anchor-id="limitations">Limitations</h2>
+<ul>
+<li>Spatial representativeness differs: point sensors (buoy, airport) capture local effects, while gridded/reanalysis products smooth extremes.</li>
+<li>Residual timestamp misalignment could affect daily aggregates despite UTC standardisation.</li>
+<li>Zero-inflated precipitation can inflate r; wet-day metrics mitigate but do not eliminate this effect.</li>
+<li>Findings depend on the overlapping period; results may change with different seasons or longer records.</li>
+<li>Wet/windy thresholds are pragmatic; sensitivity checks are recommended if thresholds influence decisions.</li>
+</ul>
+<p>Future users should adapt thresholds, reference choice, and aggregation rules to their lake, documenting any deviations.</p>
 
 
 </section>
