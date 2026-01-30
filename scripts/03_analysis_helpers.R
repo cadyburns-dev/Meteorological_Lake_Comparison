@@ -11,7 +11,7 @@ source("scripts/01_metrics_helpers.R")
 # If any dataset lacks a variable, remove it from vars or handle with tryCatch.
 
 
-#      AIM Read processed dad, comute metrics, make plots
+#      AIM Read processed data, comute metrics, make plots
 
 #----------------------------------------
 # Make saving function for figs
@@ -81,7 +81,7 @@ vcs_on   <- datasets[[5]]
 # matters because correlation may look high but preform poorly in seasonal extremes, wind and rain heavy events === (findinf out what the best met source is and when)
 # example below
 #   metrics_all   <- calc_metrics_all_days(ap1770$Precip_mm, era5$Precip_mm)   
-#   metrics_wet   <- calc_metrics_wet_days(ap1770$Precip_mm, era5$Precip_mm, threshold_mm = 1) # threshold changes = test 0.1,1 and 5)
+ # metrics_wet   <- calc_metrics_wet_days(ap1770$Precip_mm, era5$Precip_mm, threshold_mm = 1) # threshold changes = test 0.1,1 and 5)
 #   metrics_windy <- calc_metrics_windy_days(ap1770$Wind_Spd_ms, era5$Wind_Spd_ms, threshold_ms = 10) #used percentage (top 10% observed winds) to be lake transferable
 
 

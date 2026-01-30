@@ -103,6 +103,10 @@ plot_precip_wetday_distribution(ref_df, targets_list, threshold_mm = wet_thresho
 ## Event detection and mismatches
 
 Use these to spot zero vs non‑zero disagreements, misses/false alarms, and timing offsets during wet events.
+POD: Probability detection
+FAR: False alarm ratio
+CSI: Critical success inder
+Bias score: 
 
 ```{r}
 #| echo: false
@@ -143,7 +147,7 @@ plot_false_alarm_magnitude(ref_df, targets_list, threshold_mm = precip_event_thr
 
 ## Wind and precipitation timing drifts
 
-Rolling diagnostics reveal gradual offsets or drift through time (look for breaks away from 0 bias or changing correlation).
+Rolling diagnostics reveal gradual offsets or drift through time (look for breaks away from 0 bias or changing correlation). This answeres "does it shift seasonally?"
 
 ```{r}
 purrr::iwalk(targets_list, ~ print(plot_rolling_diagnostics(ref_df, .x, .y, "Wind_Spd_ms", window_days = window_days)))

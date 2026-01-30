@@ -8,7 +8,7 @@ note: can add schematic examples
 
 ## Data harmonisation units and time step
 
-The four datasets
+The four datasets Limnotrack Buoy on lake, NIWA virtual climate station network (VCSN), ERA5 statlite data, Observational data “Airport” from cliflo, and additional cliflo Obresvational data was downloaded for comparison. Data sets chosen we the closest possible to the reference site. Where nessesary hourly datasets were downloaede 
 
 ## Reference site justification
 

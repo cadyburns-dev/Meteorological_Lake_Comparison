@@ -12,12 +12,12 @@ renv::restore(prompt = FALSE)  # use the lockfile; idempotent
 # from GitHub  (records to renv.lock)
 renv::install("limnotrack/aemetools")
 renv::install("rLakeAnalyzer")
-renv::install("plotly")
-renv::install("airGR")
-renv::install("knitr")
-renv::install("markdown")
-renv::install("curl")
-renv::install("httr2")
+#renv::install("plotly")
+#renv::install("airGR")
+#renv::install("knitr")
+#renv::install("markdown")
+#renv::install("curl")
+#renv::install("httr2")
 
 renv::snapshot(prompt = FALSE, prune = TRUE)
 
