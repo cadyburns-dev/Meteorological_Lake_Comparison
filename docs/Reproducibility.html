@@ -132,13 +132,25 @@ ul.task-list li input[type="checkbox"] {
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
-  
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of Content</h2>
+   
+  <ul>
+  <li><a href="#set-up-the-environment" id="toc-set-up-the-environment" class="nav-link active" data-scroll-target="#set-up-the-environment">Set up the environment</a></li>
+  <li><a href="#prepare-data-for-a-new-lake" id="toc-prepare-data-for-a-new-lake" class="nav-link" data-scroll-target="#prepare-data-for-a-new-lake">Prepare data for a new lake</a></li>
+  <li><a href="#run-the-analyses" id="toc-run-the-analyses" class="nav-link" data-scroll-target="#run-the-analyses">Run the analyses</a></li>
+  <li><a href="#adapting-thresholds-and-subsets" id="toc-adapting-thresholds-and-subsets" class="nav-link" data-scroll-target="#adapting-thresholds-and-subsets">Adapting thresholds and subsets</a></li>
+  <li><a href="#what-to-document" id="toc-what-to-document" class="nav-link" data-scroll-target="#what-to-document">What to document</a></li>
+  </ul>
+</nav>
+</nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content column-page" id="quarto-document-content">
+<main class="content column-page-right" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -147,7 +159,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<div class="quarto-title-meta column-page">
+<div class="quarto-title-meta column-page-right">
 
     
   
@@ -159,8 +171,67 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p>Use this guide to rerun the Rotorua workflow or adapt it to a new lake.</p>
+<section id="set-up-the-environment" class="level2">
+<h2 class="anchored" data-anchor-id="set-up-the-environment">Set up the environment</h2>
+<ul>
+<li>Install R (≥ 4.4) and quarto.</li>
+<li>From the project root, run <code>scripts/00_project_setup.R</code> to restore the <code>renv</code> environment and required GitHub packages.
+<ul>
+<li>If <code>renv::restore()</code> fails due to offline use, set <code>options(repos = ...)</code> to a reachable CRAN mirror first.</li>
+</ul></li>
+</ul>
+</section>
+<section id="prepare-data-for-a-new-lake" class="level2">
+<h2 class="anchored" data-anchor-id="prepare-data-for-a-new-lake">Prepare data for a new lake</h2>
+<ol type="1">
+<li>Gather raw met data (buoy/station/reanalysis/gridded) into <code>data/raw/</code>, keeping original filenames.</li>
+<li>Update lake metadata in <code>params.yml</code> (name, lat, lon, buffer, reference, targets, thresholds).</li>
+<li>Adjust <code>file_map</code> paths in the QMDs or helper scripts if filenames differ.</li>
+<li>Run or adapt <code>scripts/02_prepare_raw_data.R</code> to:
+<ul>
+<li>Convert timestamps to UTC.</li>
+<li>Aggregate sub-daily to daily (means for state variables; sums for fluxes).</li>
+<li>Standardise column names to <code>Temp_C</code>, <code>Precip_mm</code>, <code>Wind_Spd_ms</code>, <code>RadSWD_Wm2</code>, <code>Date</code>.</li>
+<li>Convert radiation MJ/m² to W/m² when needed.</li>
+</ul></li>
+<li>Place processed daily CSVs in <code>data/processed/</code> following the pattern used for Rotorua (e.g., <code>lakeid_source_daily.csv</code>).</li>
+</ol>
+</section>
+<section id="run-the-analyses" class="level2">
+<h2 class="anchored" data-anchor-id="run-the-analyses">Run the analyses</h2>
+<ul>
+<li>Render the whole site: <code>quarto render</code> (outputs to <code>docs/</code> as set in <code>_quarto.yml</code>).</li>
+<li>Or render a single page (e.g., <code>quarto render rotorua.qmd</code>) to iterate faster.</li>
+<li>Key tabs:
+<ul>
+<li><strong>Rotorua demo</strong>: full pipeline.</li>
+<li><strong>Behaviour</strong>: event agreement and seasonal structure.</li>
+<li><strong>Variable diagnostics</strong>: time-series overlays.</li>
+<li><strong>Metrics &amp; stats</strong>: quantitative tables/plots.</li>
+</ul></li>
+</ul>
+</section>
+<section id="adapting-thresholds-and-subsets" class="level2">
+<h2 class="anchored" data-anchor-id="adapting-thresholds-and-subsets">Adapting thresholds and subsets</h2>
+<ul>
+<li>Set wet-day and windy thresholds in <code>params.yml</code> (<code>wet_threshold_mm</code>, <code>precip_event_threshold</code>, <code>windy_threshold_ms</code>, <code>windy_top_pct</code>).</li>
+<li>Re-render to propagate changes to all tabs; rolling window (<code>window_days</code>) controls drift diagnostics.</li>
+</ul>
+</section>
+<section id="what-to-document" class="level2">
+<h2 class="anchored" data-anchor-id="what-to-document">What to document</h2>
+<ul>
+<li>Source metadata (station IDs, grid cell coords, units).</li>
+<li>Any timezone assumptions or corrections applied.</li>
+<li>Chosen reference dataset and reasons.</li>
+<li>Threshold choices for wet/windy subsets.</li>
+<li>Date span of overlapping data used in metrics.</li>
+</ul>
+<p>Keeping these notes with each new lake run ensures results are transparent and comparable.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

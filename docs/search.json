@@ -91,11 +91,53 @@
     "text": "Interactive table"
   },
   {
+    "objectID": "Reproducibility.html",
+    "href": "Reproducibility.html",
+    "title": "Reproducibility / How to reuse",
+    "section": "",
+    "text": "Use this guide to rerun the Rotorua workflow or adapt it to a new lake."
+  },
+  {
+    "objectID": "Reproducibility.html#set-up-the-environment",
+    "href": "Reproducibility.html#set-up-the-environment",
+    "title": "Reproducibility / How to reuse",
+    "section": "Set up the environment",
+    "text": "Set up the environment\n\nInstall R (≥ 4.4) and quarto.\nFrom the project root, run scripts/00_project_setup.R to restore the renv environment and required GitHub packages.\n\nIf renv::restore() fails due to offline use, set options(repos = ...) to a reachable CRAN mirror first."
+  },
+  {
+    "objectID": "Reproducibility.html#prepare-data-for-a-new-lake",
+    "href": "Reproducibility.html#prepare-data-for-a-new-lake",
+    "title": "Reproducibility / How to reuse",
+    "section": "Prepare data for a new lake",
+    "text": "Prepare data for a new lake\n\nGather raw met data (buoy/station/reanalysis/gridded) into data/raw/, keeping original filenames.\nUpdate lake metadata in params.yml (name, lat, lon, buffer, reference, targets, thresholds).\nAdjust file_map paths in the QMDs or helper scripts if filenames differ.\nRun or adapt scripts/02_prepare_raw_data.R to:\n\nConvert timestamps to UTC.\nAggregate sub-daily to daily (means for state variables; sums for fluxes).\nStandardise column names to Temp_C, Precip_mm, Wind_Spd_ms, RadSWD_Wm2, Date.\nConvert radiation MJ/m² to W/m² when needed.\n\nPlace processed daily CSVs in data/processed/ following the pattern used for Rotorua (e.g., lakeid_source_daily.csv)."
+  },
+  {
+    "objectID": "Reproducibility.html#run-the-analyses",
+    "href": "Reproducibility.html#run-the-analyses",
+    "title": "Reproducibility / How to reuse",
+    "section": "Run the analyses",
+    "text": "Run the analyses\n\nRender the whole site: quarto render (outputs to docs/ as set in _quarto.yml).\nOr render a single page (e.g., quarto render rotorua.qmd) to iterate faster.\nKey tabs:\n\nRotorua demo: full pipeline.\nBehaviour: event agreement and seasonal structure.\nVariable diagnostics: time-series overlays.\nMetrics & stats: quantitative tables/plots."
+  },
+  {
+    "objectID": "Reproducibility.html#adapting-thresholds-and-subsets",
+    "href": "Reproducibility.html#adapting-thresholds-and-subsets",
+    "title": "Reproducibility / How to reuse",
+    "section": "Adapting thresholds and subsets",
+    "text": "Adapting thresholds and subsets\n\nSet wet-day and windy thresholds in params.yml (wet_threshold_mm, precip_event_threshold, windy_threshold_ms, windy_top_pct).\nRe-render to propagate changes to all tabs; rolling window (window_days) controls drift diagnostics."
+  },
+  {
+    "objectID": "Reproducibility.html#what-to-document",
+    "href": "Reproducibility.html#what-to-document",
+    "title": "Reproducibility / How to reuse",
+    "section": "What to document",
+    "text": "What to document\n\nSource metadata (station IDs, grid cell coords, units).\nAny timezone assumptions or corrections applied.\nChosen reference dataset and reasons.\nThreshold choices for wet/windy subsets.\nDate span of overlapping data used in metrics.\n\nKeeping these notes with each new lake run ensures results are transparent and comparable."
+  },
+  {
     "objectID": "metrics_stats.html",
     "href": "metrics_stats.html",
     "title": "Metrics and Statistics",
     "section": "",
-    "text": "This tab gathers the quantitative diagnostics (coverage, MAE/RMSE/CCC/bias, distributions, scatter, rolling drift). Use it when you want numbers and concise plots for statistical agreement."
+    "text": "This tab gathers the quantitative diagnostics (coverage, MAE/RMSE/CCC/bias, distributions, scatter, rolling drift). Use it when you want numbers and concise plots for statistical agreement.\n++++++++++ to look at below Example: ERA5 vs Airport for precipitation where ap1770\\(precip_mm = refernce \"obs\" series ear5\\)precip_mm = dataset we are evaluating “sim” mertrics_all uses every day where both datasets have values (after NA removal) (baseline overall preformance) metrics_wet uses only days where the reference has “meaningful rain”:if threshold_mm = 1, it keeps days where ap1770\\(Precip_mm &gt; 1.\nThis answers: “How well does ERA5 match rainy days?”(which usually matters more for modelling than dry days).\nmetrics_windy  uses only days where the reference indictes high wind :if threshold_ms = 10, it keeps days where ap1770\\)Wind_Spd_ms &gt;=10. This answers: “How well does ERA5 match wind-storm days?” matters because correlation may look high but preform poorly in seasonal extremes, wind and rain heavy events === (findinf out what the best met source is and when) to look at above ========"
   },
   {
     "objectID": "metrics_stats.html#coverage-summary",
@@ -186,14 +228,14 @@
     "href": "Behaviour.html#event-detection-and-mismatches",
     "title": "Seasonal and Event Behaviour",
     "section": "Event detection and mismatches",
-    "text": "Event detection and mismatches\nUse these to spot zero vs non‑zero disagreements, misses/false alarms, and timing offsets during wet events."
+    "text": "Event detection and mismatches\nUse these to spot zero vs non‑zero disagreements, misses/false alarms, and timing offsets during wet events. POD: Probability detection FAR: False alarm ratio CSI: Critical success inder Bias score:"
   },
   {
     "objectID": "Behaviour.html#wind-and-precipitation-timing-drifts",
     "href": "Behaviour.html#wind-and-precipitation-timing-drifts",
     "title": "Seasonal and Event Behaviour",
     "section": "Wind and precipitation timing drifts",
-    "text": "Wind and precipitation timing drifts\nRolling diagnostics reveal gradual offsets or drift through time (look for breaks away from 0 bias or changing correlation)."
+    "text": "Wind and precipitation timing drifts\nRolling diagnostics reveal gradual offsets or drift through time (look for breaks away from 0 bias or changing correlation). This answeres “does it shift seasonally?”"
   },
   {
     "objectID": "Behaviour.html#seasonal-behaviour",
@@ -214,7 +256,7 @@
     "href": "methods.html#data-harmonisation-units-and-time-step",
     "title": "Methods",
     "section": "Data harmonisation units and time step",
-    "text": "Data harmonisation units and time step\nThe four datasets"
+    "text": "Data harmonisation units and time step\nThe four datasets Limnotrack Buoy on lake, NIWA virtual climate station network (VCSN), ERA5 statlite data, Observational data “Airport” from cliflo, and additional cliflo Obresvational data was downloaded for comparison. Data sets chosen we the closest possible to the reference site. Where nessesary hourly datasets were downloaede"
   },
   {
     "objectID": "methods.html#reference-site-justification",
