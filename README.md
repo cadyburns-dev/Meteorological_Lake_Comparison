@@ -7,3 +7,4 @@ What scripts to run in order: Scripts numbered by order 00, 01, 02, 03, 04, 05
 03_analysis_helpers: Sets up functions. Computes metrics, adds all days, wet days and windy days thresholds codes for conditional preformance
 04_analysis_plotting: Writes in plotting functions ready for quarto
 05_Analysis_rotorua_plots: executable in R without quarto rendering as long as source is called out for 01,03 and 04. These are left un computable in scripts using a # for quarto render. Take # away for R specific plotting without quarto render
+
