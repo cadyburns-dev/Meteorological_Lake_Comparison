@@ -1,4 +1,4 @@
----
+﻿---
 title: "Reproducibility / How to reuse"
 format: html
 ---
@@ -7,9 +7,15 @@ Use this guide to rerun the Rotorua workflow or adapt it to a new lake.
 
 ## Set up the environment
 
-- Install R (≥ 4.4) and quarto.
-- From the project root, run `scripts/00_project_setup.R` to restore the `renv` environment and required GitHub packages.  
+- Install R (>= 4.4) and quarto.
+- From the project root, run `scripts/00_project_setup.R` to restore the `renv` environment and required GitHub packages.
   - If `renv::restore()` fails due to offline use, set `options(repos = ...)` to a reachable CRAN mirror first.
+
+## Scripts overview
+
+- `scripts/02_prepare_raw_data.R`: converts raw data to daily series, standardises units, and writes to `data/processed/`.
+- `scripts/03_analysis_helpers.R`: defines the core metrics functions and `metrics_vs_ref` logic.
+- `scripts/04_analysis_plotting.R`: defines plot helpers (time series, scatter, distributions, climatology, event skill, rolling diagnostics).
 
 ## Prepare data for a new lake
 
@@ -20,7 +26,7 @@ Use this guide to rerun the Rotorua workflow or adapt it to a new lake.
    - Convert timestamps to UTC.
    - Aggregate sub-daily to daily (means for state variables; sums for fluxes).
    - Standardise column names to `Temp_C`, `Precip_mm`, `Wind_Spd_ms`, `RadSWD_Wm2`, `Date`.
-   - Convert radiation MJ/m² to W/m² when needed.
+   - Convert radiation MJ/m^2 to W/m^2 when needed.
 5. Place processed daily CSVs in `data/processed/` following the pattern used for Rotorua (e.g., `lakeid_source_daily.csv`).
 
 ## Run the analyses
@@ -28,15 +34,16 @@ Use this guide to rerun the Rotorua workflow or adapt it to a new lake.
 - Render the whole site: `quarto render` (outputs to `docs/` as set in `_quarto.yml`).
 - Or render a single page (e.g., `quarto render rotorua.qmd`) to iterate faster.
 - Key tabs:
-  - **Rotorua demo**: full pipeline.
-  - **Behaviour**: event agreement and seasonal structure.
-  - **Variable diagnostics**: time-series overlays.
-  - **Metrics & stats**: quantitative tables/plots.
+  - Rotorua demo: full pipeline.
+  - Behaviour: event agreement and seasonal structure.
+  - Variable diagnostics: time-series overlays.
+  - Metrics and stats: quantitative tables and plots.
 
 ## Adapting thresholds and subsets
 
 - Set wet-day and windy thresholds in `params.yml` (`wet_threshold_mm`, `precip_event_threshold`, `windy_threshold_ms`, `windy_top_pct`).
 - Re-render to propagate changes to all tabs; rolling window (`window_days`) controls drift diagnostics.
+- If you change the reference dataset or add new targets, update both `params.yml` and the `file_map` in the QMDs so names align.
 
 ## What to document
 
@@ -47,4 +54,3 @@ Use this guide to rerun the Rotorua workflow or adapt it to a new lake.
 - Date span of overlapping data used in metrics.
 
 Keeping these notes with each new lake run ensures results are transparent and comparable.
-

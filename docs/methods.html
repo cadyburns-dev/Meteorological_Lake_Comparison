@@ -140,10 +140,12 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#data-harmonisation-units-and-time-step" id="toc-data-harmonisation-units-and-time-step" class="nav-link active" data-scroll-target="#data-harmonisation-units-and-time-step">Data harmonisation units and time step</a></li>
   <li><a href="#reference-site-justification" id="toc-reference-site-justification" class="nav-link" data-scroll-target="#reference-site-justification">Reference site justification</a></li>
   <li><a href="#metrics" id="toc-metrics" class="nav-link" data-scroll-target="#metrics">Metrics</a></li>
+  <li><a href="#metric-formulas-paired-daily-values" id="toc-metric-formulas-paired-daily-values" class="nav-link" data-scroll-target="#metric-formulas-paired-daily-values">Metric formulas (paired daily values)</a></li>
   <li><a href="#wetwindy-subsets-and-logic" id="toc-wetwindy-subsets-and-logic" class="nav-link" data-scroll-target="#wetwindy-subsets-and-logic">Wet/windy subsets and logic</a></li>
-  <li><a href="#data-avalability-overlap" id="toc-data-avalability-overlap" class="nav-link" data-scroll-target="#data-avalability-overlap">Data avalability / overlap</a></li>
+  <li><a href="#data-availability-overlap" id="toc-data-availability-overlap" class="nav-link" data-scroll-target="#data-availability-overlap">Data availability / overlap</a></li>
   <li><a href="#rolling-diagnostics-logic" id="toc-rolling-diagnostics-logic" class="nav-link" data-scroll-target="#rolling-diagnostics-logic">Rolling diagnostics logic</a></li>
   <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">Limitations</a></li>
+  <li><a href="#references-methods-background" id="toc-references-methods-background" class="nav-link" data-scroll-target="#references-methods-background">References (methods background)</a></li>
   </ul>
 </nav>
 </nav>
@@ -179,9 +181,9 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="data-harmonisation-units-and-time-step">Data harmonisation units and time step</h2>
 <p>We used four sources: ERA5 reanalysis, buoy in-situ station, airport observations, and NIWA Virtual Climate Station Network (VCSN). All inputs were standardised to a daily time step and common units before any comparisons:</p>
 <ul>
-<li>Temperature (°C), wind speed (m/s), and shortwave radiation (W/m²) were aggregated as daily means; precipitation (mm) as daily totals.</li>
-<li>Sub-daily records (e.g., 5‑minute buoy, hourly stations) were first converted to UTC, then aggregated with sums for fluxes (precip) and means for state variables (temp, wind, radiation).</li>
-<li>Radiation in energy units (MJ/m²) was converted to power (W/m²) using <code>Rad_MJm2 * 1e6 / 86400</code> for daily totals and <code>* 1e6 / 3600</code> (hourly) before daily means, matching the reporting interval.</li>
+<li>Temperature (deg C), wind speed (m/s), and shortwave radiation (W/m^2) were aggregated as daily means; precipitation (mm) as daily totals.</li>
+<li>Sub-daily records (e.g., 5-minute buoy, hourly stations) were first converted to UTC, then aggregated with sums for fluxes (precip) and means for state variables (temp, wind, radiation).</li>
+<li>Radiation in energy units (MJ/m^2) was converted to power (W/m^2) using <code>Rad_MJm2 * 1e6 / 86400</code> for daily totals and <code>Rad_MJm2 * 1e6 / 3600</code> for hourly values before daily means, matching the reporting interval.</li>
 <li>Variable names were standardised to <code>Temp_C</code>, <code>Precip_mm</code>, <code>Wind_Spd_ms</code>, <code>RadSWD_Wm2</code>, plus a <code>Date</code> column for joins.</li>
 </ul>
 </section>
@@ -191,23 +193,34 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="metrics" class="level2">
 <h2 class="anchored" data-anchor-id="metrics">Metrics</h2>
-<p>Performance was quantified with Pearson correlation (r), regression slope and intercept (sim ~ obs), mean absolute error (MAE), root mean squared error (RMSE), Lin’s concordance correlation coefficient (CCC), bias (sim − obs), and relative bias (percent of observed mean). Metrics are computed after dropping NA pairs.</p>
+<p>Metrics are computed on paired daily values after joining by <code>Date</code> and dropping NA pairs. The target dataset is treated as “sim” and the reference as “obs”.</p>
+<p>Core performance metrics: - Pearson correlation (r) for overall co-variation. - Linear regression of sim ~ obs to report slope and intercept (scaling and offset bias). - MAE and RMSE based on error = (sim - obs). - Lin’s concordance correlation coefficient (CCC) to combine accuracy and precision. - Bias = mean(sim - obs), and relative bias = bias / mean(obs) * 100 (if mean obs is non-zero).</p>
+<p>Event agreement metrics (used for precipitation events): - Events are defined by a threshold on the reference series (default precip &gt;= threshold). - Counts of hits, misses, false alarms, and correct negatives are computed. - Skill scores include POD (probability of detection), FAR (false alarm ratio), CSI (critical success index), and bias score.</p>
+<p>Seasonal and climatology diagnostics: - Monthly climatology is summarized with mean and interquartile range (IQR) per dataset. - Seasonal bias is computed as (target - reference) grouped by season. - Seasons follow Southern Hemisphere definitions (DJF/MAM/JJA/SON) with an optional warm/cool split.</p>
+<p>Figures use consistent overlap with the reference dates to ensure fair visual comparisons (time series, distributions, scatter).</p>
+</section>
+<section id="metric-formulas-paired-daily-values" class="level2">
+<h2 class="anchored" data-anchor-id="metric-formulas-paired-daily-values">Metric formulas (paired daily values)</h2>
+<p>Let obs_i be the reference value and sim_i the target value for i = 1..n after pairing by date and dropping NA pairs. Define error e_i = sim_i - obs_i, and means mu_obs, mu_sim with standard deviations sigma_obs, sigma_sim.</p>
+<p>Core metrics: - Pearson correlation: r = sum((obs_i - mu_obs)(sim_i - mu_sim)) / sqrt(sum((obs_i - mu_obs)^2) * sum((sim_i - mu_sim)^2)) - Linear regression (sim ~ obs): sim_i = a + b * obs_i, where b = cov(obs, sim) / var(obs) and a = mu_sim - b * mu_obs - MAE: MAE = (1/n) * sum |e_i| - RMSE: RMSE = sqrt((1/n) * sum e_i^2) - Bias: Bias = (1/n) * sum e_i - Relative bias: RelBias(%) = 100 * Bias / mu_obs (only reported if mu_obs != 0) - Lin’s concordance correlation coefficient (CCC): CCC = (2 * r * sigma_obs * sigma_sim) / (sigma_obs^2 + sigma_sim^2 + (mu_obs - mu_sim)^2)</p>
+<p>Event agreement (binary events defined on the reference series at a threshold): - Hits (H): ref event and target event - Misses (M): ref event and target no-event - False alarms (F): ref no-event and target event - Correct negatives (C): ref no-event and target no-event - POD = H / (H + M) - FAR = F / (H + F) - CSI = H / (H + M + F) - Bias score = (H + F) / (H + M)</p>
+<p>Seasonal bias within season s: - Bias_s = mean(sim_i - obs_i) for all paired days in season s</p>
 </section>
 <section id="wetwindy-subsets-and-logic" class="level2">
 <h2 class="anchored" data-anchor-id="wetwindy-subsets-and-logic">Wet/windy subsets and logic</h2>
 <ul>
-<li><strong>Wet days:</strong> Precipitation metrics were recomputed on days with observed precip above a threshold (default 0.1–1 mm) to avoid zero-inflation masking disagreement.</li>
-<li><strong>Windy days:</strong> Wind metrics were optionally recomputed for high-wind conditions, defined either by a fixed threshold (default 10 m/s) or by the top 10% of observed winds in the reference record.</li>
+<li>Wet days: precipitation metrics are recomputed on days with observed precip above a threshold (default 0.1 to 1 mm) to avoid zero inflation masking disagreement.</li>
+<li>Windy days: wind metrics are optionally recomputed for high-wind conditions, defined either by a fixed threshold (default 10 m/s) or by the top 10 percent of observed winds in the reference record. When using top-percent thresholds, the cutoff is computed per comparison from the reference overlap period.</li>
 </ul>
 <p>These subsets surface performance during hydrologically and operationally important conditions.</p>
 </section>
-<section id="data-avalability-overlap" class="level2">
-<h2 class="anchored" data-anchor-id="data-avalability-overlap">Data avalability / overlap</h2>
-<p>Only dates present in both the reference and the compared dataset are used. Coverage tables (rendered in the site) report first/last date and number of overlapping days for transparency.</p>
+<section id="data-availability-overlap" class="level2">
+<h2 class="anchored" data-anchor-id="data-availability-overlap">Data availability / overlap</h2>
+<p>Only dates present in both the reference and the compared dataset are used. Time series and distribution plots use the reference dates as the overlap anchor. Coverage tables report first/last date and number of overlapping days for transparency.</p>
 </section>
 <section id="rolling-diagnostics-logic" class="level2">
 <h2 class="anchored" data-anchor-id="rolling-diagnostics-logic">Rolling diagnostics logic</h2>
-<p>To detect drift through time, moving-window diagnostics (window = 30 days by default) track metrics such as bias and CCC. Plots of these rolling statistics help identify regime shifts, seasonal dependence, or gradual timing offsets.</p>
+<p>To detect drift through time, moving-window diagnostics (window = 30 days by default) track MAE, RMSE, bias, and correlation. The rolling window is trailing, uses only complete windows, and requires a minimum of paired values for correlation. These plots help identify regime shifts, seasonal dependence, or gradual timing offsets.</p>
 </section>
 <section id="limitations" class="level2">
 <h2 class="anchored" data-anchor-id="limitations">Limitations</h2>
@@ -216,7 +229,16 @@ ul.task-list li input[type="checkbox"] {
 <li>Residual timestamp misalignment could affect daily aggregates despite UTC standardisation.</li>
 <li>Zero-inflated precipitation can inflate r; wet-day metrics mitigate but do not eliminate this effect.</li>
 <li>Findings depend on the overlapping period; results may change with different seasons or longer records.</li>
-<li>Wet/windy thresholds are pragmatic; sensitivity checks are recommended if thresholds influence decisions. Future users should adapt thresholds, reference choice, and aggregation rules to their lake, documenting any deviations.</li>
+<li>Wet/windy thresholds are pragmatic; sensitivity checks are recommended if thresholds influence decisions.</li>
+</ul>
+<p>Future users should adapt thresholds, reference choice, and aggregation rules to their lake, documenting any deviations.</p>
+</section>
+<section id="references-methods-background" class="level2">
+<h2 class="anchored" data-anchor-id="references-methods-background">References (methods background)</h2>
+<ul>
+<li>Lin, L.I.-K. (1989). A concordance correlation coefficient to evaluate reproducibility.</li>
+<li>Jolliffe, I.T., Stephenson, D.B. (eds.). Forecast Verification: A Practitioner’s Guide in Atmospheric Science.</li>
+<li>Wilks, D.S. Statistical Methods in the Atmospheric Sciences.</li>
 </ul>
 
 
