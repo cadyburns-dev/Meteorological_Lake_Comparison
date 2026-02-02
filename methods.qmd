@@ -10,33 +10,85 @@ This section documents how the meteorological datasets were prepared, aligned, a
 
 We used four sources: ERA5 reanalysis, buoy in-situ station, airport observations, and NIWA Virtual Climate Station Network (VCSN). All inputs were standardised to a daily time step and common units before any comparisons:
 
-- Temperature (°C), wind speed (m/s), and shortwave radiation (W/m²) were aggregated as daily means; precipitation (mm) as daily totals.
-- Sub-daily records (e.g., 5‑minute buoy, hourly stations) were first converted to UTC, then aggregated with sums for fluxes (precip) and means for state variables (temp, wind, radiation).
-- Radiation in energy units (MJ/m²) was converted to power (W/m²) using `Rad_MJm2 * 1e6 / 86400` for daily totals and `* 1e6 / 3600` (hourly) before daily means, matching the reporting interval.
+- Temperature (deg C), wind speed (m/s), and shortwave radiation (W/m^2) were aggregated as daily means; precipitation (mm) as daily totals.
+- Sub-daily records (e.g., 5-minute buoy, hourly stations) were first converted to UTC, then aggregated with sums for fluxes (precip) and means for state variables (temp, wind, radiation).
+- Radiation in energy units (MJ/m^2) was converted to power (W/m^2) using `Rad_MJm2 * 1e6 / 86400` for daily totals and `Rad_MJm2 * 1e6 / 3600` for hourly values before daily means, matching the reporting interval.
 - Variable names were standardised to `Temp_C`, `Precip_mm`, `Wind_Spd_ms`, `RadSWD_Wm2`, plus a `Date` column for joins.
 
 ## Reference site justification
 
 Airport station data were used as the primary reference because they are maintained, quality-controlled, and co-located near the lake with minimal missingness. All alternative sources (ERA5, VCSN, buoy, Town) were evaluated against this reference over their overlapping dates.
 
-## Metrics 
+## Metrics
 
-Performance was quantified with Pearson correlation (r), regression slope and intercept (sim ~ obs), mean absolute error (MAE), root mean squared error (RMSE), Lin’s concordance correlation coefficient (CCC), bias (sim − obs), and relative bias (percent of observed mean). Metrics are computed after dropping NA pairs.
+Metrics are computed on paired daily values after joining by `Date` and dropping NA pairs. The target dataset is treated as "sim" and the reference as "obs".
+
+Core performance metrics:
+- Pearson correlation (r) for overall co-variation.
+- Linear regression of sim ~ obs to report slope and intercept (scaling and offset bias).
+- MAE and RMSE based on error = (sim - obs).
+- Lin's concordance correlation coefficient (CCC) to combine accuracy and precision.
+- Bias = mean(sim - obs), and relative bias = bias / mean(obs) * 100 (if mean obs is non-zero).
+
+Event agreement metrics (used for precipitation events):
+- Events are defined by a threshold on the reference series (default precip >= threshold).
+- Counts of hits, misses, false alarms, and correct negatives are computed.
+- Skill scores include POD (probability of detection), FAR (false alarm ratio), CSI (critical success index), and bias score.
+
+Seasonal and climatology diagnostics:
+- Monthly climatology is summarized with mean and interquartile range (IQR) per dataset.
+- Seasonal bias is computed as (target - reference) grouped by season.
+- Seasons follow Southern Hemisphere definitions (DJF/MAM/JJA/SON) with an optional warm/cool split.
+
+Figures use consistent overlap with the reference dates to ensure fair visual comparisons (time series, distributions, scatter).
+
+## Metric formulas (paired daily values)
+
+Let obs_i be the reference value and sim_i the target value for i = 1..n after pairing by date and dropping NA pairs. Define error e_i = sim_i - obs_i, and means mu_obs, mu_sim with standard deviations sigma_obs, sigma_sim.
+
+Core metrics:
+- Pearson correlation:
+  r = sum((obs_i - mu_obs)(sim_i - mu_sim)) / sqrt(sum((obs_i - mu_obs)^2) * sum((sim_i - mu_sim)^2))
+- Linear regression (sim ~ obs):
+  sim_i = a + b * obs_i, where b = cov(obs, sim) / var(obs) and a = mu_sim - b * mu_obs
+- MAE:
+  MAE = (1/n) * sum |e_i|
+- RMSE:
+  RMSE = sqrt((1/n) * sum e_i^2)
+- Bias:
+  Bias = (1/n) * sum e_i
+- Relative bias:
+  RelBias(%) = 100 * Bias / mu_obs (only reported if mu_obs != 0)
+- Lin's concordance correlation coefficient (CCC):
+  CCC = (2 * r * sigma_obs * sigma_sim) / (sigma_obs^2 + sigma_sim^2 + (mu_obs - mu_sim)^2)
+
+Event agreement (binary events defined on the reference series at a threshold):
+- Hits (H): ref event and target event
+- Misses (M): ref event and target no-event
+- False alarms (F): ref no-event and target event
+- Correct negatives (C): ref no-event and target no-event
+- POD = H / (H + M)
+- FAR = F / (H + F)
+- CSI = H / (H + M + F)
+- Bias score = (H + F) / (H + M)
+
+Seasonal bias within season s:
+- Bias_s = mean(sim_i - obs_i) for all paired days in season s
 
 ## Wet/windy subsets and logic
 
-- **Wet days:** Precipitation metrics were recomputed on days with observed precip above a threshold (default 0.1–1 mm) to avoid zero-inflation masking disagreement.
-- **Windy days:** Wind metrics were optionally recomputed for high-wind conditions, defined either by a fixed threshold (default 10 m/s) or by the top 10% of observed winds in the reference record.
+- Wet days: precipitation metrics are recomputed on days with observed precip above a threshold (default 0.1 to 1 mm) to avoid zero inflation masking disagreement.
+- Windy days: wind metrics are optionally recomputed for high-wind conditions, defined either by a fixed threshold (default 10 m/s) or by the top 10 percent of observed winds in the reference record. When using top-percent thresholds, the cutoff is computed per comparison from the reference overlap period.
 
 These subsets surface performance during hydrologically and operationally important conditions.
 
-## Data avalability / overlap
+## Data availability / overlap
 
-Only dates present in both the reference and the compared dataset are used. Coverage tables (rendered in the site) report first/last date and number of overlapping days for transparency.
+Only dates present in both the reference and the compared dataset are used. Time series and distribution plots use the reference dates as the overlap anchor. Coverage tables report first/last date and number of overlapping days for transparency.
 
 ## Rolling diagnostics logic
 
-To detect drift through time, moving-window diagnostics (window = 30 days by default) track metrics such as bias and CCC. Plots of these rolling statistics help identify regime shifts, seasonal dependence, or gradual timing offsets.
+To detect drift through time, moving-window diagnostics (window = 30 days by default) track MAE, RMSE, bias, and correlation. The rolling window is trailing, uses only complete windows, and requires a minimum of paired values for correlation. These plots help identify regime shifts, seasonal dependence, or gradual timing offsets.
 
 ## Limitations
 
@@ -45,4 +97,11 @@ To detect drift through time, moving-window diagnostics (window = 30 days by def
 - Zero-inflated precipitation can inflate r; wet-day metrics mitigate but do not eliminate this effect.
 - Findings depend on the overlapping period; results may change with different seasons or longer records.
 - Wet/windy thresholds are pragmatic; sensitivity checks are recommended if thresholds influence decisions.
+
 Future users should adapt thresholds, reference choice, and aggregation rules to their lake, documenting any deviations.
+
+## References (methods background)
+
+- Lin, L.I.-K. (1989). A concordance correlation coefficient to evaluate reproducibility.
+- Jolliffe, I.T., Stephenson, D.B. (eds.). Forecast Verification: A Practitioner’s Guide in Atmospheric Science.
+- Wilks, D.S. Statistical Methods in the Atmospheric Sciences.
