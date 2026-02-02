@@ -10,7 +10,7 @@ options(repos = c(CRAN = "https://packagemanager.posit.co/cran/latest"))
 renv::restore(prompt = FALSE)  # use the lockfile; idempotent
 
 # from GitHub  (records to renv.lock)
-renv::install("limnotrack/aemetools")
+renv::install("limnotrack/aemetools")  # NOTE used with Windows users
 renv::install("rLakeAnalyzer")
 #renv::install("plotly")
 #renv::install("airGR")

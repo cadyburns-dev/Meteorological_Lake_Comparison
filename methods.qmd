@@ -45,5 +45,4 @@ To detect drift through time, moving-window diagnostics (window = 30 days by def
 - Zero-inflated precipitation can inflate r; wet-day metrics mitigate but do not eliminate this effect.
 - Findings depend on the overlapping period; results may change with different seasons or longer records.
 - Wet/windy thresholds are pragmatic; sensitivity checks are recommended if thresholds influence decisions.
-
 Future users should adapt thresholds, reference choice, and aggregation rules to their lake, documenting any deviations.

@@ -143,43 +143,6 @@ reactable(
 )
 ```
 
-## Time series overlays
 
-```{r}
-ts_long <- bind_rows(
-  Reference = ref_df,
-  !!!targets_list,
-  .id = "Dataset"
-) |>
-  pivot_longer(
-    cols = all_of(vars),
-    names_to = "Variable",
-    values_to = "Value"
-  ) |>
-  drop_na(Value)
 
-make_ts_plot <- function(var) {
-  df <- ts_long |> filter(Variable == var)
-  x_rng <- range(df$Date, na.rm = TRUE)
-  y_rng <- range(df$Value, na.rm = TRUE)
-  p <- ggplot(df, aes(Date, Value, color = Dataset)) +
-    geom_line() +
-    facet_wrap(~Dataset, ncol = 1, scales = "fixed") +
-    coord_cartesian(xlim = x_rng, ylim = y_rng) +
-    labs(title = var, x = NULL, y = var) +
-    scale_color_manual(
-      values = c(
-        Airport_1770 = "black",
-        ERA5         = "#d95f02",
-        Buoy         = "#7570b3",
-        Town_40177   = "#f0c400",
-        VCS_On       = "#1b9e77"
-      )
-    ) +
-    theme_minimal() +
-    theme(legend.position = "none")
-  ggplotly(p, tooltip = c("Date", "Value", "Dataset"))
-}
 
-lapply(vars, make_ts_plot)
-```
