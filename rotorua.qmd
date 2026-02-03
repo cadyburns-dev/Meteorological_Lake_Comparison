@@ -19,11 +19,21 @@ params:
   window_days: 30
 ---
 
+## Introduction
+
+The second largest lake (by surface area \~79.9km2) in New Zealand, Lake Rotorua is a relatively well studied lake with and round shape fitting it's distrinct culdera description. Although coined the second largest lake its mean depth of just 10meters results in a shallow lake clasification. Shallow lakes are particulary suseptible to climate driven shifts across short and long term scales. Shallow lakes heat up faster than deep lakes which results in larger seasonal and diurnal tempurature fluxtuations. **(Frassel. et.al 2018)** Shallow lakes also tend to be more suseptible to atmospheric forcing where wind, air temperature and precipitation patterms which influence water quality and consequental biology. Lake Rotorua experiance cyanobacteria blooms due to its location in the landscape (hydrothermal + Farm + Population density) recieving high nutirent content along with warmer temperatures. Additional to temperature fluxes influencing cyanobacterial fluxes, wind and rain play a role in the intensity and location of these blooms. Wind drives cyanobacterial location, often leading to cyano bloom intensification/ concentration in particular areas.
+
 ## Site data sources
 
 note add what kindof lat long system used\_\_\_\_\_
 
 Limnotrack Buoy (lat:-380550S Lon:1761653E) on lake, NIWA virtual climate station network (VCSN) grid NO:27879 lat:-38.075 lon:176.275, ERA5 statlite data for Lat:-38.114908 and Lon:176.316662, Observational data "Airport" station 1770 (lat:-38.10592 lon:176.31481), Obresvational data "Town" station 41077 (lat:-38.14635 lon:176.2578).
+
+Methods
+
+All work was completed in R code [@r:alan2024] following the script order stated on README in git reposotory (00, 01, 02, 03, 04, 05).
+
+Please refer to methods tab for further detail
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(

@@ -3,33 +3,43 @@ title: "Reproducibility / How to reuse"
 format: html
 ---
 
-Use this guide to rerun the Rotorua workflow or adapt it to a new lake.
+Use this guide to rerun the Rotorua workflow or adapt it to a new lake. It assumes you want the same analysis structure (metrics, behaviour, diagnostics) but with different datasets and coordinates.
 
-## Set up the environment
+## 1. Set up the environment
 
 - Install R (>= 4.4) and quarto.
 - From the project root, run `scripts/00_project_setup.R` to restore the `renv` environment and required GitHub packages.
   - If `renv::restore()` fails due to offline use, set `options(repos = ...)` to a reachable CRAN mirror first.
 
-## Scripts overview
+## 2. Scripts overview (what does what)
 
 - `scripts/02_prepare_raw_data.R`: converts raw data to daily series, standardises units, and writes to `data/processed/`.
 - `scripts/03_analysis_helpers.R`: defines the core metrics functions and `metrics_vs_ref` logic.
 - `scripts/04_analysis_plotting.R`: defines plot helpers (time series, scatter, distributions, climatology, event skill, rolling diagnostics).
 
-## Prepare data for a new lake
+If you add new data sources, update the prep script and keep naming consistent so downstream QMDs can read the files.
+
+## 3. Prepare data for a new lake
 
 1. Gather raw met data (buoy/station/reanalysis/gridded) into `data/raw/`, keeping original filenames.
-2. Update lake metadata in `params.yml` (name, lat, lon, buffer, reference, targets, thresholds).
-3. Adjust `file_map` paths in the QMDs or helper scripts if filenames differ.
-4. Run or adapt `scripts/02_prepare_raw_data.R` to:
+2. Update lake metadata in `params.yml`:
+   - `lake_name`, `lat`, `lon`, `buffer_km`
+   - `reference` (primary benchmark) and `targets` (comparison datasets)
+   - thresholds (`wet_threshold_mm`, `precip_event_threshold`, `windy_top_pct`, `windy_threshold_ms`, `window_days`)
+3. Update station coordinates (if used) in `Overview.qmd`.
+4. Adjust `file_map` paths in the QMDs or helper scripts if filenames differ.
+5. Run or adapt `scripts/02_prepare_raw_data.R` to:
    - Convert timestamps to UTC.
    - Aggregate sub-daily to daily (means for state variables; sums for fluxes).
    - Standardise column names to `Temp_C`, `Precip_mm`, `Wind_Spd_ms`, `RadSWD_Wm2`, `Date`.
    - Convert radiation MJ/m^2 to W/m^2 when needed.
-5. Place processed daily CSVs in `data/processed/` following the pattern used for Rotorua (e.g., `lakeid_source_daily.csv`).
+6. Place processed daily CSVs in `data/processed/` following the pattern used for Rotorua (e.g., `lakeid_source_daily.csv`).
 
-## Run the analyses
+Minimum required columns for each processed file:
+- `Date` (YYYY-MM-DD, UTC)
+- `Temp_C`, `Precip_mm`, `Wind_Spd_ms`, `RadSWD_Wm2` (if a variable is unavailable, remove it from `params.yml` and the analyses will skip it).
+
+## 4. Run the analyses
 
 - Render the whole site: `quarto render` (outputs to `docs/` as set in `_quarto.yml`).
 - Or render a single page (e.g., `quarto render rotorua.qmd`) to iterate faster.
@@ -39,13 +49,15 @@ Use this guide to rerun the Rotorua workflow or adapt it to a new lake.
   - Variable diagnostics: time-series overlays.
   - Metrics and stats: quantitative tables and plots.
 
-## Adapting thresholds and subsets
+## 5. Adapting thresholds and subsets
 
 - Set wet-day and windy thresholds in `params.yml` (`wet_threshold_mm`, `precip_event_threshold`, `windy_threshold_ms`, `windy_top_pct`).
 - Re-render to propagate changes to all tabs; rolling window (`window_days`) controls drift diagnostics.
 - If you change the reference dataset or add new targets, update both `params.yml` and the `file_map` in the QMDs so names align.
 
-## What to document
+Tip: if a dataset does not contain a variable (e.g., radiation), keep the variable out of `params.yml` to prevent render errors.
+
+## 6. What to document for each lake
 
 - Source metadata (station IDs, grid cell coords, units).
 - Any timezone assumptions or corrections applied.
@@ -54,3 +66,31 @@ Use this guide to rerun the Rotorua workflow or adapt it to a new lake.
 - Date span of overlapping data used in metrics.
 
 Keeping these notes with each new lake run ensures results are transparent and comparable.
+
+## Example: new lake naming template (Lake Tutira)
+
+Use the following as a starting template for `params.yml` and file naming:
+
+```yaml
+lake_name: "Lake Tutira"
+lat: -39.223588
+lon: 176.892553
+buffer_km: 10
+lake_id: "tutira"
+reference: "Airport_XXXX"
+targets: ["ERA5", "Buoy", "Town_YYYY", "VCS_On"]
+vars: ["Temp_C", "Precip_mm", "Wind_Spd_ms", "RadSWD_Wm2"]
+wet_threshold_mm: 1
+precip_event_threshold: 0.1
+windy_top_pct: 0.10
+windy_threshold_ms: 10
+window_days: 30
+```
+
+Example processed filenames:
+
+- `data/processed/tutira_era5_daily.csv`
+- `data/processed/tutira_buoy_daily.csv`
+- `data/processed/tutira_airport_XXXX_daily.csv`
+- `data/processed/tutira_town_YYYY_daily.csv`
+- `data/processed/tutira_vcs_on_daily.csv`
