@@ -21,13 +21,13 @@ website:
         href: Results.qmd
       - text: "Metrics & stats"
         href: metrics_stats.qmd
+      - text: "Rotorua demo"
+        href: rotorua.qmd
       - text: "Reproducibility"
         href: Reproducibility.qmd
 
 metadata-files:
   - params.yml
-
-bibliography: reference.bib
 
 format:
   html:
