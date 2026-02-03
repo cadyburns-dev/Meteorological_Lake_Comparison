@@ -27,6 +27,8 @@ website:
 metadata-files:
   - params.yml
 
+bibliography: reference.bib
+
 format:
   html:
     theme: lux

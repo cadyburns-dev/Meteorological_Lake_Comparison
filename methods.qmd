@@ -90,6 +90,10 @@ Only dates present in both the reference and the compared dataset are used. Time
 
 To detect drift through time, moving-window diagnostics (window = 30 days by default) track MAE, RMSE, bias, and correlation. The rolling window is trailing, uses only complete windows, and requires a minimum of paired values for correlation. These plots help identify regime shifts, seasonal dependence, or gradual timing offsets.
 
+## Software and packages
+
+Analyses were performed in R [@r:alan2024]. Data wrangling and visualization follow the tidyverse ecosystem [@tidyverse], and spatial processing relies on the sf framework [@sf].
+
 ## Limitations
 
 - Spatial representativeness differs: point sensors (buoy, airport) capture local effects, while gridded/reanalysis products smooth extremes.
