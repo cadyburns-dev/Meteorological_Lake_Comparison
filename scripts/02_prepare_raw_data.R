@@ -4,9 +4,9 @@
 
 
 
-# Script that follows  "000_project_setup" and  "00_metrics_helpers" and precedes "02_analysis_helpers" and "03_analysis_plotting"
+# Script that follows  "00_project_setup" and  "01_metrics_helpers" and precedes "03_analysis_helpers" and "04_analysis_plotting"
 
-# If you have not gone through  000_project_setup or 00_metrics_helpers do so before this script
+# If you have not gone through  00_project_setup or 01_metrics_helpers do so before this script
 
 
 
@@ -37,7 +37,6 @@ library(purrr)
 
 #-------------------------------------------------------------------------------
   # Make functions - files all from inside data/raw
-  # Make functions
 #2. ------------------------------------------------------------------------------
 path_raw <- function(...) file.path("data", "raw", ...)
 
@@ -60,7 +59,7 @@ summarise_hourly_mean <- function(df, date_col, value_col) {
     )
 }
 
-# makeing wind function as buoy units changed (note = visualize this and get unit changes dates for diff lakes)
+# makeing wind function as buoy units changed mid dataset (note = visualize this and get unit changes dates for diff lakes)
 wind_knots_conv <- function(df, Wind_Speed_ms, value_col) 
 wind_ms_conv <- function(df, Wind_Speed_ms, value_col)
 
@@ -126,7 +125,7 @@ write.csv(deriv_met, file = "data/raw/Rotorua_ERA5_1990_2025.csv", row.names = F
 
 glimpse(deriv_met)
 
-#Us a raw file and change it to match all proceesing data below
+#Use a raw file and change it to match all proceesing data below
 
 
 Era5 <- read_csv(path_raw("Rotorua_ERA5_1990_2025.csv"), show_col_types = FALSE) |>
@@ -170,9 +169,9 @@ summary(Rotorua_Buoy_raw)
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    #   Buoy wind unit check
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# Rotorua and other buoys have wind unit change 
+# Rotorua and other buoys may have wind unit change 
 # original code below does not account for the unit change. 
-# When you get a new lake apply this code below and visualize the wind. if you see an obvious drop of rise then knots and ms could be used in the same time set
+# When you get a new lake apply this code below and visualize the wind. if you see an obvious drop or rise then knots and ms could be used in the same time set
 
 # buoy <- Rotorua_Buoy_raw |>
 #  mutate(
@@ -387,7 +386,7 @@ tail(TWN_41077_RAD_daily)
 
 
 
-# ---------- daily temperature/humidity
+# ---------- daily temperature/humidity - if you cant get hourly use th code below
 
 #Rua_41077_TEMP_daily <- read_csv(
  # path_raw("Rotorua_town_41077", "41077__Temperature__daily.csv"),
@@ -418,7 +417,7 @@ tail(TWN_41077_RAD_daily)
 
 
 # ---- Hourly temperature
-
+# Best practice to use hourly for temp and aggregae to daily so all data aligns more accuratly
 
 Rua_41077_TEMP_hourly <- read_csv(
   path_raw("Rotorua_town_41077", "41077__Temperature__hourly.csv"),

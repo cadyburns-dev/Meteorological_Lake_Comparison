@@ -13,9 +13,10 @@ params:
 
 To analyse different meterological data avalable for a given location.
 
+
+
 ## Data sources
 
-note add what kindof lat long system used\_\_\_\_\_
 
 Limnotrack Buoy on lake, NIWA virtual climate station network (VCSN) , ERA5 statlite data, Observational data "Airport" station, Obresvational data "Town" station.
 
@@ -33,9 +34,19 @@ The outputs of this project will show:
 
 4.  Root mean squared error (RMSE)
 
-5.  Concordance
+5.  Concordance (ccc)
 
 6.  Mean and realitive bias
+
+7.  Event score
+
+8.  Rolling window/drift 
+
+9. Probability detection (POD)
+
+10. False alarm ration (FAR)
+
+11. Critical success index (CSI)
 
     These metrics along with plots and diagnostics will answer bias questions, seasonal behaviour, event disagreement and extremes
 

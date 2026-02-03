@@ -94,3 +94,5 @@ Example processed filenames:
 - `data/processed/tutira_airport_XXXX_daily.csv`
 - `data/processed/tutira_town_YYYY_daily.csv`
 - `data/processed/tutira_vcs_on_daily.csv`
+
+Where airport will be the Napier Airport XXX will be its assosiated NIWA number and town may be the closest weather station to the area. 

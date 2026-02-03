@@ -15,7 +15,7 @@
 
 # 1.
 #' Compute summary metrics between two numeric vectors
-#'
+
 #' @param obs Numeric vector of "observed" or reference values (e.g. Airport)
 #' @param sim Numeric vector of "simulated" or alternative source (e.g. ERA5)
 #' @return A tibble with correlation, slope, intercept, MAE, RMSE, and concordance

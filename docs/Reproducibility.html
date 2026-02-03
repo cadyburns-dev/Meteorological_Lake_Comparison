@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Reproducibility / How to reuse – Meterological Lake Comparison</title>
+<title>reproducibility – Meterological Lake Comparison</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -137,11 +172,13 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of Content</h2>
    
   <ul>
-  <li><a href="#set-up-the-environment" id="toc-set-up-the-environment" class="nav-link active" data-scroll-target="#set-up-the-environment">Set up the environment</a></li>
-  <li><a href="#prepare-data-for-a-new-lake" id="toc-prepare-data-for-a-new-lake" class="nav-link" data-scroll-target="#prepare-data-for-a-new-lake">Prepare data for a new lake</a></li>
-  <li><a href="#run-the-analyses" id="toc-run-the-analyses" class="nav-link" data-scroll-target="#run-the-analyses">Run the analyses</a></li>
-  <li><a href="#adapting-thresholds-and-subsets" id="toc-adapting-thresholds-and-subsets" class="nav-link" data-scroll-target="#adapting-thresholds-and-subsets">Adapting thresholds and subsets</a></li>
-  <li><a href="#what-to-document" id="toc-what-to-document" class="nav-link" data-scroll-target="#what-to-document">What to document</a></li>
+  <li><a href="#set-up-the-environment" id="toc-set-up-the-environment" class="nav-link active" data-scroll-target="#set-up-the-environment">1. Set up the environment</a></li>
+  <li><a href="#scripts-overview-what-does-what" id="toc-scripts-overview-what-does-what" class="nav-link" data-scroll-target="#scripts-overview-what-does-what">2. Scripts overview (what does what)</a></li>
+  <li><a href="#prepare-data-for-a-new-lake" id="toc-prepare-data-for-a-new-lake" class="nav-link" data-scroll-target="#prepare-data-for-a-new-lake">3. Prepare data for a new lake</a></li>
+  <li><a href="#run-the-analyses" id="toc-run-the-analyses" class="nav-link" data-scroll-target="#run-the-analyses">4. Run the analyses</a></li>
+  <li><a href="#adapting-thresholds-and-subsets" id="toc-adapting-thresholds-and-subsets" class="nav-link" data-scroll-target="#adapting-thresholds-and-subsets">5. Adapting thresholds and subsets</a></li>
+  <li><a href="#what-to-document-for-each-lake" id="toc-what-to-document-for-each-lake" class="nav-link" data-scroll-target="#what-to-document-for-each-lake">6. What to document for each lake</a></li>
+  <li><a href="#example-new-lake-naming-template-lake-tutira" id="toc-example-new-lake-naming-template-lake-tutira" class="nav-link" data-scroll-target="#example-new-lake-naming-template-lake-tutira">Example: new lake naming template (Lake Tutira)</a></li>
   </ul>
 </nav>
 </nav>
@@ -171,56 +208,74 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Use this guide to rerun the Rotorua workflow or adapt it to a new lake.</p>
+<p>Use this guide to rerun the Rotorua workflow or adapt it to a new lake. It assumes you want the same analysis structure (metrics, behaviour, diagnostics) but with different datasets and coordinates.</p>
 <section id="set-up-the-environment" class="level2">
-<h2 class="anchored" data-anchor-id="set-up-the-environment">Set up the environment</h2>
+<h2 class="anchored" data-anchor-id="set-up-the-environment">1. Set up the environment</h2>
 <ul>
-<li>Install R (≥ 4.4) and quarto.</li>
+<li>Install R (&gt;= 4.4) and quarto.</li>
 <li>From the project root, run <code>scripts/00_project_setup.R</code> to restore the <code>renv</code> environment and required GitHub packages.
 <ul>
 <li>If <code>renv::restore()</code> fails due to offline use, set <code>options(repos = ...)</code> to a reachable CRAN mirror first.</li>
 </ul></li>
 </ul>
 </section>
+<section id="scripts-overview-what-does-what" class="level2">
+<h2 class="anchored" data-anchor-id="scripts-overview-what-does-what">2. Scripts overview (what does what)</h2>
+<ul>
+<li><code>scripts/02_prepare_raw_data.R</code>: converts raw data to daily series, standardises units, and writes to <code>data/processed/</code>.</li>
+<li><code>scripts/03_analysis_helpers.R</code>: defines the core metrics functions and <code>metrics_vs_ref</code> logic.</li>
+<li><code>scripts/04_analysis_plotting.R</code>: defines plot helpers (time series, scatter, distributions, climatology, event skill, rolling diagnostics).</li>
+</ul>
+<p>If you add new data sources, update the prep script and keep naming consistent so downstream QMDs can read the files.</p>
+</section>
 <section id="prepare-data-for-a-new-lake" class="level2">
-<h2 class="anchored" data-anchor-id="prepare-data-for-a-new-lake">Prepare data for a new lake</h2>
+<h2 class="anchored" data-anchor-id="prepare-data-for-a-new-lake">3. Prepare data for a new lake</h2>
 <ol type="1">
 <li>Gather raw met data (buoy/station/reanalysis/gridded) into <code>data/raw/</code>, keeping original filenames.</li>
-<li>Update lake metadata in <code>params.yml</code> (name, lat, lon, buffer, reference, targets, thresholds).</li>
+<li>Update lake metadata in <code>params.yml</code>:
+<ul>
+<li><code>lake_name</code>, <code>lat</code>, <code>lon</code>, <code>buffer_km</code></li>
+<li><code>reference</code> (primary benchmark) and <code>targets</code> (comparison datasets)</li>
+<li>thresholds (<code>wet_threshold_mm</code>, <code>precip_event_threshold</code>, <code>windy_top_pct</code>, <code>windy_threshold_ms</code>, <code>window_days</code>)</li>
+</ul></li>
+<li>Update station coordinates (if used) in <code>Overview.qmd</code>.</li>
 <li>Adjust <code>file_map</code> paths in the QMDs or helper scripts if filenames differ.</li>
 <li>Run or adapt <code>scripts/02_prepare_raw_data.R</code> to:
 <ul>
 <li>Convert timestamps to UTC.</li>
 <li>Aggregate sub-daily to daily (means for state variables; sums for fluxes).</li>
 <li>Standardise column names to <code>Temp_C</code>, <code>Precip_mm</code>, <code>Wind_Spd_ms</code>, <code>RadSWD_Wm2</code>, <code>Date</code>.</li>
-<li>Convert radiation MJ/m² to W/m² when needed.</li>
+<li>Convert radiation MJ/m^2 to W/m^2 when needed.</li>
 </ul></li>
 <li>Place processed daily CSVs in <code>data/processed/</code> following the pattern used for Rotorua (e.g., <code>lakeid_source_daily.csv</code>).</li>
 </ol>
+<p>Minimum required columns for each processed file: - <code>Date</code> (YYYY-MM-DD, UTC) - <code>Temp_C</code>, <code>Precip_mm</code>, <code>Wind_Spd_ms</code>, <code>RadSWD_Wm2</code> (if a variable is unavailable, remove it from <code>params.yml</code> and the analyses will skip it).</p>
 </section>
 <section id="run-the-analyses" class="level2">
-<h2 class="anchored" data-anchor-id="run-the-analyses">Run the analyses</h2>
+<h2 class="anchored" data-anchor-id="run-the-analyses">4. Run the analyses</h2>
 <ul>
 <li>Render the whole site: <code>quarto render</code> (outputs to <code>docs/</code> as set in <code>_quarto.yml</code>).</li>
 <li>Or render a single page (e.g., <code>quarto render rotorua.qmd</code>) to iterate faster.</li>
 <li>Key tabs:
 <ul>
-<li><strong>Rotorua demo</strong>: full pipeline.</li>
-<li><strong>Behaviour</strong>: event agreement and seasonal structure.</li>
-<li><strong>Variable diagnostics</strong>: time-series overlays.</li>
-<li><strong>Metrics &amp; stats</strong>: quantitative tables/plots.</li>
+<li>Rotorua demo: full pipeline.</li>
+<li>Behaviour: event agreement and seasonal structure.</li>
+<li>Variable diagnostics: time-series overlays.</li>
+<li>Metrics and stats: quantitative tables and plots.</li>
 </ul></li>
 </ul>
 </section>
 <section id="adapting-thresholds-and-subsets" class="level2">
-<h2 class="anchored" data-anchor-id="adapting-thresholds-and-subsets">Adapting thresholds and subsets</h2>
+<h2 class="anchored" data-anchor-id="adapting-thresholds-and-subsets">5. Adapting thresholds and subsets</h2>
 <ul>
 <li>Set wet-day and windy thresholds in <code>params.yml</code> (<code>wet_threshold_mm</code>, <code>precip_event_threshold</code>, <code>windy_threshold_ms</code>, <code>windy_top_pct</code>).</li>
 <li>Re-render to propagate changes to all tabs; rolling window (<code>window_days</code>) controls drift diagnostics.</li>
+<li>If you change the reference dataset or add new targets, update both <code>params.yml</code> and the <code>file_map</code> in the QMDs so names align.</li>
 </ul>
+<p>Tip: if a dataset does not contain a variable (e.g., radiation), keep the variable out of <code>params.yml</code> to prevent render errors.</p>
 </section>
-<section id="what-to-document" class="level2">
-<h2 class="anchored" data-anchor-id="what-to-document">What to document</h2>
+<section id="what-to-document-for-each-lake" class="level2">
+<h2 class="anchored" data-anchor-id="what-to-document-for-each-lake">6. What to document for each lake</h2>
 <ul>
 <li>Source metadata (station IDs, grid cell coords, units).</li>
 <li>Any timezone assumptions or corrections applied.</li>
@@ -229,6 +284,32 @@ ul.task-list li input[type="checkbox"] {
 <li>Date span of overlapping data used in metrics.</li>
 </ul>
 <p>Keeping these notes with each new lake run ensures results are transparent and comparable.</p>
+</section>
+<section id="example-new-lake-naming-template-lake-tutira" class="level2">
+<h2 class="anchored" data-anchor-id="example-new-lake-naming-template-lake-tutira">Example: new lake naming template (Lake Tutira)</h2>
+<p>Use the following as a starting template for <code>params.yml</code> and file naming:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lake_name</span><span class="kw">:</span><span class="at"> </span><span class="st">"Lake Tutira"</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lat</span><span class="kw">:</span><span class="at"> </span><span class="fl">-39.223588</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lon</span><span class="kw">:</span><span class="at"> </span><span class="fl">176.892553</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">buffer_km</span><span class="kw">:</span><span class="at"> </span><span class="dv">10</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lake_id</span><span class="kw">:</span><span class="at"> </span><span class="st">"tutira"</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">reference</span><span class="kw">:</span><span class="at"> </span><span class="st">"Airport_XXXX"</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">targets</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">"ERA5"</span><span class="kw">,</span><span class="at"> </span><span class="st">"Buoy"</span><span class="kw">,</span><span class="at"> </span><span class="st">"Town_YYYY"</span><span class="kw">,</span><span class="at"> </span><span class="st">"VCS_On"</span><span class="kw">]</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">vars</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">"Temp_C"</span><span class="kw">,</span><span class="at"> </span><span class="st">"Precip_mm"</span><span class="kw">,</span><span class="at"> </span><span class="st">"Wind_Spd_ms"</span><span class="kw">,</span><span class="at"> </span><span class="st">"RadSWD_Wm2"</span><span class="kw">]</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">wet_threshold_mm</span><span class="kw">:</span><span class="at"> </span><span class="dv">1</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">precip_event_threshold</span><span class="kw">:</span><span class="at"> </span><span class="fl">0.1</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">windy_top_pct</span><span class="kw">:</span><span class="at"> </span><span class="fl">0.10</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">windy_threshold_ms</span><span class="kw">:</span><span class="at"> </span><span class="dv">10</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">window_days</span><span class="kw">:</span><span class="at"> </span><span class="dv">30</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Example processed filenames:</p>
+<ul>
+<li><code>data/processed/tutira_era5_daily.csv</code></li>
+<li><code>data/processed/tutira_buoy_daily.csv</code></li>
+<li><code>data/processed/tutira_airport_XXXX_daily.csv</code></li>
+<li><code>data/processed/tutira_town_YYYY_daily.csv</code></li>
+<li><code>data/processed/tutira_vcs_on_daily.csv</code></li>
+</ul>
+<p>Where airport will be the Napier Airport XXX will be its assosiated NIWA number and town may be the closest weather station to the area.</p>
 
 
 </section>

@@ -237,7 +237,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="data-sources" class="level2">
 <h2 class="anchored" data-anchor-id="data-sources">Data sources</h2>
-<p>note add what kindof lat long system used_____</p>
 <p>Limnotrack Buoy on lake, NIWA virtual climate station network (VCSN) , ERA5 statlite data, Observational data “Airport” station, Obresvational data “Town” station.</p>
 <p>Data source and station names will vary from location to location. Selecting stations from these websites is laid out in the data wrangling section</p>
 </section>
@@ -249,8 +248,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Change in intercept and slope (linear regrassion slope and intercept)</p></li>
 <li><p>Mean absolute error (MAE)</p></li>
 <li><p>Root mean squared error (RMSE)</p></li>
-<li><p>Concordance</p></li>
-<li><p>Mean and realitive bias</p>
+<li><p>Concordance (ccc)</p></li>
+<li><p>Mean and realitive bias</p></li>
+<li><p>Event score</p></li>
+<li><p>Rolling window/drift</p></li>
+<li><p>Probability detection (POD)</p></li>
+<li><p>False alarm ration (FAR)</p></li>
+<li><p>Critical success index (CSI)</p>
 <p>These metrics along with plots and diagnostics will answer bias questions, seasonal behaviour, event disagreement and extremes</p></li>
 </ol>
 </section>
@@ -284,8 +288,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setView</span>(<span class="at">lng =</span> params<span class="sc">$</span>lon, <span class="at">lat =</span> params<span class="sc">$</span>lat, <span class="at">zoom =</span> <span class="dv">11</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div class="leaflet html-widget html-fill-item" id="htmlwidget-51c161d9e9f48c8d6e6e" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-51c161d9e9f48c8d6e6e">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addCircles","args":[-38.114908,176.316662,10000,null,null,{"interactive":true,"className":"","stroke":true,"color":"dodgerblue","weight":5,"opacity":0.5,"fill":true,"fillColor":"dodgerblue","fillOpacity":0.25},"Lake Rotorua",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null,null]},{"method":"addCircleMarkers","args":[-38.114908,176.316662,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"navy","weight":5,"opacity":0.5,"fill":true,"fillColor":"navy","fillOpacity":0.9},null,null,"Lake Rotorua",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[-38.114908,-38.114908],"lng":[176.316662,176.316662]},"setView":[[-38.114908,176.316662],11,[]]},"evals":[],"jsHooks":[]}</script>
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-6df41ed7b1950b406e20" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-6df41ed7b1950b406e20">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addCircles","args":[-38.114908,176.316662,10000,null,null,{"interactive":true,"className":"","stroke":true,"color":"dodgerblue","weight":5,"opacity":0.5,"fill":true,"fillColor":"dodgerblue","fillOpacity":0.25},"Lake Rotorua",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null,null]},{"method":"addCircleMarkers","args":[-38.114908,176.316662,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"navy","weight":5,"opacity":0.5,"fill":true,"fillColor":"navy","fillOpacity":0.9},null,null,"Lake Rotorua",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[-38.114908,-38.114908],"lng":[176.316662,176.316662]},"setView":[[-38.114908,176.316662],11,[]]},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
