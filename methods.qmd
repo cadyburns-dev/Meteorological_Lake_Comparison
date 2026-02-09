@@ -23,81 +23,82 @@ Airport station data were used as the primary reference because they are maintai
 
 Metrics are computed on paired daily values after joining by `Date` and dropping NA pairs. The target dataset is treated as "sim" and the reference as "obs".
 
-## **Core performance metrics:** 
-
--    Pearson correlation (r) for overall co-variation.
-
--    Linear regression of sim \~ obs to report slope and intercept (scaling and offset bias).
-
--    MAE and RMSE based on error = (sim - obs).
-
--    Lin's concordance correlation coefficient (CCC) to combine accuracy and precision.
-
--    Bias = mean(sim - obs), and relative bias = bias / mean(obs) \* 100 (if mean obs is non-zero).
-
-## **Event agreement metrics (used for precipitation events):** 
-
--    Events are defined by a threshold on the reference series (default precip \>= threshold).
-
--    Counts of hits, misses, false alarms, and correct negatives are computed.
-
--    Skill scores include POD (probability of detection), FAR (false alarm ratio), CSI (critical success index), and bias score.
-
-## **Seasonal and climatology diagnostics:**
-
--    Monthly climatology is summarised with mean and interquartile range (IQR) per dataset.
-
--    Seasonal bias is computed as (target - reference) grouped by season.
-
--    Seasons follow Southern Hemisphere definitions (DJF/MAM/JJA/SON) with an optional warm/cool split.
-
-**Figures use consistent overlap with the reference dates to ensure fair visual comparisons (time series, distributions, scatter).**
-
-# Metric formulas (paired daily values)
+## **Core performance metrics and formulas (paired daily values):**
 
 Let obs_i be the reference value and sim_i the target value for i = 1..n after pairing by date and dropping NA pairs.
 
+$$
+mu = sim_i + (sin_i)
+$$
+
 Define error e_i = sim_i - obs_i, and means mu_obs, mu_sim with standard deviations sigma_obs, sigma_sim.
 
-## **Core metrics:** 
+-   Pearson correlation (r) for overall co-variation.
 
--    Pearson correlation: r = sum((obs_i - mu_obs)(sim_i - mu_sim)) / sqrt(sum((obs_i - mu_obs)\^2) \* sum((sim_i - mu_sim)\^2))
+    -   Pearson correlation: r = sum((obs_i - mu_obs)(sim_i - mu_sim)) / sqrt(sum((obs_i - mu_obs)\^2) \* sum((sim_i - mu_sim)\^2))
 
--    Linear regression (sim \~ obs): sim_i = a + b \* obs_i, where b = cov(obs, sim) / var(obs) and a = mu_sim - b \* mu_obs
+-   Linear regression of sim \~ obs to report slope and intercept (scaling and offset bias).
 
--    MAE: MAE = (1/n) \* sum \|e_i\| - RMSE: RMSE = sqrt((1/n) \* sum e_i\^2) - Bias: Bias = (1/n) \* sum e_i
+    -   Linear regression (sim \~ obs): sim_i = a + b \* obs_i, where b = cov(obs, sim) / var(obs) and a = mu_sim - b \* mu_obs
 
--    Relative bias: RelBias(%) = 100 \* Bias / mu_obs (only reported if mu_obs != 0)
+-   MAE and RMSE based on error = (sim - obs).
 
--    Lin's concordance correlation coefficient (CCC): CCC = (2 \* r \* sigma_obs \* sigma_sim) / (sigma_obs\^2 + sigma_sim\^2 + (mu_obs - mu_sim)\^2). CCC values were interpreted under the McBride 2005 scale 
+    -   MAE: MAE = (1/n) \* sum \|e_i\| - RMSE: RMSE = sqrt((1/n) \* sum e_i\^2) - Bias: Bias = (1/n) \* sum e_i
 
-## **Event agreement (binary events defined on the reference series at a threshold):** 
+-   Lin's concordance correlation coefficient (CCC) to combine accuracy and precision.
 
--    Hits (H): ref event and target event
+    -   Lin's concordance correlation coefficient (CCC): CCC = (2 \* r \* sigma_obs \* sigma_sim) / (sigma_obs\^2 + sigma_sim\^2 + (mu_obs - mu_sim)\^2). CCC values were interpreted under the McBride 2005 scale
 
--    Misses (M): ref event and target no-event
+-   Bias = mean(sim - obs), and relative bias = bias / mean(obs) \* 100 (if mean obs is non-zero).
 
--    False alarms (F): ref no-event and target event
+    -   Relative bias: RelBias(%) = 100 \* Bias / mu_obs (only reported if mu_obs != 0)
 
--    Correct negatives (C): ref no-event and target no-event
+## **Event agreement metrics (used for precipitation events)**
 
--    POD = H / (H + M)
+## **(binary events defined on the reference series at a threshold):**
 
--    FAR = F / (H + F)
+-   Events are defined by a threshold on the reference series (default precip \>= threshold).
 
--    CSI = H / (H + M + F)
+-   Counts of hits (H) shows when both the ("sim" e.g ERA5) (reference "obs" e.g Airport) report an event (e.g rain or wind). Misses (M) identifies when a reference event is missed by the target (sim vs obs), false alarms, and correct negatives are computed.
 
--    Bias score = (H + F) / (H + M)
+-   Skill scores include POD (probability of detection), FAR (false alarm ratio), CSI (critical success index), and bias score.
 
-## **Seasonal bias within season s:** 
+## **Seasonal and climatology diagnostics:**
+
+-   Monthly climatology is summarised with mean and interquartile range (IQR) per dataset.
+
+-   Seasonal bias is computed as (target - reference) grouped by season.
+
+-   Seasons follow Southern Hemisphere definitions (DJF/MAM/JJA/SON) with an optional warm/cool split.
+
+**Figures use consistent overlap with the reference dates to ensure fair visual comparisons (time series, distributions, scatter).**
+
+## **Event agreement (binary events defined on the reference series at a threshold):**
+
+-   Hits (H): ref event and target event
+
+-   Misses (M): ref event and target no-event
+
+-   False alarms (F): ref no-event and target event
+
+-   Correct negatives (C): ref no-event and target no-event
+
+-   POD = H / (H + M)
+
+-   FAR = F / (H + F)
+
+-   CSI = H / (H + M + F)
+
+-   Bias score = (H + F) / (H + M)
+
+## **Seasonal bias within season s:**
 
 Bias_s = mean(sim_i - obs_i) for all paired days in season s
 
 # Wet/windy subsets and logic
 
 -   Wet days: precipitation metrics are recomputed on days with observed precip above a threshold (default 0.1 to 1 mm) to avoid zero inflation masking disagreement.
--   many ETCCDI-style indices use RR ≥ 1 mm for wet-day / consecutive wet day style
-    definitions). **1 mm is used as primary “wet day” threshold** (aligns with widely used climate/extremes index conventions e.g. ETCCDI-style definitions) (CITE ETCCDI indicies))++++++++++++++++++++
+-   many ETCCDI-style indices use RR ≥ 1 mm for wet-day / consecutive wet day style definitions). **1 mm is used as primary “wet day” threshold** (aligns with widely used climate/extremes index conventions e.g. ETCCDI-style definitions) (CITE ETCCDI indicies))++++++++++++++++++++
 -   Windy days: wind metrics are optionally recomputed for high-wind conditions, defined either by a fixed threshold (default 10 m/s) or by the top 10 percent of observed winds in the reference record. When using top-percent thresholds, the cutoff is computed per comparison from the reference overlap period.
 
 These subsets surface performance during hydrologically and operationally important conditions.
@@ -112,8 +113,7 @@ To detect drift through time, moving-window diagnostics (window = 30 days by def
 
 ## Software and packages
 
-
-If you want formal citations for every package listed above, regenerate the bibliography with `knitr::write_bib()` and replace `reference.bib` with the output.      
+If you want formal citations for every package listed above, regenerate the bibliography with `knitr::write_bib()` and replace `reference.bib` with the output.
 
 ```{r}
 #| echo: true
@@ -128,10 +128,8 @@ pkgs <- c(
 
 knitr::write_bib(pkgs, file = "reference.bib")
 ```
-               
 
-Analyses were performed in R [@r:alan2024]. Data wrangling and visualization use tidyverse packages (dplyr, tidyr, ggplot2, readr, purrr, tibble, lubridate) [@tidyverse]. Spatial processing relies on the sf framework [@sf], with leaflet [@leaflet], tmap [@tmap], osmdata [@osmdata], and rnaturalearth [@rnaturalearth] used for mapping. Interactive figures are produced with plotly [@plotly] and tables with reactable [@reactable] and gt [@gt]. Reproducibility is managed with renv [@renv], and report generation uses Quarto with knitr/rmarkdown and htmltools [@htmltools]; here is used for stable file paths.                                           
-            
+Analyses were performed in R [@r:alan2024]. Data wrangling and visualization use tidyverse packages (dplyr, tidyr, ggplot2, readr, purrr, tibble, lubridate) [@tidyverse]. Spatial processing relies on the sf framework [@sf], with leaflet [@leaflet], tmap [@tmap], osmdata [@osmdata], and rnaturalearth [@rnaturalearth] used for mapping. Interactive figures are produced with plotly [@plotly] and tables with reactable [@reactable] and gt [@gt]. Reproducibility is managed with renv [@renv], and report generation uses Quarto with knitr/rmarkdown and htmltools [@htmltools]; here is used for stable file paths.
 
 # Limitations
 

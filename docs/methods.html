@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 /* CSS for citations */
 div.csl-bib-body { }
 div.csl-entry {
@@ -88,7 +123,40 @@ div.csl-indent {
     "search-label": "Search"
   }
 }</script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
 
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="custom.css">
 </head>
@@ -163,13 +231,10 @@ div.csl-indent {
   </ul></li>
   <li><a href="#metrics" id="toc-metrics" class="nav-link" data-scroll-target="#metrics">Metrics</a>
   <ul class="collapse">
-  <li><a href="#core-performance-metrics" id="toc-core-performance-metrics" class="nav-link" data-scroll-target="#core-performance-metrics"><strong>Core performance metrics:</strong></a></li>
-  <li><a href="#event-agreement-metrics-used-for-precipitation-events" id="toc-event-agreement-metrics-used-for-precipitation-events" class="nav-link" data-scroll-target="#event-agreement-metrics-used-for-precipitation-events"><strong>Event agreement metrics (used for precipitation events):</strong></a></li>
+  <li><a href="#core-performance-metrics-and-formulas-paired-daily-values" id="toc-core-performance-metrics-and-formulas-paired-daily-values" class="nav-link" data-scroll-target="#core-performance-metrics-and-formulas-paired-daily-values"><strong>Core performance metrics and formulas (paired daily values):</strong></a></li>
+  <li><a href="#event-agreement-metrics-used-for-precipitation-events" id="toc-event-agreement-metrics-used-for-precipitation-events" class="nav-link" data-scroll-target="#event-agreement-metrics-used-for-precipitation-events"><strong>Event agreement metrics (used for precipitation events)</strong></a></li>
+  <li><a href="#binary-events-defined-on-the-reference-series-at-a-threshold" id="toc-binary-events-defined-on-the-reference-series-at-a-threshold" class="nav-link" data-scroll-target="#binary-events-defined-on-the-reference-series-at-a-threshold"><strong>(binary events defined on the reference series at a threshold):</strong></a></li>
   <li><a href="#seasonal-and-climatology-diagnostics" id="toc-seasonal-and-climatology-diagnostics" class="nav-link" data-scroll-target="#seasonal-and-climatology-diagnostics"><strong>Seasonal and climatology diagnostics:</strong></a></li>
-  </ul></li>
-  <li><a href="#metric-formulas-paired-daily-values" id="toc-metric-formulas-paired-daily-values" class="nav-link" data-scroll-target="#metric-formulas-paired-daily-values">Metric formulas (paired daily values)</a>
-  <ul class="collapse">
-  <li><a href="#core-metrics" id="toc-core-metrics" class="nav-link" data-scroll-target="#core-metrics"><strong>Core metrics:</strong></a></li>
   <li><a href="#event-agreement-binary-events-defined-on-the-reference-series-at-a-threshold" id="toc-event-agreement-binary-events-defined-on-the-reference-series-at-a-threshold" class="nav-link" data-scroll-target="#event-agreement-binary-events-defined-on-the-reference-series-at-a-threshold"><strong>Event agreement (binary events defined on the reference series at a threshold):</strong></a></li>
   <li><a href="#seasonal-bias-within-season-s" id="toc-seasonal-bias-within-season-s" class="nav-link" data-scroll-target="#seasonal-bias-within-season-s"><strong>Seasonal bias within season s:</strong></a></li>
   </ul></li>
@@ -180,7 +245,10 @@ div.csl-indent {
   <li><a href="#software-and-packages" id="toc-software-and-packages" class="nav-link" data-scroll-target="#software-and-packages">Software and packages</a></li>
   </ul></li>
   <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">Limitations</a></li>
-  <li><a href="#references-methods-background" id="toc-references-methods-background" class="nav-link" data-scroll-target="#references-methods-background">References (methods background)</a></li>
+  <li><a href="#references-methods-background" id="toc-references-methods-background" class="nav-link" data-scroll-target="#references-methods-background">References (methods background)</a>
+  <ul class="collapse">
+  <li><a href="#refernces-r-code" id="toc-refernces-r-code" class="nav-link" data-scroll-target="#refernces-r-code">Refernces R code</a></li>
+  </ul></li>
   </ul>
 </nav>
 </nav>
@@ -229,47 +297,55 @@ div.csl-indent {
 <section id="metrics" class="level1">
 <h1>Metrics</h1>
 <p>Metrics are computed on paired daily values after joining by <code>Date</code> and dropping NA pairs. The target dataset is treated as “sim” and the reference as “obs”.</p>
-<section id="core-performance-metrics" class="level2">
-<h2 class="anchored" data-anchor-id="core-performance-metrics"><strong>Core performance metrics:</strong></h2>
+<section id="core-performance-metrics-and-formulas-paired-daily-values" class="level2">
+<h2 class="anchored" data-anchor-id="core-performance-metrics-and-formulas-paired-daily-values"><strong>Core performance metrics and formulas (paired daily values):</strong></h2>
+<p>Let obs_i be the reference value and sim_i the target value for i = 1..n after pairing by date and dropping NA pairs.</p>
+<p><span class="math display">\[
+mu = sim_i + (sin_i)
+\]</span></p>
+<p>Define error e_i = sim_i - obs_i, and means mu_obs, mu_sim with standard deviations sigma_obs, sigma_sim.</p>
 <ul>
-<li><p>Pearson correlation (r) for overall co-variation.</p></li>
-<li><p>Linear regression of sim ~ obs to report slope and intercept (scaling and offset bias).</p></li>
-<li><p>MAE and RMSE based on error = (sim - obs).</p></li>
-<li><p>Lin’s concordance correlation coefficient (CCC) to combine accuracy and precision.</p></li>
-<li><p>Bias = mean(sim - obs), and relative bias = bias / mean(obs) * 100 (if mean obs is non-zero).</p></li>
+<li><p>Pearson correlation (r) for overall co-variation.</p>
+<ul>
+<li>Pearson correlation: r = sum((obs_i - mu_obs)(sim_i - mu_sim)) / sqrt(sum((obs_i - mu_obs)^2) * sum((sim_i - mu_sim)^2))</li>
+</ul></li>
+<li><p>Linear regression of sim ~ obs to report slope and intercept (scaling and offset bias).</p>
+<ul>
+<li>Linear regression (sim ~ obs): sim_i = a + b * obs_i, where b = cov(obs, sim) / var(obs) and a = mu_sim - b * mu_obs</li>
+</ul></li>
+<li><p>MAE and RMSE based on error = (sim - obs).</p>
+<ul>
+<li>MAE: MAE = (1/n) * sum |e_i| - RMSE: RMSE = sqrt((1/n) * sum e_i^2) - Bias: Bias = (1/n) * sum e_i</li>
+</ul></li>
+<li><p>Lin’s concordance correlation coefficient (CCC) to combine accuracy and precision.</p>
+<ul>
+<li>Lin’s concordance correlation coefficient (CCC): CCC = (2 * r * sigma_obs * sigma_sim) / (sigma_obs^2 + sigma_sim^2 + (mu_obs - mu_sim)^2). CCC values were interpreted under the McBride 2005 scale</li>
+</ul></li>
+<li><p>Bias = mean(sim - obs), and relative bias = bias / mean(obs) * 100 (if mean obs is non-zero).</p>
+<ul>
+<li>Relative bias: RelBias(%) = 100 * Bias / mu_obs (only reported if mu_obs != 0)</li>
+</ul></li>
 </ul>
 </section>
 <section id="event-agreement-metrics-used-for-precipitation-events" class="level2">
-<h2 class="anchored" data-anchor-id="event-agreement-metrics-used-for-precipitation-events"><strong>Event agreement metrics (used for precipitation events):</strong></h2>
+<h2 class="anchored" data-anchor-id="event-agreement-metrics-used-for-precipitation-events"><strong>Event agreement metrics (used for precipitation events)</strong></h2>
+</section>
+<section id="binary-events-defined-on-the-reference-series-at-a-threshold" class="level2">
+<h2 class="anchored" data-anchor-id="binary-events-defined-on-the-reference-series-at-a-threshold"><strong>(binary events defined on the reference series at a threshold):</strong></h2>
 <ul>
 <li><p>Events are defined by a threshold on the reference series (default precip &gt;= threshold).</p></li>
-<li><p>Counts of hits, misses, false alarms, and correct negatives are computed.</p></li>
+<li><p>Counts of hits (H) shows when both the (“sim” e.g ERA5) (reference “obs” e.g Airport) report an event (e.g rain or wind). Misses (M) identifies when a reference event is missed by the target (sim vs obs), false alarms, and correct negatives are computed.</p></li>
 <li><p>Skill scores include POD (probability of detection), FAR (false alarm ratio), CSI (critical success index), and bias score.</p></li>
 </ul>
 </section>
 <section id="seasonal-and-climatology-diagnostics" class="level2">
 <h2 class="anchored" data-anchor-id="seasonal-and-climatology-diagnostics"><strong>Seasonal and climatology diagnostics:</strong></h2>
 <ul>
-<li><p>Monthly climatology is summarized with mean and interquartile range (IQR) per dataset.</p></li>
+<li><p>Monthly climatology is summarised with mean and interquartile range (IQR) per dataset.</p></li>
 <li><p>Seasonal bias is computed as (target - reference) grouped by season.</p></li>
 <li><p>Seasons follow Southern Hemisphere definitions (DJF/MAM/JJA/SON) with an optional warm/cool split.</p></li>
 </ul>
 <p><strong>Figures use consistent overlap with the reference dates to ensure fair visual comparisons (time series, distributions, scatter).</strong></p>
-</section>
-</section>
-<section id="metric-formulas-paired-daily-values" class="level1">
-<h1>Metric formulas (paired daily values)</h1>
-<p>Let obs_i be the reference value and sim_i the target value for i = 1..n after pairing by date and dropping NA pairs.</p>
-<p>Define error e_i = sim_i - obs_i, and means mu_obs, mu_sim with standard deviations sigma_obs, sigma_sim.</p>
-<section id="core-metrics" class="level2">
-<h2 class="anchored" data-anchor-id="core-metrics"><strong>Core metrics:</strong></h2>
-<ul>
-<li><p>Pearson correlation: r = sum((obs_i - mu_obs)(sim_i - mu_sim)) / sqrt(sum((obs_i - mu_obs)^2) * sum((sim_i - mu_sim)^2))</p></li>
-<li><p>Linear regression (sim ~ obs): sim_i = a + b * obs_i, where b = cov(obs, sim) / var(obs) and a = mu_sim - b * mu_obs</p></li>
-<li><p>MAE: MAE = (1/n) * sum |e_i| - RMSE: RMSE = sqrt((1/n) * sum e_i^2) - Bias: Bias = (1/n) * sum e_i</p></li>
-<li><p>Relative bias: RelBias(%) = 100 * Bias / mu_obs (only reported if mu_obs != 0)</p></li>
-<li><p>Lin’s concordance correlation coefficient (CCC): CCC = (2 * r * sigma_obs * sigma_sim) / (sigma_obs^2 + sigma_sim^2 + (mu_obs - mu_sim)^2)</p></li>
-</ul>
 </section>
 <section id="event-agreement-binary-events-defined-on-the-reference-series-at-a-threshold" class="level2">
 <h2 class="anchored" data-anchor-id="event-agreement-binary-events-defined-on-the-reference-series-at-a-threshold"><strong>Event agreement (binary events defined on the reference series at a threshold):</strong></h2>
@@ -307,8 +383,22 @@ div.csl-indent {
 </section>
 <section id="software-and-packages" class="level2">
 <h2 class="anchored" data-anchor-id="software-and-packages">Software and packages</h2>
-<p>Analyses were performed in R <span class="citation" data-cites="r:alan2024">(<a href="#ref-r:alan2024" role="doc-biblioref"><em>R: A Language and Environment for Statistical Computing</em> 2024</a>)</span>. Data wrangling and visualization use dplyr, tidyr, ggplot2, readr, purrr, tibble, lubridate, and slider <span class="citation" data-cites="dplyr tidyr ggplot2 readr purrr tibble lubridate slider">(<a href="#ref-dplyr" role="doc-biblioref">authors 2024a</a>, <a href="#ref-tidyr" role="doc-biblioref">2024t</a>, <a href="#ref-ggplot2" role="doc-biblioref">2024b</a>, <a href="#ref-readr" role="doc-biblioref">2024m</a>, <a href="#ref-purrr" role="doc-biblioref">2024k</a>, <a href="#ref-tibble" role="doc-biblioref">2024s</a>, <a href="#ref-lubridate" role="doc-biblioref">2024h</a>, <a href="#ref-slider" role="doc-biblioref">2024r</a>)</span>, alongside the tidyverse meta-package <span class="citation" data-cites="tidyverse">(<a href="#ref-tidyverse" role="doc-biblioref">Wickham et al. 2019</a>)</span>. Spatial processing relies on sf <span class="citation" data-cites="sf">(<a href="#ref-sf" role="doc-biblioref">Pebesma 2018</a>)</span> with leaflet, tmap, osmdata, rnaturalearth, and rnaturalearthdata for mapping <span class="citation" data-cites="leaflet tmap osmdata rnaturalearth rnaturalearthdata">(<a href="#ref-leaflet" role="doc-biblioref">authors 2024g</a>, <a href="#ref-tmap" role="doc-biblioref">2024u</a>, <a href="#ref-osmdata" role="doc-biblioref">2024i</a>, <a href="#ref-rnaturalearth" role="doc-biblioref">2024p</a>, <a href="#ref-rnaturalearthdata" role="doc-biblioref">2024q</a>)</span>. Interactive graphics and tables are produced with plotly, reactable, and gt <span class="citation" data-cites="plotly reactable gt">(<a href="#ref-plotly" role="doc-biblioref">authors 2024j</a>, <a href="#ref-reactable" role="doc-biblioref">2024l</a>, <a href="#ref-gt" role="doc-biblioref">2024c</a>)</span>. Reproducibility and reporting use renv, knitr, rmarkdown, htmltools, and here <span class="citation" data-cites="renv knitr rmarkdown htmltools here">(<a href="#ref-renv" role="doc-biblioref">authors 2024n</a>, <a href="#ref-knitr" role="doc-biblioref">2024f</a>, <a href="#ref-rmarkdown" role="doc-biblioref">2024o</a>, <a href="#ref-htmltools" role="doc-biblioref">2024e</a>, <a href="#ref-here" role="doc-biblioref">2024d</a>)</span>.</p>
 <p>If you want formal citations for every package listed above, regenerate the bibliography with <code>knitr::write_bib()</code> and replace <code>reference.bib</code> with the output.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creates/overwrites reference.bib with citations for all packages used</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>pkgs <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"dplyr"</span>,<span class="st">"ggplot2"</span>,<span class="st">"tidyr"</span>,<span class="st">"readr"</span>,<span class="st">"purrr"</span>,<span class="st">"tibble"</span>,<span class="st">"lubridate"</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"slider"</span>,<span class="st">"reactable"</span>,<span class="st">"plotly"</span>,<span class="st">"here"</span>,<span class="st">"gt"</span>,<span class="st">"sf"</span>,<span class="st">"tmap"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"leaflet"</span>,<span class="st">"osmdata"</span>,<span class="st">"rnaturalearth"</span>,<span class="st">"rnaturalearthdata"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"htmltools"</span>,<span class="st">"knitr"</span>,<span class="st">"rmarkdown"</span>,<span class="st">"renv"</span>,<span class="st">"shiny"</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">write_bib</span>(pkgs, <span class="at">file =</span> <span class="st">"reference.bib"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>Analyses were performed in R <span class="citation" data-cites="r:alan2024">(<a href="#ref-r:alan2024" role="doc-biblioref"><em>R: A Language and Environment for Statistical Computing</em> 2024</a>)</span>. Data wrangling and visualization use tidyverse packages (dplyr, tidyr, ggplot2, readr, purrr, tibble, lubridate) <span class="citation" data-cites="tidyverse">(<a href="#ref-tidyverse" role="doc-biblioref">Wickham et al. 2019</a>)</span>. Spatial processing relies on the sf framework <span class="citation" data-cites="sf">(<a href="#ref-sf" role="doc-biblioref">Pebesma 2018</a>)</span>, with leaflet <span class="citation" data-cites="leaflet">(<a href="#ref-leaflet" role="doc-biblioref">authors 2024c</a>)</span>, tmap <span class="citation" data-cites="tmap">(<a href="#ref-tmap" role="doc-biblioref">authors 2024i</a>)</span>, osmdata <span class="citation" data-cites="osmdata">(<a href="#ref-osmdata" role="doc-biblioref">authors 2024d</a>)</span>, and rnaturalearth <span class="citation" data-cites="rnaturalearth">(<a href="#ref-rnaturalearth" role="doc-biblioref">authors 2024h</a>)</span> used for mapping. Interactive figures are produced with plotly <span class="citation" data-cites="plotly">(<a href="#ref-plotly" role="doc-biblioref">authors 2024e</a>)</span> and tables with reactable <span class="citation" data-cites="reactable">(<a href="#ref-reactable" role="doc-biblioref">authors 2024f</a>)</span> and gt <span class="citation" data-cites="gt">(<a href="#ref-gt" role="doc-biblioref">authors 2024a</a>)</span>. Reproducibility is managed with renv <span class="citation" data-cites="renv">(<a href="#ref-renv" role="doc-biblioref">authors 2024g</a>)</span>, and report generation uses Quarto with knitr/rmarkdown and htmltools <span class="citation" data-cites="htmltools">(<a href="#ref-htmltools" role="doc-biblioref">authors 2024b</a>)</span>; here is used for stable file paths.</p>
 </section>
 </section>
 <section id="limitations" class="level1">
@@ -329,74 +419,41 @@ div.csl-indent {
 <li>Jolliffe, I.T., Stephenson, D.B. (eds.). Forecast Verification: A Practitioner’s Guide in Atmospheric Science.</li>
 <li>Wilks, D.S. Statistical Methods in the Atmospheric Sciences.</li>
 </ol>
+<section id="refernces-r-code" class="level2">
+
 
 
 
 </section>
+</section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
-<div id="ref-dplyr" class="csl-entry" role="listitem">
-authors, R package. 2024a. <em>Dplyr: A Grammar of Data Manipulation</em>. <a href="https://CRAN.R-project.org/package=dplyr">https://CRAN.R-project.org/package=dplyr</a>.
-</div>
-<div id="ref-ggplot2" class="csl-entry" role="listitem">
-———. 2024b. <em>Ggplot2: Create Elegant Data Visualisations Using the Grammar of Graphics</em>. <a href="https://CRAN.R-project.org/package=ggplot2">https://CRAN.R-project.org/package=ggplot2</a>.
-</div>
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">Refernces R code</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-gt" class="csl-entry" role="listitem">
-———. 2024c. <em>Gt: Easily Create Presentation-Ready Display Tables</em>. <a href="https://CRAN.R-project.org/package=gt">https://CRAN.R-project.org/package=gt</a>.
-</div>
-<div id="ref-here" class="csl-entry" role="listitem">
-———. 2024d. <em>Here: A Simpler Way to Find Your Files</em>. <a href="https://CRAN.R-project.org/package=here">https://CRAN.R-project.org/package=here</a>.
+authors, R package. 2024a. <em>Gt: Easily Create Presentation-Ready Display Tables</em>. <a href="https://CRAN.R-project.org/package=gt">https://CRAN.R-project.org/package=gt</a>.
 </div>
 <div id="ref-htmltools" class="csl-entry" role="listitem">
-———. 2024e. <em>Htmltools: Tools for HTML</em>. <a href="https://CRAN.R-project.org/package=htmltools">https://CRAN.R-project.org/package=htmltools</a>.
-</div>
-<div id="ref-knitr" class="csl-entry" role="listitem">
-———. 2024f. <em>Knitr: A General-Purpose Package for Dynamic Report Generation in r</em>. <a href="https://CRAN.R-project.org/package=knitr">https://CRAN.R-project.org/package=knitr</a>.
+———. 2024b. <em>Htmltools: Tools for HTML</em>. <a href="https://CRAN.R-project.org/package=htmltools">https://CRAN.R-project.org/package=htmltools</a>.
 </div>
 <div id="ref-leaflet" class="csl-entry" role="listitem">
-———. 2024g. <em>Leaflet: Create Interactive Web Maps with the JavaScript ’Leaflet’ Library</em>. <a href="https://CRAN.R-project.org/package=leaflet">https://CRAN.R-project.org/package=leaflet</a>.
-</div>
-<div id="ref-lubridate" class="csl-entry" role="listitem">
-———. 2024h. <em>Lubridate: Make Dealing with Dates a Little Easier</em>. <a href="https://CRAN.R-project.org/package=lubridate">https://CRAN.R-project.org/package=lubridate</a>.
+———. 2024c. <em>Leaflet: Create Interactive Web Maps with the JavaScript ’Leaflet’ Library</em>. <a href="https://CRAN.R-project.org/package=leaflet">https://CRAN.R-project.org/package=leaflet</a>.
 </div>
 <div id="ref-osmdata" class="csl-entry" role="listitem">
-———. 2024i. <em>Osmdata: Import OpenStreetMap Data as Simple Features or Spatial Objects</em>. <a href="https://CRAN.R-project.org/package=osmdata">https://CRAN.R-project.org/package=osmdata</a>.
+———. 2024d. <em>Osmdata: Import OpenStreetMap Data as Simple Features or Spatial Objects</em>. <a href="https://CRAN.R-project.org/package=osmdata">https://CRAN.R-project.org/package=osmdata</a>.
 </div>
 <div id="ref-plotly" class="csl-entry" role="listitem">
-———. 2024j. <em>Plotly: Create Interactive Web Graphics via ’Plotly.js’</em>. <a href="https://CRAN.R-project.org/package=plotly">https://CRAN.R-project.org/package=plotly</a>.
-</div>
-<div id="ref-purrr" class="csl-entry" role="listitem">
-———. 2024k. <em>Purrr: Functional Programming Tools</em>. <a href="https://CRAN.R-project.org/package=purrr">https://CRAN.R-project.org/package=purrr</a>.
+———. 2024e. <em>Plotly: Create Interactive Web Graphics via ’Plotly.js’</em>. <a href="https://CRAN.R-project.org/package=plotly">https://CRAN.R-project.org/package=plotly</a>.
 </div>
 <div id="ref-reactable" class="csl-entry" role="listitem">
-———. 2024l. <em>Reactable: Interactive Data Tables for r</em>. <a href="https://CRAN.R-project.org/package=reactable">https://CRAN.R-project.org/package=reactable</a>.
-</div>
-<div id="ref-readr" class="csl-entry" role="listitem">
-———. 2024m. <em>Readr: Read Rectangular Text Data</em>. <a href="https://CRAN.R-project.org/package=readr">https://CRAN.R-project.org/package=readr</a>.
+———. 2024f. <em>Reactable: Interactive Data Tables for r</em>. <a href="https://CRAN.R-project.org/package=reactable">https://CRAN.R-project.org/package=reactable</a>.
 </div>
 <div id="ref-renv" class="csl-entry" role="listitem">
-———. 2024n. <em>Renv: Project Environments</em>. <a href="https://CRAN.R-project.org/package=renv">https://CRAN.R-project.org/package=renv</a>.
-</div>
-<div id="ref-rmarkdown" class="csl-entry" role="listitem">
-———. 2024o. <em>Rmarkdown: Dynamic Documents for r</em>. <a href="https://CRAN.R-project.org/package=rmarkdown">https://CRAN.R-project.org/package=rmarkdown</a>.
+———. 2024g. <em>Renv: Project Environments</em>. <a href="https://CRAN.R-project.org/package=renv">https://CRAN.R-project.org/package=renv</a>.
 </div>
 <div id="ref-rnaturalearth" class="csl-entry" role="listitem">
-———. 2024p. <em>Rnaturalearth: World Map Data from Natural Earth</em>. <a href="https://CRAN.R-project.org/package=rnaturalearth">https://CRAN.R-project.org/package=rnaturalearth</a>.
-</div>
-<div id="ref-rnaturalearthdata" class="csl-entry" role="listitem">
-———. 2024q. <em>Rnaturalearthdata: World Vector Map Data from Natural Earth</em>. <a href="https://CRAN.R-project.org/package=rnaturalearthdata">https://CRAN.R-project.org/package=rnaturalearthdata</a>.
-</div>
-<div id="ref-slider" class="csl-entry" role="listitem">
-———. 2024r. <em>Slider: Sliding Window Functions</em>. <a href="https://CRAN.R-project.org/package=slider">https://CRAN.R-project.org/package=slider</a>.
-</div>
-<div id="ref-tibble" class="csl-entry" role="listitem">
-———. 2024s. <em>Tibble: Simple Data Frames</em>. <a href="https://CRAN.R-project.org/package=tibble">https://CRAN.R-project.org/package=tibble</a>.
-</div>
-<div id="ref-tidyr" class="csl-entry" role="listitem">
-———. 2024t. <em>Tidyr: Tidy Messy Data</em>. <a href="https://CRAN.R-project.org/package=tidyr">https://CRAN.R-project.org/package=tidyr</a>.
+———. 2024h. <em>Rnaturalearth: World Map Data from Natural Earth</em>. <a href="https://CRAN.R-project.org/package=rnaturalearth">https://CRAN.R-project.org/package=rnaturalearth</a>.
 </div>
 <div id="ref-tmap" class="csl-entry" role="listitem">
-———. 2024u. <em>Tmap: Thematic Maps in r</em>. <a href="https://CRAN.R-project.org/package=tmap">https://CRAN.R-project.org/package=tmap</a>.
+———. 2024i. <em>Tmap: Thematic Maps in r</em>. <a href="https://CRAN.R-project.org/package=tmap">https://CRAN.R-project.org/package=tmap</a>.
 </div>
 <div id="ref-sf" class="csl-entry" role="listitem">
 Pebesma, Edzer. 2018. <span>“Simple Features for r: Standardized Support for Spatial Vector Data.”</span> <em>The R Journal</em> 10 (1): 439–46. <a href="https://doi.org/10.32614/RJ-2018-009">https://doi.org/10.32614/RJ-2018-009</a>.

@@ -283,15 +283,15 @@
     "objectID": "methods.html#event-agreement-metrics-used-for-precipitation-events",
     "href": "methods.html#event-agreement-metrics-used-for-precipitation-events",
     "title": "Methods",
-    "section": "Event agreement metrics (used for precipitation events):",
-    "text": "Event agreement metrics (used for precipitation events):\n\nEvents are defined by a threshold on the reference series (default precip &gt;= threshold).\nCounts of hits, misses, false alarms, and correct negatives are computed.\nSkill scores include POD (probability of detection), FAR (false alarm ratio), CSI (critical success index), and bias score."
+    "section": "Event agreement metrics (used for precipitation events)",
+    "text": "Event agreement metrics (used for precipitation events)"
   },
   {
     "objectID": "methods.html#seasonal-and-climatology-diagnostics",
     "href": "methods.html#seasonal-and-climatology-diagnostics",
     "title": "Methods",
     "section": "Seasonal and climatology diagnostics:",
-    "text": "Seasonal and climatology diagnostics:\n\nMonthly climatology is summarized with mean and interquartile range (IQR) per dataset.\nSeasonal bias is computed as (target - reference) grouped by season.\nSeasons follow Southern Hemisphere definitions (DJF/MAM/JJA/SON) with an optional warm/cool split.\n\nFigures use consistent overlap with the reference dates to ensure fair visual comparisons (time series, distributions, scatter)."
+    "text": "Seasonal and climatology diagnostics:\n\nMonthly climatology is summarised with mean and interquartile range (IQR) per dataset.\nSeasonal bias is computed as (target - reference) grouped by season.\nSeasons follow Southern Hemisphere definitions (DJF/MAM/JJA/SON) with an optional warm/cool split.\n\nFigures use consistent overlap with the reference dates to ensure fair visual comparisons (time series, distributions, scatter)."
   },
   {
     "objectID": "methods.html#core-metrics",
@@ -326,7 +326,7 @@
     "href": "methods.html#software-and-packages",
     "title": "Methods",
     "section": "Software and packages",
-    "text": "Software and packages\nAnalyses were performed in R (R: A Language and Environment for Statistical Computing 2024). Data wrangling and visualization use dplyr, tidyr, ggplot2, readr, purrr, tibble, lubridate, and slider (authors 2024a, 2024t, 2024b, 2024m, 2024k, 2024s, 2024h, 2024r), alongside the tidyverse meta-package (Wickham et al. 2019). Spatial processing relies on sf (Pebesma 2018) with leaflet, tmap, osmdata, rnaturalearth, and rnaturalearthdata for mapping (authors 2024g, 2024u, 2024i, 2024p, 2024q). Interactive graphics and tables are produced with plotly, reactable, and gt (authors 2024j, 2024l, 2024c). Reproducibility and reporting use renv, knitr, rmarkdown, htmltools, and here (authors 2024n, 2024f, 2024o, 2024e, 2024d).\nIf you want formal citations for every package listed above, regenerate the bibliography with knitr::write_bib() and replace reference.bib with the output."
+    "text": "Software and packages\nIf you want formal citations for every package listed above, regenerate the bibliography with knitr::write_bib() and replace reference.bib with the output.\n\n\nCode\n# Creates/overwrites reference.bib with citations for all packages used\npkgs &lt;- c(\n  \"dplyr\",\"ggplot2\",\"tidyr\",\"readr\",\"purrr\",\"tibble\",\"lubridate\",\n  \"slider\",\"reactable\",\"plotly\",\"here\",\"gt\",\"sf\",\"tmap\",\n  \"leaflet\",\"osmdata\",\"rnaturalearth\",\"rnaturalearthdata\",\n  \"htmltools\",\"knitr\",\"rmarkdown\",\"renv\",\"shiny\"\n)\n\nknitr::write_bib(pkgs, file = \"reference.bib\")\n\n\nAnalyses were performed in R (R: A Language and Environment for Statistical Computing 2024). Data wrangling and visualization use tidyverse packages (dplyr, tidyr, ggplot2, readr, purrr, tibble, lubridate) (Wickham et al. 2019). Spatial processing relies on the sf framework (Pebesma 2018), with leaflet (authors 2024c), tmap (authors 2024i), osmdata (authors 2024d), and rnaturalearth (authors 2024h) used for mapping. Interactive figures are produced with plotly (authors 2024e) and tables with reactable (authors 2024f) and gt (authors 2024a). Reproducibility is managed with renv (authors 2024g), and report generation uses Quarto with knitr/rmarkdown and htmltools (authors 2024b); here is used for stable file paths."
   },
   {
     "objectID": "Overview.html",
@@ -390,5 +390,19 @@
     "title": "Variable diagnostics",
     "section": "Latest daily snapshot",
     "text": "Latest daily snapshot\nQuick look at the most recent reported day from each dataset."
+  },
+  {
+    "objectID": "methods.html#core-performance-metrics-and-formulas-paired-daily-values",
+    "href": "methods.html#core-performance-metrics-and-formulas-paired-daily-values",
+    "title": "Methods",
+    "section": "Core performance metrics and formulas (paired daily values):",
+    "text": "Core performance metrics and formulas (paired daily values):\nLet obs_i be the reference value and sim_i the target value for i = 1..n after pairing by date and dropping NA pairs.\n\\[\nmu = sim_i + (sin_i)\n\\]\nDefine error e_i = sim_i - obs_i, and means mu_obs, mu_sim with standard deviations sigma_obs, sigma_sim.\n\nPearson correlation (r) for overall co-variation.\n\nPearson correlation: r = sum((obs_i - mu_obs)(sim_i - mu_sim)) / sqrt(sum((obs_i - mu_obs)^2) * sum((sim_i - mu_sim)^2))\n\nLinear regression of sim ~ obs to report slope and intercept (scaling and offset bias).\n\nLinear regression (sim ~ obs): sim_i = a + b * obs_i, where b = cov(obs, sim) / var(obs) and a = mu_sim - b * mu_obs\n\nMAE and RMSE based on error = (sim - obs).\n\nMAE: MAE = (1/n) * sum |e_i| - RMSE: RMSE = sqrt((1/n) * sum e_i^2) - Bias: Bias = (1/n) * sum e_i\n\nLin’s concordance correlation coefficient (CCC) to combine accuracy and precision.\n\nLin’s concordance correlation coefficient (CCC): CCC = (2 * r * sigma_obs * sigma_sim) / (sigma_obs^2 + sigma_sim^2 + (mu_obs - mu_sim)^2). CCC values were interpreted under the McBride 2005 scale\n\nBias = mean(sim - obs), and relative bias = bias / mean(obs) * 100 (if mean obs is non-zero).\n\nRelative bias: RelBias(%) = 100 * Bias / mu_obs (only reported if mu_obs != 0)"
+  },
+  {
+    "objectID": "methods.html#binary-events-defined-on-the-reference-series-at-a-threshold",
+    "href": "methods.html#binary-events-defined-on-the-reference-series-at-a-threshold",
+    "title": "Methods",
+    "section": "(binary events defined on the reference series at a threshold):",
+    "text": "(binary events defined on the reference series at a threshold):\n\nEvents are defined by a threshold on the reference series (default precip &gt;= threshold).\nCounts of hits (H) shows when both the (“sim” e.g ERA5) (reference “obs” e.g Airport) report an event (e.g rain or wind). Misses (M) identifies when a reference event is missed by the target (sim vs obs), false alarms, and correct negatives are computed.\nSkill scores include POD (probability of detection), FAR (false alarm ratio), CSI (critical success index), and bias score."
   }
 ]
