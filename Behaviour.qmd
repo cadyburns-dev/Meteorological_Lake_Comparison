@@ -102,11 +102,7 @@ plot_precip_wetday_distribution(ref_df, targets_list, threshold_mm = wet_thresho
 
 ## Event detection and mismatches
 
-Use these to spot zero vs non‑zero disagreements, misses/false alarms, and timing offsets during wet events.
-POD: Probability detection
-FAR: False alarm ratio
-CSI: Critical success inder
-Bias score: 
+Use these to spot zero vs non‑zero disagreements, misses/false alarms, and timing offsets during wet events. POD: Probability detection FAR: False alarm ratio CSI: Critical success inder Bias score:
 
 ```{r}
 #| echo: false

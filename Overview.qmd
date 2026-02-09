@@ -42,7 +42,7 @@ The outputs of this project will show:
 
 8.  Rolling window/drift 
 
-9. Probability detection (POD)
+9.  Probability detection (POD)
 
 10. False alarm ration (FAR)
 
