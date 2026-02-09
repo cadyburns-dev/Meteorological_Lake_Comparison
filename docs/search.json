@@ -1,0 +1,394 @@
+[
+  {
+    "objectID": "rotorua.html",
+    "href": "rotorua.html",
+    "title": "Rotorua demo",
+    "section": "",
+    "text": "The second largest lake (by surface area ~79.9km2) in New Zealand, Lake Rotorua is a relatively well studied lake with and round shape fitting it’s distrinct culdera description. Although coined the second largest lake its mean depth of just 10meters results in a shallow lake clasification. Shallow lakes are particulary suseptible to climate driven shifts across short and long term scales. Shallow lakes heat up faster than deep lakes which results in larger seasonal and diurnal tempurature fluxtuations. (Frassel. et.al 2018) Shallow lakes also tend to be more suseptible to atmospheric forcing where wind, air temperature and precipitation patterms which influence water quality and consequental biology. Lake Rotorua experiance cyanobacteria blooms due to its location in the landscape (hydrothermal + Farm + Population density) recieving high nutirent content along with warmer temperatures. Additional to temperature fluxes influencing cyanobacterial fluxes, wind and rain play a role in the intensity and location of these blooms. Wind drives cyanobacterial location, often leading to cyano bloom intensification/ concentration in particular areas."
+  },
+  {
+    "objectID": "rotorua.html#introduction",
+    "href": "rotorua.html#introduction",
+    "title": "Rotorua demo",
+    "section": "",
+    "text": "The second largest lake (by surface area ~79.9km2) in New Zealand, Lake Rotorua is a relatively well studied lake with and round shape fitting it’s distrinct culdera description. Although coined the second largest lake its mean depth of just 10meters results in a shallow lake clasification. Shallow lakes are particulary suseptible to climate driven shifts across short and long term scales. Shallow lakes heat up faster than deep lakes which results in larger seasonal and diurnal tempurature fluxtuations. (Frassel. et.al 2018) Shallow lakes also tend to be more suseptible to atmospheric forcing where wind, air temperature and precipitation patterms which influence water quality and consequental biology. Lake Rotorua experiance cyanobacteria blooms due to its location in the landscape (hydrothermal + Farm + Population density) recieving high nutirent content along with warmer temperatures. Additional to temperature fluxes influencing cyanobacterial fluxes, wind and rain play a role in the intensity and location of these blooms. Wind drives cyanobacterial location, often leading to cyano bloom intensification/ concentration in particular areas."
+  },
+  {
+    "objectID": "rotorua.html#site-data-sources",
+    "href": "rotorua.html#site-data-sources",
+    "title": "Rotorua demo",
+    "section": "Site data sources",
+    "text": "Site data sources\nnote add what kindof lat long system used_____\nLimnotrack Buoy (lat:-380550S Lon:1761653E) on lake, NIWA virtual climate station network (VCSN) grid NO:27879 lat:-38.075 lon:176.275, ERA5 statlite data for Lat:-38.114908 and Lon:176.316662, Observational data “Airport” station 1770 (lat:-38.10592 lon:176.31481), Obresvational data “Town” station 41077 (lat:-38.14635 lon:176.2578).\nMethods\nAll work was completed in R code (R: A Language and Environment for Statistical Computing 2024) following the script order stated on README in git reposotory (00, 01, 02, 03, 04, 05).\nPlease refer to methods tab for further detail"
+  },
+  {
+    "objectID": "rotorua.html#data-coverage",
+    "href": "rotorua.html#data-coverage",
+    "title": "Rotorua demo",
+    "section": "Data coverage",
+    "text": "Data coverage"
+  },
+  {
+    "objectID": "rotorua.html#metrics-table-reference-vs-targets",
+    "href": "rotorua.html#metrics-table-reference-vs-targets",
+    "title": "Rotorua demo",
+    "section": "Metrics table (reference vs targets)",
+    "text": "Metrics table (reference vs targets)"
+  },
+  {
+    "objectID": "rotorua.html#time-series-overlays",
+    "href": "rotorua.html#time-series-overlays",
+    "title": "Rotorua demo",
+    "section": "Time series overlays",
+    "text": "Time series overlays"
+  },
+  {
+    "objectID": "rotorua.html#precipitation-event-structure",
+    "href": "rotorua.html#precipitation-event-structure",
+    "title": "Rotorua demo",
+    "section": "Precipitation event structure",
+    "text": "Precipitation event structure"
+  },
+  {
+    "objectID": "rotorua.html#distribution-variability-bias",
+    "href": "rotorua.html#distribution-variability-bias",
+    "title": "Rotorua demo",
+    "section": "Distribution (variability / bias)",
+    "text": "Distribution (variability / bias)"
+  },
+  {
+    "objectID": "rotorua.html#scatter-vs-reference",
+    "href": "rotorua.html#scatter-vs-reference",
+    "title": "Rotorua demo",
+    "section": "Scatter vs reference",
+    "text": "Scatter vs reference"
+  },
+  {
+    "objectID": "rotorua.html#rolling-diagnostics-drift-thrugh-time",
+    "href": "rotorua.html#rolling-diagnostics-drift-thrugh-time",
+    "title": "Rotorua demo",
+    "section": "Rolling diagnostics (drift thrugh time)",
+    "text": "Rolling diagnostics (drift thrugh time)"
+  },
+  {
+    "objectID": "rotorua.html#precipitation-event-agreement",
+    "href": "rotorua.html#precipitation-event-agreement",
+    "title": "Rotorua demo",
+    "section": "Precipitation event agreement",
+    "text": "Precipitation event agreement"
+  },
+  {
+    "objectID": "rotorua.html#monthly-climatology-seasonal-structure",
+    "href": "rotorua.html#monthly-climatology-seasonal-structure",
+    "title": "Rotorua demo",
+    "section": "Monthly climatology (seasonal structure)",
+    "text": "Monthly climatology (seasonal structure)"
+  },
+  {
+    "objectID": "rotorua.html#seasonal-performance-nzsouthern-hemisphere",
+    "href": "rotorua.html#seasonal-performance-nzsouthern-hemisphere",
+    "title": "Rotorua demo",
+    "section": "Seasonal performance (NZ/Southern Hemisphere)",
+    "text": "Seasonal performance (NZ/Southern Hemisphere)"
+  },
+  {
+    "objectID": "rotorua.html#interactive-table",
+    "href": "rotorua.html#interactive-table",
+    "title": "Rotorua demo",
+    "section": "Interactive table",
+    "text": "Interactive table"
+  },
+  {
+    "objectID": "Reproducibility.html",
+    "href": "Reproducibility.html",
+    "title": "Reproducibility / How to reuse",
+    "section": "",
+    "text": "Use this guide to rerun the Rotorua workflow or adapt it to a new lake. It assumes you want the same analysis structure (metrics, behaviour, diagnostics) but with different datasets and coordinates."
+  },
+  {
+    "objectID": "Reproducibility.html#set-up-the-environment",
+    "href": "Reproducibility.html#set-up-the-environment",
+    "title": "Reproducibility / How to reuse",
+    "section": "1. Set up the environment",
+    "text": "1. Set up the environment\n\nInstall R (&gt;= 4.4) and quarto.\nFrom the project root, run scripts/00_project_setup.R to restore the renv environment and required GitHub packages.\n\nIf renv::restore() fails due to offline use, set options(repos = ...) to a reachable CRAN mirror first."
+  },
+  {
+    "objectID": "Reproducibility.html#scripts-overview-what-does-what",
+    "href": "Reproducibility.html#scripts-overview-what-does-what",
+    "title": "Reproducibility / How to reuse",
+    "section": "2. Scripts overview (what does what)",
+    "text": "2. Scripts overview (what does what)\n\nscripts/02_prepare_raw_data.R: converts raw data to daily series, standardises units, and writes to data/processed/.\nscripts/03_analysis_helpers.R: defines the core metrics functions and metrics_vs_ref logic.\nscripts/04_analysis_plotting.R: defines plot helpers (time series, scatter, distributions, climatology, event skill, rolling diagnostics).\n\nIf you add new data sources, update the prep script and keep naming consistent so downstream QMDs can read the files."
+  },
+  {
+    "objectID": "Reproducibility.html#prepare-data-for-a-new-lake",
+    "href": "Reproducibility.html#prepare-data-for-a-new-lake",
+    "title": "Reproducibility / How to reuse",
+    "section": "3. Prepare data for a new lake",
+    "text": "3. Prepare data for a new lake\n\nGather raw met data (buoy/station/reanalysis/gridded) into data/raw/, keeping original filenames.\nUpdate lake metadata in params.yml:\n\nlake_name, lat, lon, buffer_km\nreference (primary benchmark) and targets (comparison datasets)\nthresholds (wet_threshold_mm, precip_event_threshold, windy_top_pct, windy_threshold_ms, window_days)\n\nUpdate station coordinates (if used) in Overview.qmd.\nAdjust file_map paths in the QMDs or helper scripts if filenames differ.\nRun or adapt scripts/02_prepare_raw_data.R to:\n\nConvert timestamps to UTC.\nAggregate sub-daily to daily (means for state variables; sums for fluxes).\nStandardise column names to Temp_C, Precip_mm, Wind_Spd_ms, RadSWD_Wm2, Date.\nConvert radiation MJ/m^2 to W/m^2 when needed.\n\nPlace processed daily CSVs in data/processed/ following the pattern used for Rotorua (e.g., lakeid_source_daily.csv).\n\nMinimum required columns for each processed file: - Date (YYYY-MM-DD, UTC) - Temp_C, Precip_mm, Wind_Spd_ms, RadSWD_Wm2 (if a variable is unavailable, remove it from params.yml and the analyses will skip it)."
+  },
+  {
+    "objectID": "Reproducibility.html#run-the-analyses",
+    "href": "Reproducibility.html#run-the-analyses",
+    "title": "Reproducibility / How to reuse",
+    "section": "4. Run the analyses",
+    "text": "4. Run the analyses\n\nRender the whole site: quarto render (outputs to docs/ as set in _quarto.yml).\nOr render a single page (e.g., quarto render rotorua.qmd) to iterate faster.\nKey tabs:\n\nRotorua demo: full pipeline.\nBehaviour: event agreement and seasonal structure.\nVariable diagnostics: time-series overlays.\nMetrics and stats: quantitative tables and plots."
+  },
+  {
+    "objectID": "Reproducibility.html#adapting-thresholds-and-subsets",
+    "href": "Reproducibility.html#adapting-thresholds-and-subsets",
+    "title": "Reproducibility / How to reuse",
+    "section": "5. Adapting thresholds and subsets",
+    "text": "5. Adapting thresholds and subsets\n\nSet wet-day and windy thresholds in params.yml (wet_threshold_mm, precip_event_threshold, windy_threshold_ms, windy_top_pct).\nRe-render to propagate changes to all tabs; rolling window (window_days) controls drift diagnostics.\nIf you change the reference dataset or add new targets, update both params.yml and the file_map in the QMDs so names align.\n\nTip: if a dataset does not contain a variable (e.g., radiation), keep the variable out of params.yml to prevent render errors."
+  },
+  {
+    "objectID": "Reproducibility.html#what-to-document-for-each-lake",
+    "href": "Reproducibility.html#what-to-document-for-each-lake",
+    "title": "Reproducibility / How to reuse",
+    "section": "6. What to document for each lake",
+    "text": "6. What to document for each lake\n\nSource metadata (station IDs, grid cell coords, units).\nAny timezone assumptions or corrections applied.\nChosen reference dataset and reasons.\nThreshold choices for wet/windy subsets.\nDate span of overlapping data used in metrics.\n\nKeeping these notes with each new lake run ensures results are transparent and comparable."
+  },
+  {
+    "objectID": "Reproducibility.html#example-new-lake-naming-template-lake-tutira",
+    "href": "Reproducibility.html#example-new-lake-naming-template-lake-tutira",
+    "title": "Reproducibility / How to reuse",
+    "section": "Example: new lake naming template (Lake Tutira)",
+    "text": "Example: new lake naming template (Lake Tutira)\nUse the following as a starting template for params.yml and file naming:\nlake_name: \"Lake Tutira\"\nlat: -39.223588\nlon: 176.892553\nbuffer_km: 10\nlake_id: \"tutira\"\nreference: \"Airport_XXXX\"\ntargets: [\"ERA5\", \"Buoy\", \"Town_YYYY\", \"VCS_On\"]\nvars: [\"Temp_C\", \"Precip_mm\", \"Wind_Spd_ms\", \"RadSWD_Wm2\"]\nwet_threshold_mm: 1\nprecip_event_threshold: 0.1\nwindy_top_pct: 0.10\nwindy_threshold_ms: 10\nwindow_days: 30\nExample processed filenames:\n\ndata/processed/tutira_era5_daily.csv\ndata/processed/tutira_buoy_daily.csv\ndata/processed/tutira_airport_XXXX_daily.csv\ndata/processed/tutira_town_YYYY_daily.csv\ndata/processed/tutira_vcs_on_daily.csv\n\nWhere airport will be the Napier Airport XXX will be its assosiated NIWA number and town may be the closest weather station to the area."
+  },
+  {
+    "objectID": "metrics_stats.html",
+    "href": "metrics_stats.html",
+    "title": "Metrics and Statistics",
+    "section": "",
+    "text": "This tab gathers the quantitative diagnostics (coverage, MAE/RMSE/CCC/bias, distributions, scatter, rolling drift). Use it when you want numbers and concise plots for statistical agreement.\n++++++++++ to look at below Example: ERA5 vs Airport for precipitation where ap1770\\(precip_mm = refernce \"obs\" series ear5\\)precip_mm = dataset we are evaluating “sim” mertrics_all uses every day where both datasets have values (after NA removal) (baseline overall preformance) metrics_wet uses only days where the reference has “meaningful rain”:if threshold_mm = 1, it keeps days where ap1770\\(Precip_mm &gt; 1.\nThis answers: “How well does ERA5 match rainy days?”(which usually matters more for modelling than dry days).\nmetrics_windy  uses only days where the reference indictes high wind :if threshold_ms = 10, it keeps days where ap1770\\)Wind_Spd_ms &gt;=10. This answers: “How well does ERA5 match wind-storm days?” matters because correlation may look high but preform poorly in seasonal extremes, wind and rain heavy events === (findinf out what the best met source is and when) to look at above ========"
+  },
+  {
+    "objectID": "metrics_stats.html#coverage-summary",
+    "href": "metrics_stats.html#coverage-summary",
+    "title": "Metrics and Statistics",
+    "section": "Coverage summary",
+    "text": "Coverage summary\nShows the available date range and count per dataset."
+  },
+  {
+    "objectID": "metrics_stats.html#metrics-table-mae-rmse-ccc-bias",
+    "href": "metrics_stats.html#metrics-table-mae-rmse-ccc-bias",
+    "title": "Metrics and Statistics",
+    "section": "Metrics table (MAE, RMSE, CCC, bias)",
+    "text": "Metrics table (MAE, RMSE, CCC, bias)\nIncludes all days plus wet-day and windy-day subsets where relevant. Sort/filter to focus on a variable or subset."
+  },
+  {
+    "objectID": "metrics_stats.html#distribution-and-bias-shape",
+    "href": "metrics_stats.html#distribution-and-bias-shape",
+    "title": "Metrics and Statistics",
+    "section": "Distribution and bias shape",
+    "text": "Distribution and bias shape\nKernel density overlays show bias or spread differences; look for shifts or heavier tails."
+  },
+  {
+    "objectID": "metrics_stats.html#scatter-vs-reference-11",
+    "href": "metrics_stats.html#scatter-vs-reference-11",
+    "title": "Metrics and Statistics",
+    "section": "Scatter vs reference (1:1)",
+    "text": "Scatter vs reference (1:1)\nCheck linear agreement and systematic bias; points should cluster along the 1:1 line."
+  },
+  {
+    "objectID": "metrics_stats.html#rolling-diagnostics-drift-through-time",
+    "href": "metrics_stats.html#rolling-diagnostics-drift-through-time",
+    "title": "Metrics and Statistics",
+    "section": "Rolling diagnostics (drift through time)",
+    "text": "Rolling diagnostics (drift through time)\nThese track moving-window bias/CCC to surface gradual timing offsets or seasonal drifts."
+  },
+  {
+    "objectID": "index.html#project-description",
+    "href": "index.html#project-description",
+    "title": "Meterological Lake Comparison",
+    "section": "Project description",
+    "text": "Project description\nThis project aims to take meteorological data in close proximity from different sources/forcing choices (stations, grided, reanalysis) and evaluate their validity across variables and time.\nIt assesses four main meterological parameters (precipitation, wind, radiation, temperature) for accuracy, stability and usability. This was developed for the use of lymnologists with the purpose of selecting data sources for differing projects and attempts to answer the question “what data to use and when?”. The data sources used are Limnotrack Buoy in-situ, NIWA virtual climate station network (VCSN), ERA5 statlite data and NIWAs Observational climate data.\nLake Rotorua, North Island, New Zealand is used as a worked example thoughout."
+  },
+  {
+    "objectID": "index.html#guide",
+    "href": "index.html#guide",
+    "title": "Meterological Lake Comparison",
+    "section": "Guide",
+    "text": "Guide\nThis project takes your though the overview of the project which addresses:\n\n\n\nThe objective, data sources and the project outputs so the reader can understand what they will get out of the process.\n\n\n\n\nThe methods, outlining the steps taken to prepare, align, and compare the metrological datasets.\n\n\n\n\nViriable diagnostics whcih shows time series plots to visulise data stability and alignment.\n\n\n\n\n\nMetrics and stats, which shows the statistical/quantitative diagnostics outlined in the overview.\n\n\nSeasonal and event behaviour, which shows seasonality preformance and dataset agreement during events.\n\n\nRotorua demo gives the reader a visual flow of the project using Lake Rotorua as the example lake.\n\n\nReproducibility talks through the reusability of this project when accessing different lakes around New Zealand.\n\n\nDesision of what data sets to use will depend on intended outcome. The objective tab will show outputs where the reader can decide how to use the project to answer their questions around meterological data sources."
+  },
+  {
+    "objectID": "index.html#data-coverage",
+    "href": "index.html#data-coverage",
+    "title": "Meterological Lake Comparison",
+    "section": "Data coverage",
+    "text": "Data coverage"
+  },
+  {
+    "objectID": "index.html#metrics-table-reference-vs-targets",
+    "href": "index.html#metrics-table-reference-vs-targets",
+    "title": "Meterological Lake Comparison",
+    "section": "Metrics table (reference vs targets)",
+    "text": "Metrics table (reference vs targets)"
+  },
+  {
+    "objectID": "Behaviour.html",
+    "href": "Behaviour.html",
+    "title": "Seasonal and Event Behaviour",
+    "section": "",
+    "text": "This page focuses on behaviour: when datasets agree on events, where they miss each other (zeros vs non-zeros, timing offsets, extremes), and how seasonality shows up."
+  },
+  {
+    "objectID": "Behaviour.html#precipitation-event-structure",
+    "href": "Behaviour.html#precipitation-event-structure",
+    "title": "Seasonal and Event Behaviour",
+    "section": "Precipitation event structure",
+    "text": "Precipitation event structure\nThese plots show how precipitation volumes and timing align across datasets."
+  },
+  {
+    "objectID": "Behaviour.html#event-detection-and-mismatches",
+    "href": "Behaviour.html#event-detection-and-mismatches",
+    "title": "Seasonal and Event Behaviour",
+    "section": "Event detection and mismatches",
+    "text": "Event detection and mismatches\nUse these to spot zero vs non‑zero disagreements, misses/false alarms, and timing offsets during wet events. POD: Probability detection FAR: False alarm ratio CSI: Critical success inder Bias score:"
+  },
+  {
+    "objectID": "Behaviour.html#wind-and-precipitation-timing-drifts",
+    "href": "Behaviour.html#wind-and-precipitation-timing-drifts",
+    "title": "Seasonal and Event Behaviour",
+    "section": "Wind and precipitation timing drifts",
+    "text": "Wind and precipitation timing drifts\nRolling diagnostics reveal gradual offsets or drift through time (look for breaks away from 0 bias or changing correlation). This answeres “does it shift seasonally?”"
+  },
+  {
+    "objectID": "Behaviour.html#seasonal-behaviour",
+    "href": "Behaviour.html#seasonal-behaviour",
+    "title": "Seasonal and Event Behaviour",
+    "section": "Seasonal behaviour",
+    "text": "Seasonal behaviour\nClimatology and seasonal bias plots highlight over/under-capture of extremes across the year."
+  },
+  {
+    "objectID": "methods.html",
+    "href": "methods.html",
+    "title": "Methods",
+    "section": "",
+    "text": "This section documents how the meteorological datasets were prepared, aligned, and compared so the workflow is transparent and repeatable."
+  },
+  {
+    "objectID": "methods.html#reference-site-justification",
+    "href": "methods.html#reference-site-justification",
+    "title": "Methods",
+    "section": "Reference site justification",
+    "text": "Reference site justification\nAirport station data were used as the primary reference because they are maintained, quality-controlled, and co-located near the lake with minimal missingness. All alternative sources (ERA5, VCSN, buoy, Town) were evaluated against this reference over their overlapping dates."
+  },
+  {
+    "objectID": "methods.html#core-performance-metrics",
+    "href": "methods.html#core-performance-metrics",
+    "title": "Methods",
+    "section": "Core performance metrics:",
+    "text": "Core performance metrics:\n\nPearson correlation (r) for overall co-variation.\nLinear regression of sim ~ obs to report slope and intercept (scaling and offset bias).\nMAE and RMSE based on error = (sim - obs).\nLin’s concordance correlation coefficient (CCC) to combine accuracy and precision.\nBias = mean(sim - obs), and relative bias = bias / mean(obs) * 100 (if mean obs is non-zero)."
+  },
+  {
+    "objectID": "methods.html#event-agreement-metrics-used-for-precipitation-events",
+    "href": "methods.html#event-agreement-metrics-used-for-precipitation-events",
+    "title": "Methods",
+    "section": "Event agreement metrics (used for precipitation events):",
+    "text": "Event agreement metrics (used for precipitation events):\n\nEvents are defined by a threshold on the reference series (default precip &gt;= threshold).\nCounts of hits, misses, false alarms, and correct negatives are computed.\nSkill scores include POD (probability of detection), FAR (false alarm ratio), CSI (critical success index), and bias score."
+  },
+  {
+    "objectID": "methods.html#seasonal-and-climatology-diagnostics",
+    "href": "methods.html#seasonal-and-climatology-diagnostics",
+    "title": "Methods",
+    "section": "Seasonal and climatology diagnostics:",
+    "text": "Seasonal and climatology diagnostics:\n\nMonthly climatology is summarized with mean and interquartile range (IQR) per dataset.\nSeasonal bias is computed as (target - reference) grouped by season.\nSeasons follow Southern Hemisphere definitions (DJF/MAM/JJA/SON) with an optional warm/cool split.\n\nFigures use consistent overlap with the reference dates to ensure fair visual comparisons (time series, distributions, scatter)."
+  },
+  {
+    "objectID": "methods.html#core-metrics",
+    "href": "methods.html#core-metrics",
+    "title": "Methods",
+    "section": "Core metrics:",
+    "text": "Core metrics:\n\nPearson correlation: r = sum((obs_i - mu_obs)(sim_i - mu_sim)) / sqrt(sum((obs_i - mu_obs)^2) * sum((sim_i - mu_sim)^2))\nLinear regression (sim ~ obs): sim_i = a + b * obs_i, where b = cov(obs, sim) / var(obs) and a = mu_sim - b * mu_obs\nMAE: MAE = (1/n) * sum |e_i| - RMSE: RMSE = sqrt((1/n) * sum e_i^2) - Bias: Bias = (1/n) * sum e_i\nRelative bias: RelBias(%) = 100 * Bias / mu_obs (only reported if mu_obs != 0)\nLin’s concordance correlation coefficient (CCC): CCC = (2 * r * sigma_obs * sigma_sim) / (sigma_obs^2 + sigma_sim^2 + (mu_obs - mu_sim)^2)"
+  },
+  {
+    "objectID": "methods.html#event-agreement-binary-events-defined-on-the-reference-series-at-a-threshold",
+    "href": "methods.html#event-agreement-binary-events-defined-on-the-reference-series-at-a-threshold",
+    "title": "Methods",
+    "section": "Event agreement (binary events defined on the reference series at a threshold):",
+    "text": "Event agreement (binary events defined on the reference series at a threshold):\n\nHits (H): ref event and target event\nMisses (M): ref event and target no-event\nFalse alarms (F): ref no-event and target event\nCorrect negatives (C): ref no-event and target no-event\nPOD = H / (H + M)\nFAR = F / (H + F)\nCSI = H / (H + M + F)\nBias score = (H + F) / (H + M)"
+  },
+  {
+    "objectID": "methods.html#seasonal-bias-within-season-s",
+    "href": "methods.html#seasonal-bias-within-season-s",
+    "title": "Methods",
+    "section": "Seasonal bias within season s:",
+    "text": "Seasonal bias within season s:\nBias_s = mean(sim_i - obs_i) for all paired days in season s"
+  },
+  {
+    "objectID": "methods.html#rolling-diagnostics-logic",
+    "href": "methods.html#rolling-diagnostics-logic",
+    "title": "Methods",
+    "section": "Rolling diagnostics logic",
+    "text": "Rolling diagnostics logic\nTo detect drift through time, moving-window diagnostics (window = 30 days by default) track MAE, RMSE, bias, and correlation. The rolling window is trailing, uses only complete windows, and requires a minimum of paired values for correlation. These plots help identify regime shifts, seasonal dependence, or gradual timing offsets."
+  },
+  {
+    "objectID": "methods.html#software-and-packages",
+    "href": "methods.html#software-and-packages",
+    "title": "Methods",
+    "section": "Software and packages",
+    "text": "Software and packages\nAnalyses were performed in R (R: A Language and Environment for Statistical Computing 2024). Data wrangling and visualization use dplyr, tidyr, ggplot2, readr, purrr, tibble, lubridate, and slider (authors 2024a, 2024t, 2024b, 2024m, 2024k, 2024s, 2024h, 2024r), alongside the tidyverse meta-package (Wickham et al. 2019). Spatial processing relies on sf (Pebesma 2018) with leaflet, tmap, osmdata, rnaturalearth, and rnaturalearthdata for mapping (authors 2024g, 2024u, 2024i, 2024p, 2024q). Interactive graphics and tables are produced with plotly, reactable, and gt (authors 2024j, 2024l, 2024c). Reproducibility and reporting use renv, knitr, rmarkdown, htmltools, and here (authors 2024n, 2024f, 2024o, 2024e, 2024d).\nIf you want formal citations for every package listed above, regenerate the bibliography with knitr::write_bib() and replace reference.bib with the output."
+  },
+  {
+    "objectID": "Overview.html",
+    "href": "Overview.html",
+    "title": "Meterological Source Comparison",
+    "section": "",
+    "text": "To analyse different meterological data avalable for a given location."
+  },
+  {
+    "objectID": "Overview.html#objective",
+    "href": "Overview.html#objective",
+    "title": "Meterological Source Comparison",
+    "section": "",
+    "text": "To analyse different meterological data avalable for a given location."
+  },
+  {
+    "objectID": "Overview.html#data-sources",
+    "href": "Overview.html#data-sources",
+    "title": "Meterological Source Comparison",
+    "section": "Data sources",
+    "text": "Data sources\nLimnotrack Buoy on lake, NIWA virtual climate station network (VCSN) , ERA5 statlite data, Observational data “Airport” station, Obresvational data “Town” station.\nData source and station names will vary from location to location. Selecting stations from these websites is laid out in the data wrangling section"
+  },
+  {
+    "objectID": "Overview.html#outputs",
+    "href": "Overview.html#outputs",
+    "title": "Meterological Source Comparison",
+    "section": "Outputs",
+    "text": "Outputs\nThe outputs of this project will show:\n\nCorrelation coeficient (Pearsons r)\nChange in intercept and slope (linear regrassion slope and intercept)\nMean absolute error (MAE)\nRoot mean squared error (RMSE)\nConcordance (ccc)\nMean and realitive bias\nEvent score\nRolling window/drift\nProbability detection (POD)\nFalse alarm ration (FAR)\nCritical success index (CSI)\nThese metrics along with plots and diagnostics will answer bias questions, seasonal behaviour, event disagreement and extremes"
+  },
+  {
+    "objectID": "Overview.html#study-area",
+    "href": "Overview.html#study-area",
+    "title": "Meterological Source Comparison",
+    "section": "Study area",
+    "text": "Study area\n\n\nCode\n# Note: Chage Quarto title Lat and lon to render your location of choice\nlibrary(leaflet)\n\n# Interactive overview map centred on the lake\nleaflet() |&gt;\n  addTiles() |&gt;\n  addCircles(\n    lng = params$lon,\n    lat = params$lat,\n    radius = params$buffer_km * 1000,\n    color = \"dodgerblue\",\n    fillOpacity = 0.25,\n    popup = params$lake_name\n  ) |&gt;\n  addCircleMarkers(\n    lng = params$lon,\n    lat = params$lat,\n    radius = 6,\n    color = \"navy\",\n    fillOpacity = 0.9,\n    popup = params$lake_name\n  ) |&gt;\n  setView(lng = params$lon, lat = params$lat, zoom = 11)"
+  },
+  {
+    "objectID": "Overview.html#polygon-and-plot",
+    "href": "Overview.html#polygon-and-plot",
+    "title": "Meterological Source Comparison",
+    "section": "Polygon and plot",
+    "text": "Polygon and plot\n\n\nCode\nlibrary(osmdata)\nlibrary(sf)\nlibrary(tmap)\nlibrary(rnaturalearth)\nlibrary(rnaturalearthdata)\nlibrary(tibble)  # for tribble()\n\n# Download nearby water polygons to outline the lake\nbb &lt;- c(\n  params$lon - 0.1,\n  params$lat - 0.1,\n  params$lon + 0.1,\n  params$lat + 0.1\n)\n\nosm_lake &lt;- opq(bbox = bb) |&gt;\n  add_osm_feature(key = \"natural\", value = \"water\") |&gt;\n  osmdata_sf()\n\nlake_poly &lt;- osm_lake$osm_multipolygons |&gt; st_make_valid()\n\n# Fallback: if no polygon returned, use the bounding box as a placeholder polygon\nif (nrow(lake_poly) == 0) {\n  lake_poly &lt;- st_polygon(list(rbind(\n    c(bb[1], bb[2]),\n    c(bb[3], bb[2]),\n    c(bb[3], bb[4]),\n    c(bb[1], bb[4]),\n    c(bb[1], bb[2])\n  ))) |&gt;\n    st_sfc(crs = 4326) |&gt;\n    st_as_sf()\n}\n \n\n# Change lon and lat to render your location of choice \n#change names to match locations\n# Station metadata (decimal degrees)\nstations &lt;- tribble(\n  ~name,           ~lon,       ~lat,       \n  \"Airport_1770\",  176.31481, -38.10592,  \n  \"ERA5\",          176.316662,-38.114908,  \n  \"Buoy\",          176.2653,  -38.0740,    \n  \"Town_40177\",    176.2578,  -38.14635,   \n  \"VCS_On\",        176.275,   -38.075\n)\n\nstations_sf &lt;- st_as_sf(stations, coords = c(\"lon\", \"lat\"), crs = 4326)\n\n\n# Use combined extent of lake + stations, with a small buffer (degrees)\nmap_extent &lt;- st_union(lake_poly, st_geometry(stations_sf)) |&gt;\n  st_bbox() |&gt;\n  st_as_sfc() |&gt;\n  st_buffer(dist = 0.005)   # shrink/expand to taste\n\n#Change names to match your Data set where nessesary\nstation_palette &lt;- c(\n  Airport_1770 = \"black\",\n  ERA5         = \"#d95f02\",\n  Buoy         = \"#7570b3\",\n  Town_40177   = \"#f0c400\",\n  VCS_On       = \"#1b9e77\"\n)\n\n# Inset: New Zealand with study extent box\nnz &lt;- rnaturalearth::ne_countries(country = \"New Zealand\", scale = \"medium\", returnclass = \"sf\")\ninset &lt;- tm_shape(nz) +\n  tm_polygons(col = \"gray90\", border.col = \"gray60\") +\n  tm_shape(map_extent) +\n  tm_borders(col = \"red\", lwd = 2)\n\ntmap_mode(\"plot\")\n\ntm_shape(lake_poly, bbox = st_bbox(map_extent)) +\n  tm_fill(col = \"blue\", alpha = 0.6) +\n  tm_borders(col = \"black\") +\n  tm_shape(stations_sf) +\n  tm_symbols(\n    col = \"name\",\n    palette = station_palette,\n    shape = 21,\n    size = 1,\n    border.col = \"black\",\n    colorNA = NA,\n    textNZ = NULL,\n    legend.col.show = TRUE,\n    legend.col.title = \"Stations\",\n    title.col = \"Stations\"\n  ) +\n  tm_compass(\n    type = \"arrow\",\n    position = c(\"left\", \"top\"),\n    color.dark = \"black\",\n    color.light = \"gray80\"\n  ) +\n  tm_scale_bar(position = c(\"left\", \"bottom\")) +\n  tm_layout(\n    title = params$lake_name,\n    frame = FALSE,\n    legend.outside = TRUE,\n    legend.title.size = 0.8,\n    legend.text.size = 0.7,\n    legend.format = list(digits = 2),\n    inset_tm = inset,\n    inset_x = 0.72, inset_y = 0.05, inset_width = 0.25, inset_height = 0.25\n  )\n\n\n\n\n\n\n\n\n\nRotorua Lake, North Island, New Zealand"
+  },
+  {
+    "objectID": "Results.html",
+    "href": "Results.html",
+    "title": "Variable diagnostics",
+    "section": "",
+    "text": "This tab focuses on time-series comparisons so you can visually check alignment and stability across datasets."
+  },
+  {
+    "objectID": "Results.html#time-series-overlays",
+    "href": "Results.html#time-series-overlays",
+    "title": "Variable diagnostics",
+    "section": "Time-series overlays",
+    "text": "Time-series overlays\nEach plot shows the reference (Airport) against targets for a single variable; use hover tooltips to inspect dates and values."
+  },
+  {
+    "objectID": "Results.html#latest-daily-snapshot",
+    "href": "Results.html#latest-daily-snapshot",
+    "title": "Variable diagnostics",
+    "section": "Latest daily snapshot",
+    "text": "Latest daily snapshot\nQuick look at the most recent reported day from each dataset."
+  }
+]
