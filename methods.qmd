@@ -45,7 +45,7 @@ Metrics are computed on paired daily values after joining by `Date` and dropping
 
 ## **Seasonal and climatology diagnostics:**
 
--    Monthly climatology is summarized with mean and interquartile range (IQR) per dataset.
+-    Monthly climatology is summarised with mean and interquartile range (IQR) per dataset.
 
 -    Seasonal bias is computed as (target - reference) grouped by season.
 
@@ -69,7 +69,7 @@ Define error e_i = sim_i - obs_i, and means mu_obs, mu_sim with standard deviati
 
 -    Relative bias: RelBias(%) = 100 \* Bias / mu_obs (only reported if mu_obs != 0)
 
--    Lin's concordance correlation coefficient (CCC): CCC = (2 \* r \* sigma_obs \* sigma_sim) / (sigma_obs\^2 + sigma_sim\^2 + (mu_obs - mu_sim)\^2)
+-    Lin's concordance correlation coefficient (CCC): CCC = (2 \* r \* sigma_obs \* sigma_sim) / (sigma_obs\^2 + sigma_sim\^2 + (mu_obs - mu_sim)\^2). CCC values were interpreted under the McBride 2005 scale 
 
 ## **Event agreement (binary events defined on the reference series at a threshold):** 
 
@@ -111,13 +111,27 @@ Only dates present in both the reference and the compared dataset are used. Time
 To detect drift through time, moving-window diagnostics (window = 30 days by default) track MAE, RMSE, bias, and correlation. The rolling window is trailing, uses only complete windows, and requires a minimum of paired values for correlation. These plots help identify regime shifts, seasonal dependence, or gradual timing offsets.
 
 ## Software and packages
-Analyses were performed in R [@r:alan2024]. Data wrangling and visualization use dplyr, tidyr, ggplot2, readr, purrr, tibble, lubridate, and slider [@dplyr; @tidyr; @ggplot2; @readr; @purrr; @tibble; @lubridate; @slider], alongside the tidyverse meta-package [@tidyverse]. Spatial processing relies on sf [@sf] with leaflet, tmap, osmdata, rnaturalearth, and rnaturalearthdata for mapping [@leaflet; @tmap; @osmdata; @rnaturalearth; @rnaturalearthdata]. Interactive graphics and tables are produced with plotly, reactable, and gt [@plotly; @reactable; @gt]. Reproducibility and reporting use renv, knitr, rmarkdown, htmltools, and here [@renv; @knitr; @rmarkdown; @htmltools; @here].
 
-If you want formal citations for every package listed above, regenerate the bibliography with `knitr::write_bib()` and replace `reference.bib` with the output.
 
+If you want formal citations for every package listed above, regenerate the bibliography with `knitr::write_bib()` and replace `reference.bib` with the output.      
+
+```{r}
+#| echo: true
+#| eval: false
+# Creates/overwrites reference.bib with citations for all packages used
+pkgs <- c(
+  "dplyr","ggplot2","tidyr","readr","purrr","tibble","lubridate",
+  "slider","reactable","plotly","here","gt","sf","tmap",
+  "leaflet","osmdata","rnaturalearth","rnaturalearthdata",
+  "htmltools","knitr","rmarkdown","renv","shiny"
+)
+
+knitr::write_bib(pkgs, file = "reference.bib")
+```
                
-                                             
-              
+
+Analyses were performed in R [@r:alan2024]. Data wrangling and visualization use tidyverse packages (dplyr, tidyr, ggplot2, readr, purrr, tibble, lubridate) [@tidyverse]. Spatial processing relies on the sf framework [@sf], with leaflet [@leaflet], tmap [@tmap], osmdata [@osmdata], and rnaturalearth [@rnaturalearth] used for mapping. Interactive figures are produced with plotly [@plotly] and tables with reactable [@reactable] and gt [@gt]. Reproducibility is managed with renv [@renv], and report generation uses Quarto with knitr/rmarkdown and htmltools [@htmltools]; here is used for stable file paths.                                           
+            
 
 # Limitations
 
@@ -134,3 +148,5 @@ Future users should adapt thresholds, reference choice, and aggregation rules to
 1.  Lin, L.I.-K. (1989). A concordance correlation coefficient to evaluate reproducibility.
 2.  Jolliffe, I.T., Stephenson, D.B. (eds.). Forecast Verification: A Practitioner’s Guide in Atmospheric Science.
 3.  Wilks, D.S. Statistical Methods in the Atmospheric Sciences.
+
+## Refernces R code
