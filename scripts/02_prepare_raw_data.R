@@ -315,6 +315,83 @@ buoy_daily <- buoy_hourly |>
 head(buoy_daily)
 summary(buoy_daily)
 
+###################################
+# Rotorua Buoy has some historical data we ill patch together, for other lakes this might not be nessesary
+########### SKIP THIS LAST BUOY STEP IF YOU ONLY HAVE ONE BUOY DATASET ##############
+
+
+
+# Read temp (15‑min) and make daily
+Historic_buoy_Temp <- read.csv(
+  path_raw("Rotorua_Buoy_historic", "Air_Temp.UoW@EL696127.EntireRecord.csv"),
+  skip = 14,
+  check.names = FALSE
+) |>
+  rename(
+    Datetime_txt = `Timestamp (UTC+12:00)`,
+    Temp_C       = `Value`
+  ) |>
+  mutate(
+    Datetime = parse_date_time(Datetime_txt, orders = c("ymd_HMS", "ymd_HM", "ymd"), tz = "UTC"),
+    Date     = as_date(Datetime)
+  ) |>
+  filter(!is.na(Date))
+
+Historic_buoy_Temp_daily <- Historic_buoy_Temp |>
+  group_by(Date) |>
+  summarise(
+    Temp_C  = mean(Temp_C, na.rm = TRUE),
+    n_obs   = n(),
+    .groups = "drop"
+  ) |>
+  mutate(coverage = n_obs / 96) |>
+  filter(coverage >= 0.75)
+
+
+# Read wind (15‑min) and make daily (keep dates even if missing)
+Historic_buoy_Wnd <- read.csv(
+  path_raw("Rotorua_Buoy_historic", "Wind_Vel.UoW@EL696127.EntireRecord.csv"),
+  skip = 14,
+  check.names = FALSE
+) |>
+  rename(
+    Datetime_txt = `ISO 8601 UTC`,
+    `Wind_m/s`   = `Value`
+  ) |>
+  mutate(
+    Datetime = parse_date_time(Datetime_txt, orders = c("ymd_HMS", "ymd_HM", "ymd"), tz = "UTC"),
+    Date     = as_date(Datetime),
+    `Wind_m/s` = if_else(
+      Date >= as.Date("2019-10-24") & Date <= as.Date("2019-11-25"),
+      NA_real_,
+      `Wind_m/s`
+    )
+  ) |>
+  filter(!is.na(Date))
+
+Historic_buoy_Wnd_daily <- Historic_buoy_Wnd |>
+  group_by(Date) |>
+  summarise(
+    Wind_Spd_ms = if (all(is.na(`Wind_m/s`))) NA_real_ else mean(`Wind_m/s`, na.rm = TRUE),
+    n_obs       = sum(!is.na(`Wind_m/s`)),
+    .groups     = "drop"
+  ) |>
+  mutate(coverage = n_obs / 96)
+
+# keep every date in the span (gaps stay as NA)
+all_days <- tibble(Date = seq(min(Historic_buoy_Wnd$Date), max(Historic_buoy_Wnd$Date), by = "day"))
+
+Historic_buoy_Wnd_daily <- all_days |>
+  left_join(Historic_buoy_Wnd_daily, by = "Date")
+
+# Combine daily temp + wind
+Buoy_historic_daily <- Historic_buoy_Wnd_daily |>
+  select(Date, Wind_Spd_ms) |>
+  left_join(Historic_buoy_Temp_daily |> select(Date, Temp_C), by = "Date")
+
+# Stack old + new
+buoy_daily <- dplyr::bind_rows(buoy_daily, Buoy_historic_daily) |>
+  dplyr::arrange(Date)
 
 
 # -------------------------------------------------------------------

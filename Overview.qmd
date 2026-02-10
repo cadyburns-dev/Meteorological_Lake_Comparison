@@ -97,14 +97,22 @@ bb <- c(
   params$lat + 0.1
 )
 
-osm_lake <- opq(bbox = bb) |>
-  add_osm_feature(key = "natural", value = "water") |>
-  osmdata_sf()
+osm_lake <- tryCatch(
+  opq(bbox = bb) |>
+    add_osm_feature(key = "natural", value = "water") |>
+    osmdata_sf(),
+  error = function(e) NULL
+)
 
-lake_poly <- osm_lake$osm_multipolygons |> st_make_valid()
+lake_poly <- NULL
+if (!is.null(osm_lake) &&
+    !is.null(osm_lake$osm_multipolygons) &&
+    nrow(osm_lake$osm_multipolygons) > 0) {
+  lake_poly <- st_make_valid(osm_lake$osm_multipolygons)
+}
 
-# Fallback: if no polygon returned, use the bounding box as a placeholder polygon
-if (nrow(lake_poly) == 0) {
+# Fallback: if no polygon returned (or OSM query failed), use the bounding box
+if (is.null(lake_poly) || nrow(lake_poly) == 0) {
   lake_poly <- st_polygon(list(rbind(
     c(bb[1], bb[2]),
     c(bb[3], bb[2]),
@@ -128,8 +136,22 @@ stations <- tribble(
   "Town_40177",    176.2578,  -38.14635,   
   "VCS_On",        176.275,   -38.075
 )
+stations <- stations |>
+  mutate(name = trimws(name))
 
-stations_sf <- st_as_sf(stations, coords = c("lon", "lat"), crs = 4326)
+#Change names to match your Data set where nessesary
+station_palette <- c(
+  Airport_1770 = "black",
+  ERA5         = "#d95f02",
+  Buoy         = "#7570b3",
+  Town_40177   = "#f0c400",
+  VCS_On       = "#1b9e77"
+)
+
+stations_sf <- st_as_sf(stations, coords = c("lon", "lat"), crs = 4326) |>
+  filter(!is.na(name), name %in% names(station_palette)) |>
+  mutate(name = factor(name, levels = names(station_palette))) |>
+  droplevels()
 
 
 # Use combined extent of lake + stations, with a small buffer (degrees)
@@ -165,12 +187,7 @@ tm_shape(lake_poly, bbox = st_bbox(map_extent)) +
     palette = station_palette,
     shape = 21,
     size = 1,
-    border.col = "black",
-    colorNA = NA,
-    textNZ = NULL,
-    legend.col.show = TRUE,
-    legend.col.title = "Stations",
-    title.col = "Stations"
+    border.col = "black"
   ) +
   tm_compass(
     type = "arrow",
@@ -185,9 +202,7 @@ tm_shape(lake_poly, bbox = st_bbox(map_extent)) +
     legend.outside = TRUE,
     legend.title.size = 0.8,
     legend.text.size = 0.7,
-    legend.format = list(digits = 2),
-    inset_tm = inset,
-    inset_x = 0.72, inset_y = 0.05, inset_width = 0.25, inset_height = 0.25
+    legend.format = list(digits = 2)
   )
 
 ```
