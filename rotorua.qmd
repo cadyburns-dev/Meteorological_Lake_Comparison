@@ -29,7 +29,7 @@ Meterological data is utalised for many different lake assesments, from understa
 
 The question here is how does coarse global, mpdelled national, Local, and Lake source metorological data compare. Is there a better data source in cool or warm periods? or in a storm event? or for a specific variable? or Is there a better data source for local models?
 
-## Additional infor afout data sources - to put in discussion? 
+## Additional infor afout data sources - to put in discussion?
 
 ERA5 uncertancy - presious ERA-interim showed improved fit fro temp, wind and huidily in the troposphere but not in the stratosphere" (direct cite - rmets.oninelibrary.wiley.com/doi/10.1002/qj.3803)
 

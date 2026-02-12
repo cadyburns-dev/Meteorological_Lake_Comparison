@@ -37,6 +37,7 @@ save_fig <- function(plot_obj, filename, width = 8, height = 5, dpi = 150) {
 #----------------------------------------
 # Load processed daily data
 #----------------------------------------
+# when coding with different data sets change the csv file to the new created files
 era5    <- read_csv("data/processed/rotorua_era5_daily.csv", show_col_types = FALSE)
 buoy    <- read_csv("data/processed/rotorua_buoy_daily.csv", show_col_types = FALSE)
 ap1770  <- read_csv("data/processed/rotorua_airport_1770_daily.csv", show_col_types = FALSE)
