@@ -21,27 +21,7 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -140,10 +120,6 @@ div.csl-indent {
 <span class="menu-text">Overview</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./rotorua.html" aria-current="page"> 
-<span class="menu-text">Rotorua demo</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="./methods.html"> 
 <span class="menu-text">Methods</span></a>
   </li>  
@@ -160,8 +136,16 @@ div.csl-indent {
 <span class="menu-text">Metrics &amp; stats</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link active" href="./rotorua.html" aria-current="page"> 
+<span class="menu-text">Rotorua demo</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="./Reproducibility.html"> 
 <span class="menu-text">Reproducibility</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./Reference_List.html"> 
+<span class="menu-text">References</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -179,6 +163,7 @@ div.csl-indent {
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#additional-infor-afout-data-sources---to-put-in-discussion" id="toc-additional-infor-afout-data-sources---to-put-in-discussion" class="nav-link" data-scroll-target="#additional-infor-afout-data-sources---to-put-in-discussion">Additional infor afout data sources - to put in discussion?</a></li>
   <li><a href="#site-data-sources" id="toc-site-data-sources" class="nav-link" data-scroll-target="#site-data-sources">Site data sources</a></li>
   <li><a href="#data-coverage" id="toc-data-coverage" class="nav-link" data-scroll-target="#data-coverage">Data coverage</a></li>
   <li><a href="#metrics-table-reference-vs-targets" id="toc-metrics-table-reference-vs-targets" class="nav-link" data-scroll-target="#metrics-table-reference-vs-targets">Metrics table (reference vs targets)</a></li>
@@ -228,22 +213,28 @@ div.csl-indent {
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>The second largest lake (by surface area ~79.9km2) in New Zealand, Lake Rotorua is a relatively well studied lake with and round shape fitting it’s distrinct culdera description. Although coined the second largest lake its mean depth of just 10meters results in a shallow lake clasification. Shallow lakes are particulary suseptible to climate driven shifts across short and long term scales. Shallow lakes heat up faster than deep lakes which results in larger seasonal and diurnal tempurature fluxtuations. <strong>(Frassel. et.al 2018)</strong> Shallow lakes also tend to be more suseptible to atmospheric forcing where wind, air temperature and precipitation patterms which influence water quality and consequental biology. Lake Rotorua experiance cyanobacteria blooms due to its location in the landscape (hydrothermal + Farm + Population density) recieving high nutirent content along with warmer temperatures. Additional to temperature fluxes influencing cyanobacterial fluxes, wind and rain play a role in the intensity and location of these blooms. Wind drives cyanobacterial location, often leading to cyano bloom intensification/ concentration in particular areas.</p>
+<p>The second largest lake (by surface area ~79.9km2) in New Zealand, Lake Rotorua is a relatively well studied lake with and round shape fitting it’s distrinct culdera description.</p>
+<p>Although coined the second largest lake its mean depth of just 10meters results in a shallow lake clasification. Shallow lakes are particulary suseptible to climate driven shifts across short and long term scales. Shallow lakes heat up faster than deep lakes which results in larger seasonal and diurnal tempurature fluxtuations. <strong>(Frassel. et.al 2018)</strong> Shallow lakes also tend to be more suseptible to atmospheric forcing where wind, air temperature and precipitation patterms which influence water quality and consequental biology. Lake Rotorua experiance cyanobacteria blooms due to its location in the landscape (hydrothermal + Farm + Population density) recieving high nutirent content along with warmer temperatures. Additional to temperature fluxes influencing cyanobacterial fluxes, wind and rain play a role in the intensity and location of these blooms. Wind drives cyanobacterial location, often leading to cyano bloom intensification/ concentration in particular areas.</p>
+<p>Meterological data is utalised for many different lake assesments, from understanding lake regime shifts to modeling future lake dynamices. It is therfore vital to use the best avalable meterological data for the location and time of choice. Too often meterological data are incomplete and unreliable. ERA5 (ECMWF fifth gen) data is widely used due to its comprehensive and clean nature combining observations with model data , however it is coarse and some variables are known to misrepresent data at the land/lake surface (low atmosphere metorology). NIWAs virtual climate station takes captured observational station data and created a 5km grid conecting other weather stations to allow for intergrated data in a chosen location. The VCNS data is partly the product of the Airport data which is used as the Reference for the Rotorua Lake demo. Weather datations within higher population destinations or areas with large topographical gradients will experience micro metorological readings due to the physical nature these environments, In partucular wind, rain and even temperature in larger cities or stations placed in higher altitudes. Buoy data allows for more accurate readings due to its on water position, however precipitation data is often inaccurate as the buoy moves with the lake, especially large lakes that can develope waves. For this reason wind can also be scewed. Temperature for a given Lake from a Buoy is regarded the most likely accurate candidate as fulxtuations from a water body and fluxes from land follow different physical laws.</p>
+<p>The question here is how does coarse global, mpdelled national, Local, and Lake source metorological data compare. Is there a better data source in cool or warm periods? or in a storm event? or for a specific variable? or Is there a better data source for local models?</p>
+</section>
+<section id="additional-infor-afout-data-sources---to-put-in-discussion" class="level2">
+<h2 class="anchored" data-anchor-id="additional-infor-afout-data-sources---to-put-in-discussion">Additional infor afout data sources - to put in discussion?</h2>
+<p>ERA5 uncertancy - presious ERA-interim showed improved fit fro temp, wind and huidily in the troposphere but not in the stratosphere” (direct cite - rmets.oninelibrary.wiley.com/doi/10.1002/qj.3803)</p>
 </section>
 <section id="site-data-sources" class="level2">
 <h2 class="anchored" data-anchor-id="site-data-sources">Site data sources</h2>
-<p>note add what kindof lat long system used_____</p>
 <p>Limnotrack Buoy (lat:-380550S Lon:1761653E) on lake, NIWA virtual climate station network (VCSN) grid NO:27879 lat:-38.075 lon:176.275, ERA5 statlite data for Lat:-38.114908 and Lon:176.316662, Observational data “Airport” station 1770 (lat:-38.10592 lon:176.31481), Obresvational data “Town” station 41077 (lat:-38.14635 lon:176.2578).</p>
 <p>Methods</p>
-<p>All work was completed in R code <span class="citation" data-cites="r:alan2024">(<a href="#ref-r:alan2024" role="doc-biblioref"><em>R: A Language and Environment for Statistical Computing</em> 2024</a>)</span> following the script order stated on README in git reposotory (00, 01, 02, 03, 04, 05).</p>
+<p>All work was completed in R code <span class="citation" data-cites="r:alan2024">(<a href="#ref-r:alan2024" role="doc-biblioref"><strong>r:alan2024?</strong></a>)</span> following the script order stated on README in git reposotory (00, 01, 02, 03, 04, 05).</p>
 <p>Please refer to methods tab for further detail</p>
 </section>
 <section id="data-coverage" class="level2">
 <h2 class="anchored" data-anchor-id="data-coverage">Data coverage</h2>
 <div class="cell">
 <div class="cell-output-display">
-<div class="reactable html-widget html-fill-item" id="htmlwidget-ac09eb7cccc6575273dd" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-ac09eb7cccc6575273dd">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Dataset":["Buoy","ERA5","Reference","Town_40177","VCS_On"],"first_date":["2022-02-21","1990-01-01","2009-06-29","2015-09-24","1960-01-01"],"last_date":["2025-09-01","2025-08-31","2025-07-27","2025-11-28","2025-06-30"],"n_days":[1285,13027,5873,3654,23923]},"columns":[{"id":"Dataset","name":"Dataset","type":"character"},{"id":"first_date","name":"first_date","type":"Date"},{"id":"last_date","name":"last_date","type":"Date"},{"id":"n_days","name":"n_days","type":"numeric"}],"pagination":false,"striped":true,"dataKey":"94aff4237e95a73c1f91d12cb498a752"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+<div class="reactable html-widget html-fill-item" id="htmlwidget-cca518078bd33b1fef29" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-cca518078bd33b1fef29">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Dataset":["Buoy","ERA5","Reference","Town_40177","VCS_On"],"first_date":["2007-07-13","1990-01-01","2009-06-29","2015-09-24","1960-01-01"],"last_date":["2025-09-01","2025-08-31","2025-07-27","2025-11-28","2025-06-30"],"n_days":[6590,13027,5873,3654,23923]},"columns":[{"id":"Dataset","name":"Dataset","type":"character"},{"id":"first_date","name":"first_date","type":"Date"},{"id":"last_date","name":"last_date","type":"Date"},{"id":"n_days","name":"n_days","type":"numeric"}],"pagination":false,"striped":true,"dataKey":"7ab4c88afb01d04f54b42035a5032604"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
@@ -251,8 +242,8 @@ div.csl-indent {
 <h2 class="anchored" data-anchor-id="metrics-table-reference-vs-targets">Metrics table (reference vs targets)</h2>
 <div class="cell">
 <div class="cell-output-display">
-<div class="reactable html-widget html-fill-item" id="htmlwidget-2fd599d64671ae21d89f" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-2fd599d64671ae21d89f">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"target":["ERA5","ERA5","ERA5","ERA5","ERA5","Buoy","Buoy","Buoy","Buoy","Buoy","Town_40177","Town_40177","Town_40177","Town_40177","Town_40177","VCS_On","VCS_On","VCS_On","VCS_On","VCS_On"],"var":["Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms"],"subset":["all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs"],"n":[5873,5829,1799,5854,588,1225,1246,417,1223,126,3519,3462,1101,3512,355,5846,5802,1789,5827,586],"cor":[0.950252726263742,0.741249024236475,0.67431636909125,0.606393155341196,0.202352666779504,0.933598027178203,0.610776596436927,0.555737937323425,0.809926695344059,0.512131858540458,0.993523541694969,0.927727505844174,0.908752364819289,0.884974987196444,0.727268238915944,0.914770965293676,0.947898015007699,0.928074207258292,0.822134183330596,0.425332331613507],"slope":[0.882440597429375,0.873042895451712,0.74450910126041,0.413238038168765,0.209763580348193,0.805782942997428,0.336701182510668,0.337291395166382,0.870599182210333,0.868163449925056,1.00166451159841,0.830816719267625,0.795081195311294,0.597634516035904,0.74585101846782,0.90166498186377,1.02463410075137,0.991222656419513,0.777390508576691,0.584731478239795],"intercept":[0.990114265176521,3.12251727307789,7.32500023937001,0.650308415288529,2.00137814653436,3.58134103102643,0.280888326973165,0.256896363571603,1.2624352833042,1.15436469613406,-0.013860360669776,0.487804562202073,1.67307840471515,0.684516044231292,-0.31724627206801,1.75419784752098,0.38475932953196,1.47974123074671,0.947923136517395,2.19211560546403],"mae":[1.15386341645304,4.16337519300051,9.04532406892718,1.57904988042364,3.46403401360544,1.38759702315078,3.93232143739968,11.0438369868106,1.03966835946834,1.17274062017934,0.354806576606159,1.45684575389948,4.12706630336058,0.891480637813212,2.09729577464789,1.41336360519805,1.36356428817649,3.98026830631638,0.700401578857045,1.20085324232082],"rmse":[1.41555448747477,8.86946127120353,14.2341676187537,1.95487627601514,3.70517131169121,1.82489677872555,10.0334222233155,17.1156148511674,1.30002817661153,1.42882604383569,0.479666914260097,4.0831868423009,6.82779687546213,1.1471362530857,2.23439590726947,1.78540246223107,3.67696698070302,6.47907281733944,0.932972445285637,1.50448306181108],"ccc":[0.939515902763934,0.713125950941946,0.651607296459391,0.352113960138051,0.0309773822460065,0.891663919382223,0.493187885727772,0.404469167514134,0.733170186549662,0.443303489207647,0.99348864500982,0.921905693753109,0.898860629964187,0.697054538771047,0.241273601778792,0.90869487971212,0.944125926435051,0.92287924486931,0.817678222425936,0.35120818455802],"bias":[-0.53343589580586,2.62003808543489,4.10320177876598,-1.48949538776905,-3.46403401360544,1.03079606831477,-2.99248601391118,-9.40593543285372,0.76525046661573,0.201678210350431,0.00803602166618504,-0.217331022530329,-0.970299727520436,-0.809578587699317,-2.09712676056338,0.477827095145039,0.482040675629093,1.36920067076579,0.135802299639609,-0.679317406143345],"rel_bias":[-4.11607092609458,66.1982540398086,32.5386805843303,-40.8438958103125,-50.0859908869824,7.84923150482587,-60.6381130807177,-64.5089812094997,19.9169469521525,2.79090339525698,0.0610879508001442,-5.2144263022205,-7.52191515578243,-21.8022656185899,-29.9448549375143,3.68130780022946,12.2064908084705,10.8719774171786,3.72246092996606,-9.82433279532475],"wind_threshold":["NA","NA","NA","NA",5.78,"NA","NA","NA","NA",6.06,"NA","NA","NA","NA",5.84,"NA","NA","NA","NA",5.78]},"columns":[{"id":"target","name":"target","type":"character"},{"id":"var","name":"var","type":"character"},{"id":"subset","name":"subset","type":"character"},{"id":"n","name":"n","type":"numeric"},{"id":"cor","name":"cor","type":"numeric"},{"id":"slope","name":"slope","type":"numeric"},{"id":"intercept","name":"intercept","type":"numeric"},{"id":"mae","name":"mae","type":"numeric"},{"id":"rmse","name":"rmse","type":"numeric"},{"id":"ccc","name":"ccc","type":"numeric"},{"id":"bias","name":"bias","type":"numeric"},{"id":"rel_bias","name":"rel_bias","type":"numeric"},{"id":"wind_threshold","name":"wind_threshold","type":"numeric"}],"searchable":true,"defaultPageSize":12,"highlight":true,"dataKey":"d36ca72d0804e2bbcceba58d26f7c52b"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+<div class="reactable html-widget html-fill-item" id="htmlwidget-1714a5a3fccf53897f2e" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-1714a5a3fccf53897f2e">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"target":["ERA5","ERA5","ERA5","ERA5","ERA5","Buoy","Buoy","Buoy","Buoy","Buoy","Town_40177","Town_40177","Town_40177","Town_40177","Town_40177","VCS_On","VCS_On","VCS_On","VCS_On","VCS_On"],"var":["Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms"],"subset":["all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs"],"n":[5873,5829,1799,5854,588,5491,1246,417,5442,554,3519,3462,1101,3512,355,5846,5802,1789,5827,586],"cor":[0.950252726263742,0.741249024236475,0.67431636909125,0.606393155341196,0.202352666779504,0.923679980700124,0.610776596436927,0.555737937323425,0.784614606192337,0.31361065431878,0.993523541694969,0.927727505844174,0.908752364819289,0.884974987196444,0.727268238915944,0.914770965293676,0.947898015007699,0.928074207258292,0.822134183330596,0.425332331613507],"slope":[0.882440597429375,0.873042895451712,0.74450910126041,0.413238038168765,0.209763580348193,0.827350288767713,0.336701182510668,0.337291395166382,0.879467853449804,0.555470237405179,1.00166451159841,0.830816719267625,0.795081195311294,0.597634516035904,0.74585101846782,0.90166498186377,1.02463410075137,0.991222656419513,0.777390508576691,0.584731478239795],"intercept":[0.990114265176521,3.12251727307789,7.32500023937001,0.650308415288529,2.00137814653436,3.12863896634716,0.280888326973165,0.256896363571603,1.09330703859897,3.13780546905575,-0.013860360669776,0.487804562202073,1.67307840471515,0.684516044231292,-0.31724627206801,1.75419784752098,0.38475932953196,1.47974123074671,0.947923136517395,2.19211560546403],"mae":[1.15386341645304,4.16337519300051,9.04532406892718,1.57904988042364,3.46403401360544,1.35635418690091,3.93232143739968,11.0438369868106,0.978142295018613,1.11179588111854,0.354806576606159,1.45684575389948,4.12706630336058,0.891480637813212,2.09729577464789,1.41336360519805,1.36356428817649,3.98026830631638,0.700401578857045,1.20085324232082],"rmse":[1.41555448747477,8.86946127120353,14.2341676187537,1.95487627601514,3.70517131169121,1.82068764387213,10.0334222233155,17.1156148511674,1.29348823466425,1.75703221512302,0.479666914260097,4.0831868423009,6.82779687546213,1.1471362530857,2.23439590726947,1.78540246223107,3.67696698070302,6.47907281733944,0.932972445285637,1.50448306181108],"ccc":[0.939515902763934,0.713125950941946,0.651607296459391,0.352113960138051,0.0309773822460065,0.896421541912313,0.493187885727772,0.404469167514134,0.724935242161359,0.268237241627964,0.99348864500982,0.921905693753109,0.898860629964187,0.697054538771047,0.241273601778792,0.90869487971212,0.944125926435051,0.92287924486931,0.817678222425936,0.35120818455802],"bias":[-0.53343589580586,2.62003808543489,4.10320177876598,-1.48949538776905,-3.46403401360544,0.869477375018544,-2.99248601391118,-9.40593543285372,0.652744988611671,0.067388649995119,0.00803602166618504,-0.217331022530329,-0.970299727520436,-0.809578587699317,-2.09712676056338,0.477827095145039,0.482040675629093,1.36920067076579,0.135802299639609,-0.679317406143345],"rel_bias":[-4.11607092609458,66.1982540398086,32.5386805843303,-40.8438958103125,-50.0859908869824,6.64472246235729,-60.6381130807177,-64.5089812094997,17.8582686887154,0.975641495902197,0.0610879508001442,-5.2144263022205,-7.52191515578243,-21.8022656185899,-29.9448549375143,3.68130780022946,12.2064908084705,10.8719774171786,3.72246092996606,-9.82433279532475],"wind_threshold":["NA","NA","NA","NA",5.78,"NA","NA","NA","NA",5.78,"NA","NA","NA","NA",5.84,"NA","NA","NA","NA",5.78]},"columns":[{"id":"target","name":"target","type":"character"},{"id":"var","name":"var","type":"character"},{"id":"subset","name":"subset","type":"character"},{"id":"n","name":"n","type":"numeric"},{"id":"cor","name":"cor","type":"numeric"},{"id":"slope","name":"slope","type":"numeric"},{"id":"intercept","name":"intercept","type":"numeric"},{"id":"mae","name":"mae","type":"numeric"},{"id":"rmse","name":"rmse","type":"numeric"},{"id":"ccc","name":"ccc","type":"numeric"},{"id":"bias","name":"bias","type":"numeric"},{"id":"rel_bias","name":"rel_bias","type":"numeric"},{"id":"wind_threshold","name":"wind_threshold","type":"numeric"}],"searchable":true,"defaultPageSize":12,"highlight":true,"dataKey":"6d8486f6d4eaa5eb0c372bac7a1616ac"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
@@ -288,6 +279,7 @@ div.csl-indent {
 </section>
 <section id="precipitation-event-structure" class="level2">
 <h2 class="anchored" data-anchor-id="precipitation-event-structure">Precipitation event structure</h2>
+<p>Precipitation data collection can be achieved in many ways. Here Airport, Town</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -473,8 +465,8 @@ div.csl-indent {
 <h2 class="anchored" data-anchor-id="precipitation-event-agreement">Precipitation event agreement</h2>
 <div class="cell">
 <div class="cell-output-display">
-<div class="reactable html-widget html-fill-item" id="htmlwidget-3226601adcb505e9891a" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-3226601adcb505e9891a">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"target":["ERA5","Buoy","Town_40177","VCS_On"],"var":["Precip_mm","Precip_mm","Precip_mm","Precip_mm"],"threshold":[0.1,0.1,0.1,0.1],"ref":["Airport_1770","Airport_1770","Airport_1770","Airport_1770"],"n":[5829,1246,3462,5802],"hits":[2562,356,1392,1985],"misses":[123,241,234,679],"false_alarms":[1832,53,125,49],"correct_neg":[1312,596,1711,3089],"POD":[0.954189944134078,0.596314907872697,0.856088560885609,0.74512012012012],"FAR":[0.41693218024579,0.12958435207824,0.0823994726433751,0.0240904621435595],"CSI":[0.567190613238875,0.547692307692308,0.794974300399772,0.731662366384077],"bias_score":[1.6364990689013,0.685092127303183,0.932964329643296,0.763513513513513]},"columns":[{"id":"target","name":"target","type":"character"},{"id":"var","name":"var","type":"character"},{"id":"threshold","name":"threshold","type":"numeric"},{"id":"ref","name":"ref","type":"character"},{"id":"n","name":"n","type":"numeric"},{"id":"hits","name":"hits","type":"numeric"},{"id":"misses","name":"misses","type":"numeric"},{"id":"false_alarms","name":"false_alarms","type":"numeric"},{"id":"correct_neg","name":"correct_neg","type":"numeric"},{"id":"POD","name":"POD","type":"numeric"},{"id":"FAR","name":"FAR","type":"numeric"},{"id":"CSI","name":"CSI","type":"numeric"},{"id":"bias_score","name":"bias_score","type":"numeric"}],"striped":true,"dataKey":"dfb76af3607b91fc7df4355b14125e53"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+<div class="reactable html-widget html-fill-item" id="htmlwidget-4fe236c36ce82b8cc735" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-4fe236c36ce82b8cc735">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"target":["ERA5","Buoy","Town_40177","VCS_On"],"var":["Precip_mm","Precip_mm","Precip_mm","Precip_mm"],"threshold":[0.1,0.1,0.1,0.1],"ref":["Airport_1770","Airport_1770","Airport_1770","Airport_1770"],"n":[5829,1246,3462,5802],"hits":[2562,356,1392,1985],"misses":[123,241,234,679],"false_alarms":[1832,53,125,49],"correct_neg":[1312,596,1711,3089],"POD":[0.954189944134078,0.596314907872697,0.856088560885609,0.74512012012012],"FAR":[0.41693218024579,0.12958435207824,0.0823994726433751,0.0240904621435595],"CSI":[0.567190613238875,0.547692307692308,0.794974300399772,0.731662366384077],"bias_score":[1.6364990689013,0.685092127303183,0.932964329643296,0.763513513513513]},"columns":[{"id":"target","name":"target","type":"character"},{"id":"var","name":"var","type":"character"},{"id":"threshold","name":"threshold","type":"numeric"},{"id":"ref","name":"ref","type":"character"},{"id":"n","name":"n","type":"numeric"},{"id":"hits","name":"hits","type":"numeric"},{"id":"misses","name":"misses","type":"numeric"},{"id":"false_alarms","name":"false_alarms","type":"numeric"},{"id":"correct_neg","name":"correct_neg","type":"numeric"},{"id":"POD","name":"POD","type":"numeric"},{"id":"FAR","name":"FAR","type":"numeric"},{"id":"CSI","name":"CSI","type":"numeric"},{"id":"bias_score","name":"bias_score","type":"numeric"}],"striped":true,"dataKey":"dfb76af3607b91fc7df4355b14125e53"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <div class="cell">
@@ -569,20 +561,15 @@ div.csl-indent {
 <h2 class="anchored" data-anchor-id="interactive-table">Interactive table</h2>
 <div class="cell">
 <div class="cell-output-display">
-<div class="reactable html-widget html-fill-item" id="htmlwidget-bec62c831697805d09f6" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-bec62c831697805d09f6">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Dataset":["Airport_1770","ERA5","Buoy","Town_40177","VCS_On"],"Date":["2025-07-27","2025-08-31","2025-09-01","2025-11-28","2025-06-30"],"Temp_C":[11.5857142857143,8.231,9.80763859722222,22.1,10.5],"Precip_mm":[0.2,24.029,0,"NA",0],"Wind_Spd_ms":[2.54,5.689,9.64310825442118,"NA",4.4],"RadSWD_Wm2":["NA",57.449,164.054703333333,"NA",63.6574074074074]},"columns":[{"id":"Dataset","name":"Dataset","type":"character"},{"id":"Date","name":"Date","type":"Date"},{"id":"Temp_C","name":"Temp_C","type":"numeric"},{"id":"Precip_mm","name":"Precip_mm","type":"numeric"},{"id":"Wind_Spd_ms","name":"Wind_Spd_ms","type":"numeric"},{"id":"RadSWD_Wm2","name":"RadSWD_Wm2","type":"numeric"}],"searchable":true,"defaultPageSize":5,"highlight":true,"striped":true,"dataKey":"a53f2081c9725cc1c19eca7798f704c5"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+<div class="reactable html-widget html-fill-item" id="htmlwidget-830ae3eebaf51ed394a8" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-830ae3eebaf51ed394a8">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Dataset":["Airport_1770","ERA5","Buoy","Town_40177","VCS_On"],"Date":["2025-07-27","2025-08-31","2025-09-01","2025-11-28","2025-06-30"],"Temp_C":[11.5857142857143,8.231,9.80763859722222,22.1,10.5],"Precip_mm":[0.2,24.029,0,"NA",0],"Wind_Spd_ms":[2.54,5.689,9.64310825442118,"NA",4.4],"RadSWD_Wm2":["NA",57.449,"NA","NA",63.6574074074074]},"columns":[{"id":"Dataset","name":"Dataset","type":"character"},{"id":"Date","name":"Date","type":"Date"},{"id":"Temp_C","name":"Temp_C","type":"numeric"},{"id":"Precip_mm","name":"Precip_mm","type":"numeric"},{"id":"Wind_Spd_ms","name":"Wind_Spd_ms","type":"numeric"},{"id":"RadSWD_Wm2","name":"RadSWD_Wm2","type":"numeric"}],"searchable":true,"defaultPageSize":5,"highlight":true,"striped":true,"dataKey":"c2468207ccdf881bdeec8aacf6463547"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
-
 
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
-<div id="ref-r:alan2024" class="csl-entry" role="listitem">
-<em>R: A Language and Environment for Statistical Computing</em>. 2024. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.
-</div>
-</div></section></div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

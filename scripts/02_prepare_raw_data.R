@@ -147,7 +147,7 @@ glimpse(Era5)
   # Buoy data (5-min → hourly → daily)
 #4.------------------------------------------------------------------------------
 
-#Get Bouy data from Limnotrack database - This is from the new Buoy so starts Feb 2022
+#Get Buoy data from Limnotrack database - This is from the new Buoy so starts Feb 2022
 Rotorua_Buoy_raw <- read.csv(file = "https://www.dropbox.com/scl/fi/s37tbex1uej3r1xfzxkrd/Rotorua_202202-202508_meteorology.csv?rlkey=9oee6fzwx3q9yc7ubiobn9flc&st=obtfridy&dl=1", header = TRUE)
 
 aemetools::check_api_status()
@@ -318,7 +318,7 @@ summary(buoy_daily)
 ###################################
 # Rotorua Buoy has some historical data we ill patch together, for other lakes this might not be nessesary
 ########### SKIP THIS LAST BUOY STEP IF YOU ONLY HAVE ONE BUOY DATASET ##############
-
+################################
 
 
 # Read temp (15‑min) and make daily
@@ -343,12 +343,16 @@ Historic_buoy_Temp_daily <- Historic_buoy_Temp |>
     Temp_C  = mean(Temp_C, na.rm = TRUE),
     n_obs   = n(),
     .groups = "drop"
-  ) |>
-  mutate(coverage = n_obs / 96) |>
-  filter(coverage >= 0.75)
+  ) 
 
 
-# Read wind (15‑min) and make daily (keep dates even if missing)
+
+# Read wind (15‑min) and make daily (keep dates, remove bad range)
+bad_start <- as.Date("2019-10-24") #error in buoy data
+bad_end   <- as.Date("2019-12-09") #error in buoy data
+safe_mean <- function(x) if (all(is.na(x))) NA_real_ else mean(x, na.rm = TRUE)
+
+# ---- Historic wind daily (with bad range removed)
 Historic_buoy_Wnd <- read.csv(
   path_raw("Rotorua_Buoy_historic", "Wind_Vel.UoW@EL696127.EntireRecord.csv"),
   skip = 14,
@@ -359,39 +363,49 @@ Historic_buoy_Wnd <- read.csv(
     `Wind_m/s`   = `Value`
   ) |>
   mutate(
-    Datetime = parse_date_time(Datetime_txt, orders = c("ymd_HMS", "ymd_HM", "ymd"), tz = "UTC"),
-    Date     = as_date(Datetime),
-    `Wind_m/s` = if_else(
-      Date >= as.Date("2019-10-24") & Date <= as.Date("2019-11-25"),
-      NA_real_,
-      `Wind_m/s`
-    )
+    Datetime  = parse_date_time(Datetime_txt, orders = c("ymd_HMS", "ymd_HM", "ymd"), tz = "UTC"),
+    Date      = as_date(Datetime),
+    `Wind_m/s` = if_else(Date >= bad_start & Date <= bad_end, NA_real_, `Wind_m/s`)
   ) |>
   filter(!is.na(Date))
 
 Historic_buoy_Wnd_daily <- Historic_buoy_Wnd |>
   group_by(Date) |>
   summarise(
-    Wind_Spd_ms = if (all(is.na(`Wind_m/s`))) NA_real_ else mean(`Wind_m/s`, na.rm = TRUE),
+    Wind_Spd_ms = safe_mean(`Wind_m/s`),
     n_obs       = sum(!is.na(`Wind_m/s`)),
     .groups     = "drop"
   ) |>
   mutate(coverage = n_obs / 96)
 
-# keep every date in the span (gaps stay as NA)
-all_days <- tibble(Date = seq(min(Historic_buoy_Wnd$Date), max(Historic_buoy_Wnd$Date), by = "day"))
+# keep every date
+all_days <- tibble(
+  Date = seq(min(Historic_buoy_Wnd$Date), max(Historic_buoy_Wnd$Date), by = "day")
+)
 
+# keeping dates so the plots will lone up well
 Historic_buoy_Wnd_daily <- all_days |>
   left_join(Historic_buoy_Wnd_daily, by = "Date")
 
-# Combine daily temp + wind
+# ---- Join histori temp + wind (daily)
 Buoy_historic_daily <- Historic_buoy_Wnd_daily |>
   select(Date, Wind_Spd_ms) |>
   left_join(Historic_buoy_Temp_daily |> select(Date, Temp_C), by = "Date")
 
-# Stack old + new
+# ---- Stack + force ONE row per day (prevents duplicates)
 buoy_daily <- dplyr::bind_rows(buoy_daily, Buoy_historic_daily) |>
-  dplyr::arrange(Date)
+  group_by(Date) |>
+  summarise(
+    Temp_C      = safe_mean(Temp_C),
+    Wind_Spd_ms = safe_mean(Wind_Spd_ms),
+    Precip_mm   = if (all(is.na(Precip_mm))) NA_real_ else sum(Precip_mm, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  mutate(
+    Wind_Spd_ms = if_else(Date >= bad_start & Date <= bad_end, NA_real_, Wind_Spd_ms)
+  ) |>
+  arrange(Date)
+
 
 
 # -------------------------------------------------------------------
@@ -769,16 +783,16 @@ message("Saved cleaned Rotorua met datasets to data/processed/")
 # ---- Join onto common datetime DF -------
 # -------------------------------------------------------------------
 
-Met_alll <- full_join(era5_daily, buoy_daily, by = "Date", suffix = c("_ERA5", "_Buoy")) %>%
-  full_join(ap_40177_daily, by = "Date", suffix = c("", "_40177")) %>%
-  full_join(ap_1770_daily, by = "Date", suffix = c("", "_1770"))
+#Met_alll <- full_join(era5_daily, buoy_daily, by = "Date", suffix = c("_ERA5", "_Buoy")) %>%
+ # full_join(ap_40177_daily, by = "Date", suffix = c("", "_40177")) %>%
+ # full_join(ap_1770_daily, by = "Date", suffix = c("", "_1770"))
 
 # Optional: filter to a common period
 # met_all <- met_all |>
 #   filter(datetime >= ymd("2000-01-01"),
 #          datetime <= ymd("2024-12-31"))
 
-# ---- 3. Save a processed version for analysis & Quarto ----
-write_csv(Met_alll, "data/processed/rotorua_met_all_daily.csv")
+# ----  Save a processed version for analysis & Quarto ----
+#write_csv(Met_alll, "data/processed/rotorua_met_all_daily.csv")
 
-message("Saved combined Rotorua met dataset to data/processed/rotorua_met_all_daily.csv")
+#message("Saved combined Rotorua met dataset to data/processed/rotorua_met_all_daily.csv")

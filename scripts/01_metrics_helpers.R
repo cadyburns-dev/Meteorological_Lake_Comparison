@@ -157,9 +157,4 @@ calc_metrics_windy_days <- function(obs, sim, threshold_ms = 8) {
 
 
 
-# Add some metrics (extra hydrology measures) for the rain correlation problem like using NSE and KGE - used to judge time-series hydrology
-# NSE (Nash-Sutcliffe Efficency) Measures how much better the dataset is than using the mean of obs as a predictor|>
-          # Range: −∞ to 1    1 = perfect match 0 = no better than using the mean of obs every day < 0 = worse than the mean
-# KGE (Kling-Gupta Efficency) Also ranges roughly up to 1 (1 = perfect).Breaks performance into correlation + bias + variability ratio|>
-          # Often more informative than NSE because it explicitly accounts for bias and spread.
-# adding this will answer the question does ERA5 systematically over/under estimate? ( absolute magnitude matters)  - for RAD and Raibn
+

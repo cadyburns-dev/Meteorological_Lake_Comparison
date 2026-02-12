@@ -6,102 +6,794 @@ format: html
 
 This section documents how the meteorological datasets were prepared, aligned, and compared so the workflow is transparent and repeatable.
 
-# Data harmonisation units and time step
+# **Data harmonisation units and time step**
 
-We used four sources: ERA5 reanalysis, buoy in-situ station, airport observations, and NIWA Virtual Climate Station Network (VCSN). All inputs were standardised to a daily time step and common units before any comparisons:
+## Data Sources
 
--   Temperature (deg C), wind speed (m/s), and shortwave radiation (W/m\^2) were aggregated as daily means; precipitation (mm) as daily totals.
--   Sub-daily records (e.g., 5-minute buoy, hourly stations) were first converted to UTC, then aggregated with sums for fluxes (precip) and means for state variables (temp, wind, radiation).
--   Radiation in energy units (MJ/m\^2) was converted to power (W/m\^2) using `Rad_MJm2 * 1e6 / 86400` for daily totals and `Rad_MJm2 * 1e6 / 3600` for hourly values before daily means, matching the reporting interval.
--   Variable names were standardised to `Temp_C`, `Precip_mm`, `Wind_Spd_ms`, `RadSWD_Wm2`, plus a `Date` column for joins.
+\
+Daily meteorological datasets were compiled for Lake Rotorua from ERA5‑Land reanalysis, the Limnotrack buoy (in‑situ), NIWA Airport_1770 observations, NIWA Town_40177 observations, and the NIWA Virtual Climate Station Network (VCS_On). ERA5 variables were extracted using `aemetools::get_era5_land_point_nz`, VCS and reference data were downloaded manually from NIWA "Earth Science New Zealand" datahub  and save as CSV in "data/raw" folder
+# https://cliflo.niwa.co.nz/
+
+# Seperate files need to be joined together - radiation, temperature, rainfall, wind speed - 
+while the others were seperatly downloaded and inported to the file. All datasets were standardised to common variable names (`Temp_C`, `Precip_mm`, `Wind_Spd_ms`, `RadSWD_Wm2`) with a shared Date field.
+
+
+\
+Sub‑daily records (5&15 minute buoy and hourly station data) were parsed in UTC and aggregated to daily values, using sums for fluxes (precipitation) and means for temperature, wind speed, and radiation. Radiation in MJ m⁻² was converted to W m⁻² using `Rad_MJm2 * 1e6 / 86400` for daily totals and `Rad_MJm2 * 1e6 / 3600` for hourly values prior to daily means. Buoy wind speeds were corrected for a documented unit change (knots to m/s before a switch date), and buoy precipitation was converted from mm hr⁻¹ to 5‑minute depth before aggregation. Historical buoy records (15‑minute) were aggregated to daily means, with known incorrect wind periods set to `NA` to keep a continuous date. Town_40177 and Airport_1770 were assembled from hourly radiation/temperature (daily means) plus daily wind and rain. VCS_On daily data were converted to numeric, with temperature computed as the mean of Tmin and Tmax. All daily datasets were written as aligned CSVs, which were then used to compare overlapping dates.
 
 ## Reference site justification
 
 Airport station data were used as the primary reference because they are maintained, quality-controlled, and co-located near the lake with minimal missingness. All alternative sources (ERA5, VCSN, buoy, Town) were evaluated against this reference over their overlapping dates.
 
-# Metrics
+# **Metrics**
 
-Metrics are computed on paired daily values after joining by `Date` and dropping NA pairs. The target dataset is treated as "sim" and the reference as "obs".
+Metrics are computed on paired daily values after joining by `Date` and dropping NA s. For each target ("sim") vs reference ("obs"), the following are calculated.
 
-## **Core performance metrics and formulas (paired daily values):**
+## Core performance metrics and formulas (paired daily values)
 
-Let obs_i be the reference value and sim_i the target value for i = 1..n after pairing by date and dropping NA pairs.
+Pearson correlation (r) [@pearson1895] for overall co-variation `(cor(obs, sim) ).`
+
+$$r = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}         {\sqrt{\sum_{i=1}^{n} (x_i - \bar{x})^2 \; \sum_{i=1}^{n} (y_i - \bar{y})^2}}
+$$Pearson correlation coefficient between the reference series (obs; Airport_1770) and the target dataset (sim). Here, (x_i) denotes the reference value on day (i), (y_i) denotes the target value on day (i), and (\\bar{x}), (\\bar{y}) are their respective means over the overlap period (after removing missing values)
+
+Linear regression: Slope and intercept (scaling and offset bias) `lm(sim ~obs)`
 
 $$
-mu = sim_i + (sin_i)
+y_i = \beta_0 + \beta_1 x_i + \epsilon_i
 $$
 
-Define error e_i = sim_i - obs_i, and means mu_obs, mu_sim with standard deviations sigma_obs, sigma_sim.
+Linear regression model used to estimate agreement between the reference series (obs; Airport_1770) and each target dataset (sim). Here, (x_i) is the reference value on day (i), (y_i) is the target value on day (i), (\\beta_0) is the intercept, (\\beta_1) is the slope, and (\\epsilon_i) is the residual error (using paired, non‑missing daily values).
 
--   Pearson correlation (r) for overall co-variation.
+MAE: Mean absolute error `mean(|sim-obs|)`.
 
-    -   Pearson correlation: r = sum((obs_i - mu_obs)(sim_i - mu_sim)) / sqrt(sum((obs_i - mu_obs)\^2) \* sum((sim_i - mu_sim)\^2))
+$$
+\mathrm{MAE} = \frac{1}{n}\sum_{i=1}^{n}\left|\,y_i - x_i\,\right|
+$$Mean Absolute Error (MAE) between the reference series (obs; (x_i)) and the target series (sim; (y_i)) over the overlapping days. Here (n) is the number of paired, non‑missing daily observations.
 
--   Linear regression of sim \~ obs to report slope and intercept (scaling and offset bias).
+RMSE: Root mean square error `sqrt(mean((sin-obs)^2))`.
 
-    -   Linear regression (sim \~ obs): sim_i = a + b \* obs_i, where b = cov(obs, sim) / var(obs) and a = mu_sim - b \* mu_obs
+$$
+\mathrm{RMSE} = \sqrt{\frac{1}{n}\sum_{i=1}^{n}\left(y_i - x_i\right)^2}
+$$
 
--   MAE and RMSE based on error = (sim - obs).
+Root Mean Square Error (RMSE) between the reference series (obs; (x_i)) and the target series (sim; (y_i)) over the overlapping days. Here (n) is the number of paired, non‑missing daily observations.
 
-    -   MAE: MAE = (1/n) \* sum \|e_i\| - RMSE: RMSE = sqrt((1/n) \* sum e_i\^2) - Bias: Bias = (1/n) \* sum e_i
+Lin's concordance correlation coefficient (CCC) to combine accuracy and precision. Values were interpreted under the McBride 2005 scale.
 
--   Lin's concordance correlation coefficient (CCC) to combine accuracy and precision.
+$$
+[\text{CCC} = \frac{2 r \sigma_{obs} \sigma_{sim}}{\sigma_{obs}^2 + \sigma_{sim}^2 + (\mu_{obs} - \mu_{sim})^2}]
+$$
 
-    -   Lin's concordance correlation coefficient (CCC): CCC = (2 \* r \* sigma_obs \* sigma_sim) / (sigma_obs\^2 + sigma_sim\^2 + (mu_obs - mu_sim)\^2). CCC values were interpreted under the McBride 2005 scale
+Bias `mean(sim - obs)`, and relative bias if mean obs is non-zero.
 
--   Bias = mean(sim - obs), and relative bias = bias / mean(obs) \* 100 (if mean obs is non-zero).
+Relative bias: Expressed as percent (%) of mean observed, `100xbias/mean(obs)`.
 
-    -   Relative bias: RelBias(%) = 100 \* Bias / mu_obs (only reported if mu_obs != 0)
+## Event‑based performance evaluated using reference‑defined subsets
 
-## **Event agreement metrics (used for precipitation events)**
+Wet‑day precipitation metrics use `Precip_mm > 1 mm` in the reference (set via `wet_threshold_mm = 1`), to assess performance on meaningful rain days.
 
-## **(binary events defined on the reference series at a threshold):**
+Windy‑day metrics use the top 10% of reference wind speeds (`windy_top_pct = 0.10`), i.e., the 90th percentile of the reference wind during the overlap period. (A fixed threshold of 10 m/s is coded as an alternative but not used in the current runs.)
 
--   Events are defined by a threshold on the reference series (default precip \>= threshold).
+Wet‑day and windy‑day subsets\
+Wet‑day metrics were computed only when the reference precipitation exceeded 1 mm (Airport_1770), to focus on meaningful rain events. Windy‑day metrics used the top 10% of reference wind speeds, defined by the 90th percentile of Airport_1770 during the overlap period; metrics were computed only on those high‑wind days.
 
--   Counts of hits (H) shows when both the ("sim" e.g ERA5) (reference "obs" e.g Airport) report an event (e.g rain or wind). Misses (M) identifies when a reference event is missed by the target (sim vs obs), false alarms, and correct negatives are computed.
+Event‑agreement statistics for precipitation (`threshold ≥ 0.1 mm/day`, as set in the event‑skill section) include:
 
--   Skill scores include POD (probability of detection), FAR (false alarm ratio), CSI (critical success index), and bias score.
+Hits (H) (ref event & target event), *both obs and sim say "event"*
 
-## **Seasonal and climatology diagnostics:**
+Misses (M) (ref event & target no event), *obs says "event" but sim does not*
 
--   Monthly climatology is summarised with mean and interquartile range (IQR) per dataset.
+False alarms (FA), *sim says "event" but obs does not*
 
--   Seasonal bias is computed as (target - reference) grouped by season.
+Correct negatives (CN), *both say "no event"*
 
--   Seasons follow Southern Hemisphere definitions (DJF/MAM/JJA/SON) with an optional warm/cool split.
+POD (Probability of Detection) = H / (H + M)\
+*“Of the true events, how many did we catch?”*
 
-**Figures use consistent overlap with the reference dates to ensure fair visual comparisons (time series, distributions, scatter).**
+FAR (False Alarm Ratio) = FA / (H + FA)\
+*“Of the predicted events, how many were false?”*
 
-## **Event agreement (binary events defined on the reference series at a threshold):**
+CSI (Critical Success Index) = H / (H + M + FA)\
+*“Overall event accuracy, ignoring correct negatives.”*
 
--   Hits (H): ref event and target event
+Bias score = (H + FA) / (H + M)\
+*“Do we predict too many events (\>1) or too few (\<1)?”*
 
--   Misses (M): ref event and target no-event
+These quantify detection performance separately from continuous error metrics.
 
--   False alarms (F): ref no-event and target event
+# **Plotting and Diagnostics**
 
--   Correct negatives (C): ref no-event and target no-event
+\
+Plots are generated from overlap‑aligned daily data to ensure consistent comparisons. 
+Where plotting code avalable: `ref_df`: reference dataset (Airport_1770) in daily format.
+`targets_list`: list of target datasets (ERA5, Buoy, Town_40177, VCS_On).
+`var`: variable name string, e.g., `"Temp_C"`, `"Wind_Spd_ms"`, `"Precip_mm"`.
+`make_long_overlap()`: helper that aligns datasets to overlapping dates and returns a long table with `Date`, `value`, and `source`.
+`target_colors`: named palette used consistently across plots
 
--   POD = H / (H + M)
+```{r}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Show example code: Plotting set up"
+library(tidyverse)
+library(slider)
+library(plotly)
 
--   FAR = F / (H + F)
+# --- Source helpers (must exist relative to project root) ---
+# run source below if not using quarto file
+source("scripts/01_metrics_helpers.R")
+source("scripts/03_analysis_helpers.R")
 
--   CSI = H / (H + M + F)
+# -----------------------------
+# Load processed daily data
+# -----------------------------
+era5     <- read_csv("data/processed/rotorua_era5_daily.csv", show_col_types = FALSE)
+buoy     <- read_csv("data/processed/rotorua_buoy_daily.csv", show_col_types = FALSE)
+ap1770   <- read_csv("data/processed/rotorua_airport_1770_daily.csv", show_col_types = FALSE)
+twn40177 <- read_csv("data/processed/rotorua_town_40177_daily.csv", show_col_types = FALSE)
+vcs_on   <- read_csv("data/processed/rotorua_vcs_on_daily.csv", show_col_types = FALSE)
 
--   Bias score = (H + F) / (H + M)
+#----------------------------------------
+# Creating additional functions for plotting and later use in quarto
+#----------------------------------------
 
-## **Seasonal bias within season s:**
+# Enforce Date type (prevents join issues)
+to_date <- function(df) { df$Date <- as.Date(df$Date); df }
+era5     <- to_date(era5)
+buoy     <- to_date(buoy)
+ap1770   <- to_date(ap1770)
+twn40177 <- to_date(twn40177)
+vcs_on   <- to_date(vcs_on)
+# -----------------------------
+# Reference + targets
+# -----------------------------
+ref_df <- ap1770
 
-Bias_s = mean(sim_i - obs_i) for all paired days in season s
+targets_list <- list(
+  ERA5       = era5,
+  Buoy       = buoy,
+  Town_40177 = twn40177,
+  VCS_On     = vcs_on
+)
 
-# Wet/windy subsets and logic
+target_colors <- c(
+  Airport_1770 = "black",
+  ERA5         = "#d95f02",
+  Buoy         = "#7570b3",
+  Town_40177   = "#f0c400",
+  VCS_On       = "#1b9e77"
+)
 
--   Wet days: precipitation metrics are recomputed on days with observed precip above a threshold (default 0.1 to 1 mm) to avoid zero inflation masking disagreement.
--   many ETCCDI-style indices use RR ≥ 1 mm for wet-day / consecutive wet day style definitions). **1 mm is used as primary “wet day” threshold** (aligns with widely used climate/extremes index conventions e.g. ETCCDI-style definitions) (CITE ETCCDI indicies))++++++++++++++++++++
--   Windy days: wind metrics are optionally recomputed for high-wind conditions, defined either by a fixed threshold (default 10 m/s) or by the top 10 percent of observed winds in the reference record. When using top-percent thresholds, the cutoff is computed per comparison from the reference overlap period.
+vars <- c("Temp_C", "Precip_mm", "Wind_Spd_ms", "RadSWD_Wm2")
 
-These subsets surface performance during hydrologically and operationally important conditions.
+# -----------------------------
+# Metrics table (ready for Quarto)
+# -----------------------------
+metrics_all <- purrr::imap_dfr(
+  targets_list,
+  ~ metrics_vs_ref(
+    ref_df      = ref_df,
+    target_df   = .x,
+    target_name = .y,
+    vars = vars,
+    wet_threshold_mm = 1,
+    windy_top_pct    = 0.10
+  )
+)
+
+#print(metrics_all)
+
+# ============================================================
+# Plot helpers
+# ============================================================
+
+# -----------------------------
+# Helper: overlap-aligned long table
+# -----------------------------
+# Why: comparisons must be on the SAME dates where the reference exists (honest overlap).
+make_long_overlap <- function(ref_df, targets_list, var, ref_name = "Airport_1770") {
+
+  ref_keep <- ref_df |>
+    select(Date, value = all_of(var)) |>
+    mutate(source = ref_name)
+
+  targets_keep <- purrr::imap_dfr(
+    targets_list,
+    ~ .x |>
+      select(Date, value = all_of(var)) |>
+      mutate(source = .y)
+  )
+
+  df <- bind_rows(ref_keep, targets_keep) |>
+    drop_na(value)
+
+  ref_dates <- ref_keep |>
+    drop_na(value) |>
+    distinct(Date)
+
+  df |> semi_join(ref_dates, by = "Date")
+}
+
+```
+
+The analysis produces:
+
+**Time‑series line plots** for Temp_C, Wind_Spd_ms, and RadSWD_Wm2 (faceted by dataset).
+
+```{r}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Show example code: Time series plots"
+plot_timeseries_line <- function(ref_df, targets_list, var, ref_name = "Airport_1770") {
+  df <- make_long_overlap(ref_df, targets_list, var, ref_name = ref_name)
+
+  ggplot(df, aes(Date, value, color = source)) +
+    geom_line(alpha = 0.85) +
+    facet_wrap(~ source, ncol = 1, scales = "fixed") +
+    scale_color_manual(values = target_colors) +
+    labs(
+      title = paste0(var, " over time (aligned to reference overlap)"),
+      x = NULL, y = var
+    ) +
+    theme_bw() +
+    theme(legend.position = "none")
+}
+```
+
+**Precipitation hydrographs** (daily bars), optionally with a 7‑day rolling sum.
+
+```{r}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Show example code: Precipitation"
+plot_precip_hydrograph <- function(ref_df, targets_list, ref_name = "Airport_1770", show_7day_sum = TRUE) {
+
+  df <- make_long_overlap(ref_df, targets_list, "Precip_mm", ref_name = ref_name)
+
+  p <- ggplot(df, aes(Date, value, fill = source)) +
+    geom_col(alpha = 0.55) +
+    facet_wrap(~ source, ncol = 1, scales = "fixed") +
+    scale_fill_manual(values = target_colors) +
+    labs(
+      title = "Precipitation hydrograph (daily totals; overlap with reference)",
+      x = NULL, y = "Precip (mm/day)"
+    ) +
+    theme_bw() +
+    theme(legend.position = "none")
+
+  # OPTIONAL 7-day sum is useful for storm periods but is on a different scale than daily totals.
+    #  7-day rolling sum line per dataset to show storm periods more clearly
+  # Allows to see week long totals over the daily bars
+  if (isTRUE(show_7day_sum)) {
+    df7 <- df |>
+      arrange(source, Date) |>
+      group_by(source) |>
+      mutate(sum7 = slider::slide_dbl(value, ~ sum(.x, na.rm = TRUE), .before = 6, .complete = TRUE)) |>
+      ungroup()
+
+    p <- p +
+      geom_line(data = df7, aes(Date, sum7, color = source), inherit.aes = FALSE, alpha = 0.85) +
+      scale_color_manual(values = target_colors)
+  }
+
+  p
+}
+
+```
+
+**Distribution plots**: `geom_density` kernel density overlays for temperature and wind; zero‑inflated precipitation histograms for all days; wet‑day precipitation histograms (ref \> 1 mm).
+
+
+```{r}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Show example function: plot_distribution()"
+plot_distribution <- function(ref_df, targets_list, var, ref_name = "Airport_1770") {
+df <- make_long_overlap(ref_df, targets_list, var, ref_name = ref_name)
+
+  if (var == "Precip_mm") {
+    ggplot(df, aes(value, fill = source)) +
+      geom_histogram(bins = 40, alpha = 0.5, position = "identity") +
+      scale_fill_manual(values = target_colors) +
+      labs(
+        title = "Precip distribution (all days; zero-inflated)",
+        x = "Precip (mm/day)", y = "Count"
+      ) +
+      theme_bw()
+  } else {
+    ggplot(df, aes(value, color = source)) +
+      geom_density(linewidth = 1) +
+      scale_color_manual(values = target_colors) +
+      labs(
+        title = paste0(var, " density (overlap with reference)"),
+        x = var, y = "Density"
+      ) +
+      theme_bw()
+  }
+}
+
+plot_precip_wetday_distribution <- function(ref_df, targets_list, threshold_mm = 1, ref_name = "Airport_1770") {
+  df <- make_long_overlap(ref_df, targets_list, "Precip_mm", ref_name = ref_name)
+
+  # Wet days defined using reference only (critical for fair event evaluation)
+  ref_wet_dates <- ref_df |>
+    select(Date, Precip_mm) |>
+    drop_na(Precip_mm) |>
+    filter(Precip_mm > threshold_mm) |>
+    distinct(Date)
+
+  df_wet <- df |> semi_join(ref_wet_dates, by = "Date")
+
+  ggplot(df_wet, aes(value, fill = source)) +
+    geom_histogram(bins = 40, alpha = 0.5, position = "identity") +
+    scale_fill_manual(values = target_colors) +
+    facet_wrap(~ source, ncol = 1, scales = "fixed") +
+    labs(
+      title = paste0("Precip distribution on wet days only (ref > ", threshold_mm, " mm)"),
+      x = "Precip (mm/day)", y = "Count"
+    ) +
+    theme_bw()+
+    theme(legend.position = "none")
+}
+
+```
+
+**Cumulative frequency (CDF) plots** for precipitation.
+
+```{r}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Show example function: plot_distribution()"
+plot_precip_cdf <- function(ref_df, targets_list, ref_name = "Airport_1770") {
+  df <- make_long_overlap(ref_df, targets_list, "Precip_mm", ref_name = ref_name)
+
+  ggplot(df, aes(value, color = source)) +
+    stat_ecdf(geom = "step", pad = FALSE, linewidth = 1) +
+    scale_color_manual(values = target_colors) +
+    scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+    labs(
+      title = "Cumulative frequency of daily precipitation",
+      x = "Precip (mm/day)",
+      y = "Cumulative probability"
+    ) +
+    theme_bw()
+}
+
+```
+
+**Scatter plots vs reference**, with 1:1 line and fitted regression, annotated with n, R, RMSE, and bias.
+
+```{r}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Show example code: Scatter plots"
+plot_scatter_vs_ref_single <- function(ref_df, target_df, target_name, var) {
+  joined <- inner_join(
+    ref_df |> select(Date, ref = all_of(var)),
+    target_df |> select(Date, tgt = all_of(var)),
+    by = "Date"
+  ) |> drop_na(ref, tgt)
+  
+  ggplot(joined, aes(ref, tgt)) +
+    geom_point(alpha = 0.35) +
+    geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+    geom_smooth(method = "lm", se = TRUE) +
+    labs(
+      title = paste0(var, ": ", target_name, " vs Airport_1770"),
+      x = "Reference (Airport_1770)",
+      y = paste0(target_name)
+    ) +
+    theme_bw()
+}
+# -----------------------------
+plot_scatter_faceted <- function(ref_df, targets_list, var, ref_name = "Airport_1770", ncol = 2) {
+
+  paired <- purrr::imap_dfr(
+    targets_list,
+    ~ inner_join(
+      ref_df |> select(Date, ref = all_of(var)),
+      .x     |> select(Date, tgt = all_of(var)),
+      by = "Date"
+    ) |>
+      drop_na(ref, tgt) |>
+      mutate(source = .y)
+  )
+
+  stats_df <- paired |>
+    group_by(source) |>
+    summarise(
+      n_val    = n(),
+      cor_val  = if (n_val > 1) cor(ref, tgt) else NA_real_,
+      rmse_val = sqrt(mean((tgt - ref)^2)),
+      bias_val = mean(tgt - ref),
+      label = paste0(
+        "n = ", n_val,
+        "\nR = ", ifelse(is.na(cor_val), "NA", sprintf("%.3f", cor_val)),
+        "\nRMSE = ", sprintf("%.3f", rmse_val),
+        "\nBias = ", sprintf("%.3f", bias_val)
+      ),
+      .groups = "drop"
+    )
+
+  ggplot(paired, aes(ref, tgt)) +
+    geom_point(aes(color = source), alpha = 0.35) +
+    geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+    geom_smooth(method = "lm", se = TRUE) +
+    geom_text(
+      data = stats_df,
+      aes(x = Inf, y = -Inf, label = label),
+      inherit.aes = FALSE,
+      hjust = 1.1, vjust = -0.2,
+      color = "black" # fixed annotation color
+    ) +
+    facet_wrap(~ source, ncol = ncol, scales = "fixed") +
+    scale_color_manual(values = target_colors) +
+    coord_equal() +
+    labs(
+      title = paste0(var, ": datasets vs ", ref_name),
+      x = paste0("Reference (", ref_name, ")"),
+      y = paste0("Target (", var, ")")
+    ) +
+    theme_bw() +
+    theme(legend.position = "none")
+}
+```
+
+**Rolling diagnostics** (30‑day window) of bias, correlation, MAE, and RMSE to evaluate temporal drift.
+
+```{r}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Show example code: Rolling diagnostics"
+rolling_diagnostics <- function(ref_df, target_df, var, window_days = 30) {
+
+  joined <- inner_join(
+    ref_df    |> select(Date, ref = all_of(var)),
+    target_df |> select(Date, tgt = all_of(var)),
+    by = "Date"
+  ) |>
+    arrange(Date) |>
+    drop_na(ref, tgt) |>
+    mutate(err = tgt - ref)
+
+  joined |>
+    mutate(
+      mae  = slider::slide_dbl(abs(err), mean, .before = window_days - 1, .complete = TRUE),
+      rmse = slider::slide_dbl(err^2, ~ sqrt(mean(.x)), .before = window_days - 1, .complete = TRUE),
+      bias = slider::slide_dbl(err, mean, .before = window_days - 1, .complete = TRUE),
+      cor  = slider::slide2_dbl(
+        ref, tgt,
+        ~ if (sum(is.finite(.x) & is.finite(.y)) >= 3) cor(.x, .y, use = "complete.obs") else NA_real_,
+        .before = window_days - 1,
+        .complete = TRUE
+      )
+    ) |>
+    select(Date, mae, rmse, bias, cor)
+}
+
+plot_rolling_diagnostics <- function(ref_df, target_df, target_name, var, window_days = 30) {
+
+  df <- rolling_diagnostics(ref_df, target_df, var, window_days) |>
+    pivot_longer(c(mae, rmse, bias, cor), names_to = "metric", values_to = "value")
+
+  ggplot(df, aes(Date, value)) +
+    geom_line() +
+    facet_wrap(~ metric, scales = "free_y", ncol = 1) +
+    labs(
+      title = paste0("Rolling ", window_days, "-day diagnostics: ", target_name, " vs Airport_1770 (", var, ")"),
+      x = NULL, y = NULL
+    ) +
+    theme_bw()
+}
+
+```
+
+**Monthly climatology (mean ± IQR)** for temperature, wind, and precipitation.
+
+```{r}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Show example function: make_monthly_climatology"
+make_monthly_climatology <- function(ref_df, targets_list, var,
+                                     ref_name = "Airport_1770", ribbon = 0.15) {
+  df <- make_long_overlap(ref_df, targets_list, var, ref_name = ref_name) |>
+    mutate(
+      month = month(Date),
+      month_lab = factor(month.abb[month], levels = month.abb)
+    )
+
+  df |>
+    group_by(source, month, month_lab) |>
+    summarise(
+      n = n(),
+      mean = mean(value, na.rm = TRUE),
+      q25  = quantile(value, 0.25, na.rm = TRUE, type = 7),
+      q75  = quantile(value, 0.75, na.rm = TRUE, type = 7),
+      .groups = "drop"
+    )
+}
+
+plot_monthly_climatology <- function(ref_df, targets_list, var,
+                                     ref_name = "Airport_1770",
+                                     ribbon_alpha = 0.15) {
+
+  clim <- make_monthly_climatology(ref_df, targets_list, var, ref_name)
+
+  # Make one consistent palette including the reference
+  pal <- c(setNames("black", ref_name), target_colors)
+
+  ggplot(clim, aes(month_lab, mean, group = source, color = source)) +
+    # ribbon uses fill but we HIDE its legend so only one legend remains
+    geom_ribbon(aes(ymin = q25, ymax = q75, fill = source),
+                alpha = ribbon_alpha, color = NA, show.legend = FALSE) +
+    geom_line(linewidth = 0.9) +
+    geom_point(size = 2) +
+    scale_color_manual(values = pal) +
+    scale_fill_manual(values = pal) +
+    labs(
+      title = paste0("Monthly climatology: ", var, " (mean +/- IQR)"),
+      x = NULL, y = var,
+      color = "Dataset"
+    ) +
+    theme_bw() +
+    theme(legend.position = "right")
+}
+
+```
+**Seasonal analysis** set warm and cool periods and seasonal monthly bins 
+
+```{r}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Show example code: Seasonal/climatology selection"
+season_defs_default <- list(
+  summer = c(12, 1, 2),
+  autumn = c(3, 4, 5),
+  winter = c(6, 7, 8),
+  spring = c(9, 10, 11)
+)
+
+season_defs_warmcool <- list(
+  warm = c(10, 11, 12, 1, 2, 3),
+  cool = c(4, 5, 6, 7, 8, 9)
+)
+
+assign_season <- function(date, season_defs = season_defs_default) {
+  m <- month(date)
+  out <- rep(NA_character_, length(m))
+  for (nm in names(season_defs)) {
+    out[m %in% season_defs[[nm]]] <- nm
+  }
+  factor(out, levels = names(season_defs))
+}
+```
+
+**Seasonal bias plots** (target − reference) by DJF/MAM/JJA/SON.
+
+```{r}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Show example code: Searonal bias"
+plot_seasonal_bias <- function(ref_df, targets_list, var,
+                              season_defs = season_defs_default,
+                              ref_name = "Airport_1770") {
+
+  paired <- imap_dfr(
+    targets_list,
+    ~ inner_join(
+      ref_df |> select(Date, ref = all_of(var)),
+      .x     |> select(Date, tgt = all_of(var)),
+      by = "Date"
+    ) |>
+      drop_na(ref, tgt) |>
+      mutate(target = .y, season = assign_season(Date, season_defs),
+             bias = tgt - ref)
+  )
+
+  summ <- paired |>
+    group_by(target, season) |>
+    summarise(
+      n = n(),
+      bias_mean = mean(bias, na.rm = TRUE),
+      bias_q25  = quantile(bias, 0.25, na.rm = TRUE),
+      bias_q75  = quantile(bias, 0.75, na.rm = TRUE),
+      .groups = "drop"
+    )
+
+  ggplot(summ, aes(season, bias_mean, fill = target)) +
+    geom_col(position = position_dodge(width = 0.8), width = 0.7) +
+    geom_errorbar(
+      aes(ymin = bias_q25, ymax = bias_q75),
+      position = position_dodge(width = 0.8),
+      width = 0.2
+    ) +
+    scale_fill_manual(values = target_colors) +
+    labs(
+      title = paste0("Seasonal bias: ", var, " (target - reference)"),
+      x = NULL, y = "Bias", fill = "Dataset"
+    ) +
+    theme_bw()
+}
+
+```
+
+**Seasonal scatter panels** for wind and precipitation, showing seasonal structure in agreement.
+
+```{r}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Show example code: Seasonal scatter"
+plot_seasonal_scatter <- function(ref_df, targets_list, var,
+                                 season_defs = season_defs_default,
+                                 ref_name = "Airport_1770") {
+
+  paired <- imap_dfr(
+    targets_list,
+    ~ inner_join(
+      ref_df |> select(Date, ref = all_of(var)),
+      .x     |> select(Date, tgt = all_of(var)),
+      by = "Date"
+    ) |>
+      drop_na(ref, tgt) |>
+      mutate(target = .y, season = assign_season(Date, season_defs))
+  )
+
+  ggplot(paired, aes(ref, tgt)) +
+    geom_point(alpha = 0.25) +
+    geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+    geom_smooth(method = "lm", se = FALSE) +
+    facet_grid(season ~ target) +
+    coord_equal() +
+    labs(
+      title = paste0("Seasonal scatter: ", var, " (datasets vs reference)"),
+      x = paste0("Reference (", ref_name, ")"),
+      y = "Target"
+    ) +
+    theme_bw() +
+    theme(legend.position = "none")
+}
+```
+
+**Event‑agreement plots** for precipitation: stacked outcome counts (hits/misses/false alarms/correct negatives), skill score bars (POD, FAR, CSI, bias score), and false‑alarm magnitude histograms (log1p scale).
+
+```{r}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Show example code: Event aggreement"
+event_skill <- function(ref_df, target_df, var, threshold,
+                        direction = c(">", ">=", "<", "<=")) {
+  direction <- match.arg(direction)
+
+  joined <- inner_join(
+    ref_df    |> select(Date, ref = all_of(var)),
+    target_df |> select(Date, tgt = all_of(var)),
+    by = "Date"
+  ) |>
+    drop_na(ref, tgt)
+
+  ref_event <- switch(
+    direction,
+    ">"  = joined$ref >  threshold,
+    ">=" = joined$ref >= threshold,
+    "<"  = joined$ref <  threshold,
+    "<=" = joined$ref <= threshold
+  )
+
+  tgt_event <- switch(
+    direction,
+    ">"  = joined$tgt >  threshold,
+    ">=" = joined$tgt >= threshold,
+    "<"  = joined$tgt <  threshold,
+    "<=" = joined$tgt <= threshold
+  )
+
+  hits  <- sum(ref_event & tgt_event, na.rm = TRUE)
+  miss  <- sum(ref_event & !tgt_event, na.rm = TRUE)
+  fa    <- sum(!ref_event & tgt_event, na.rm = TRUE)
+  cn    <- sum(!ref_event & !tgt_event, na.rm = TRUE)
+
+  pod <- if ((hits + miss) > 0) hits / (hits + miss) else NA_real_
+  far <- if ((hits + fa)   > 0) fa   / (hits + fa)   else NA_real_
+  csi <- if ((hits + miss + fa) > 0) hits / (hits + miss + fa) else NA_real_
+  bias_score <- if ((hits + miss) > 0) (hits + fa) / (hits + miss) else NA_real_
+
+  tibble(
+    n = nrow(joined),
+    hits = hits, misses = miss, false_alarms = fa, correct_neg = cn,
+    POD = pod, FAR = far, CSI = csi, bias_score = bias_score
+  )
+}
+
+event_skill_all_targets <- function(ref_df, targets_list, var, threshold,
+                                   direction = ">=",
+                                   ref_name = "Airport_1770") {
+  imap_dfr(targets_list, ~ {
+    event_skill(ref_df, .x, var = var, threshold = threshold, direction = direction) |>
+      mutate(target = .y, var = var, threshold = threshold, ref = ref_name, .before = 1)
+  })
+}
+
+# --- Plot: stacked counts of event outcomes per target ---
+plot_event_outcomes <- function(skill_tbl, title = NULL) {
+  long <- skill_tbl |>
+    select(target, hits, misses, false_alarms, correct_neg) |>
+    pivot_longer(-target, names_to = "outcome", values_to = "count")
+
+  ggplot(long, aes(target, count, fill = outcome)) +
+    geom_col() +
+    coord_flip() +
+    labs(
+      title = title %||% "Event agreement outcomes",
+      x = NULL, y = "Count (days)", fill = NULL
+    ) +
+    theme_bw()
+}
+
+# --- Plot: POD/FAR/CSI per target (quick skill comparison) ---
+plot_event_skill_scores <- function(skill_tbl, title = NULL) {
+  long <- skill_tbl |>
+    select(target, POD, FAR, CSI, bias_score) |>
+    pivot_longer(-target, names_to = "metric", values_to = "value")
+
+  ggplot(long, aes(target, value)) +
+    geom_col() +
+    facet_wrap(~ metric, ncol = 2, scales = "free_y") +
+    coord_flip() +
+    labs(
+      title = title %||% "Event skill scores",
+      x = NULL, y = NULL
+    ) +
+    theme_bw()
+}
+
+# --- Magnitude when disagreement occurs (precip example) ---
+# "Ref dry but target wet": how much rain do they report?
+plot_false_alarm_magnitude <- function(ref_df, targets_list,
+                                      threshold_mm = 0.1,
+                                      ref_name = "Airport_1770") {
+
+  # Build paired dataset
+  paired <- imap_dfr(
+    targets_list,
+    ~ inner_join(
+      ref_df |> select(Date, ref = Precip_mm),
+      .x     |> select(Date, tgt = Precip_mm),
+      by = "Date"
+    ) |>
+      drop_na(ref, tgt) |>
+      mutate(target = .y)
+  )
+
+  fa <- paired |>
+    filter(ref <= threshold_mm, tgt > threshold_mm)
+
+  ggplot(fa, aes(tgt, fill = target)) +
+    geom_histogram(bins = 40, alpha = 0.6, position = "identity") +
+    scale_x_continuous(trans = "log1p") +
+    scale_fill_manual(values = target_colors) +
+    labs(
+      title = paste0("False alarms magnitude: ref ≤ ", threshold_mm, " mm but target > ", threshold_mm, " mm"),
+      x = "Target precip (mm/day) [log1p]", y = "Count", fill = "Dataset"
+    ) +
+    theme_bw()
+}
+
+# --- Example calls (precip threshold default = 0.1 mm; easy to change) ---
+precip_event_threshold <- 0.1  # change to 1 or 5 if you want sensitivity tests later
+
+skill_precip <- event_skill_all_targets(
+  ref_df, targets_list,
+  var = "Precip_mm",
+  threshold = precip_event_threshold,
+  direction = ">=")
+
+```
+
+This workflow ensures statistical results are computed on matched daily observations, with targeted event thresholds and seasonally resolved diagnostics to interpret both mean agreement and extreme‑event performance.
+
+If you want, I can format this directly into a Methods section for your report (with citations or numbering).
+
+## 
 
 # Data availability / overlap
 
@@ -111,14 +803,14 @@ Only dates present in both the reference and the compared dataset are used. Time
 
 To detect drift through time, moving-window diagnostics (window = 30 days by default) track MAE, RMSE, bias, and correlation. The rolling window is trailing, uses only complete windows, and requires a minimum of paired values for correlation. These plots help identify regime shifts, seasonal dependence, or gradual timing offsets.
 
-## Software and packages
-
-If you want formal citations for every package listed above, regenerate the bibliography with `knitr::write_bib()` and replace `reference.bib` with the output.
+# Software and packages
 
 ```{r}
 #| echo: true
 #| eval: false
-# Creates/overwrites reference.bib with citations for all packages used
+# Generate package citations to a separate file to avoid overwriting
+# manual/Zotero entries in reference.bib. If needed, copy entries
+# from reference_packages.bib into reference.bib.
 pkgs <- c(
   "dplyr","ggplot2","tidyr","readr","purrr","tibble","lubridate",
   "slider","reactable","plotly","here","gt","sf","tmap",
@@ -126,10 +818,10 @@ pkgs <- c(
   "htmltools","knitr","rmarkdown","renv","shiny"
 )
 
-knitr::write_bib(pkgs, file = "reference.bib")
+knitr::write_bib(pkgs, file = "reference_packages.bib")
 ```
 
-Analyses were performed in R [@r:alan2024]. Data wrangling and visualization use tidyverse packages (dplyr, tidyr, ggplot2, readr, purrr, tibble, lubridate) [@tidyverse]. Spatial processing relies on the sf framework [@sf], with leaflet [@leaflet], tmap [@tmap], osmdata [@osmdata], and rnaturalearth [@rnaturalearth] used for mapping. Interactive figures are produced with plotly [@plotly] and tables with reactable [@reactable] and gt [@gt]. Reproducibility is managed with renv [@renv], and report generation uses Quarto with knitr/rmarkdown and htmltools [@htmltools]; here is used for stable file paths.
+Analyses were performed in R [@r-alan2024]. Data wrangling and visualization use tidyverse packages (dplyr, tidyr, ggplot2, readr, purrr, tibble, lubridate) [@tidyverse]. Spatial processing relies on the sf framework [@R-sf], with leaflet [@R-leaflet], tmap [@R-tmap], osmdata [@R-osmdata], and rnaturalearth [@R-rnaturalearth] used for mapping. Interactive figures are produced with plotly [@R-plotly] and tables with reactable [@R-reactable] and gt [@R-gt]. Reproducibility is managed with renv [@R-renv], and report generation uses Quarto with knitr/rmarkdown and htmltools [@R-htmltools]; here is used for stable file paths.
 
 # Limitations
 

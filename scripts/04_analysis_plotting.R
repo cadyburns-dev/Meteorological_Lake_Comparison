@@ -12,6 +12,7 @@
 
 library(tidyverse)
 library(slider)
+library(plotly)
 
 # --- Source helpers (must exist relative to project root) ---
 # run source below if not using quarto file
@@ -21,6 +22,7 @@ source("scripts/03_analysis_helpers.R")
 # -----------------------------
 # Load processed daily data
 # -----------------------------
+# when coding with different data sets change the csv file to the new created files
 era5     <- read_csv("data/processed/rotorua_era5_daily.csv", show_col_types = FALSE)
 buoy     <- read_csv("data/processed/rotorua_buoy_daily.csv", show_col_types = FALSE)
 ap1770   <- read_csv("data/processed/rotorua_airport_1770_daily.csv", show_col_types = FALSE)
@@ -167,7 +169,7 @@ plot_precip_hydrograph <- function(ref_df, targets_list, ref_name = "Airport_177
 # -----------------------------
 # Distributions
 
-#  distribution = density for temp/wind/ran but hustogram for precip
+#  distribution = density for temp/wind/ran but hystogram for precip
 
 
 # Why: distributions show bias in variability (e.g., too many moderate values, missing extremes).
@@ -594,7 +596,7 @@ plot_monthly_climatology <- function(ref_df, targets_list, var,
     scale_color_manual(values = pal) +
     scale_fill_manual(values = pal) +
     labs(
-      title = paste0("Monthly climatology: ", var, " (mean ± IQR)"),
+      title = paste0("Monthly climatology: ", var, " (mean +/- IQR)"),
       x = NULL, y = var,
       color = "Dataset"
     ) +
@@ -619,7 +621,7 @@ plot_monthly_climatology <- function(ref_df, targets_list, var,
 #   Spring = SON
 #
 # For your "NZ warm vs cool season" style, you can set:
-#   warm = Oct–Mar, cool = Apr–Sep
+#   warm = Oct-Mar, cool = Apr-Sep
 #
 # You can change these month vectors without touching anything else.
 
@@ -800,3 +802,5 @@ season_defs <- season_defs_default
 # Seasonal scatter (big figure, but very informative)
 #print(plot_seasonal_scatter(ref_df, targets_list, "Wind_Spd_ms", season_defs = season_defs))
 # print(plot_seasonal_scatter(ref_df, targets_list, "Precip_mm", season_defs = season_defs))  # can be heavy; optional
+
+

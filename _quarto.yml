@@ -1,6 +1,16 @@
 project:
   type: website
   output-dir: docs
+  render:
+    - index.qmd
+    - Overview.qmd
+    - methods.qmd
+    - Behaviour.qmd
+    - Results.qmd
+    - metrics_stats.qmd
+    - rotorua.qmd
+    - Reproducibility.qmd
+    - Reference_List.qmd
 
 website:
   title: "Meterological Lake Comparison"
@@ -11,8 +21,6 @@ website:
         href: index.qmd
       - text: "Overview"
         href: Overview.qmd
-      - text: "Rotorua demo"
-        href: rotorua.qmd
       - text: "Methods"
         href: methods.qmd
       - text: "Seasonal and event behaviour"
@@ -21,8 +29,12 @@ website:
         href: Results.qmd
       - text: "Metrics & stats"
         href: metrics_stats.qmd
+      - text: "Rotorua demo"
+        href: rotorua.qmd
       - text: "Reproducibility"
         href: Reproducibility.qmd
+      - text: "References"
+        href: Reference_List.qmd
 
 metadata-files:
   - params.yml

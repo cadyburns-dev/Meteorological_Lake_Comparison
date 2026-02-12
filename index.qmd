@@ -17,34 +17,33 @@ params:
 
 ## Project description
 
-This project aims to take meteorological data in close proximity from different sources/forcing choices (stations, grided, reanalysis) and evaluate their validity across variables and time. 
+This project aims to take meteorological data in close proximity from different sources/forcing choices (stations, grided, reanalysis) and evaluate their validity across variables and time.
 
 It assesses four main meterological parameters (precipitation, wind, radiation, temperature) for accuracy, stability and usability. This was developed for the use of lymnologists with the purpose of selecting data sources for differing projects and attempts to answer the question "what data to use and when?". The data sources used are Limnotrack Buoy in-situ, NIWA virtual climate station network (VCSN), ERA5 statlite data and NIWAs Observational climate data.
 
-
 Lake Rotorua, North Island, New Zealand is used as a worked example thoughout.
 
-## Guide 
+## Guide
 
 This project takes your though the overview of the project which addresses:
 
-- 1. - The objective, data sources and the project outputs so the reader can understand what they will get out of the process. 
+1.  The objective, data sources and the project outputs so the reader can understand what they will get out of the process.
 
-- 2. - The methods, outlining the steps taken to prepare, align, and compare the metrological datasets. 
+2.  The methods, outlining the steps taken to prepare, align, and compare the metrological datasets.
 
-- 3. - Viriable diagnostics whcih shows time series plots to visulise data stability and alignment. 
+3.  Viriable diagnostics whcih shows time series plots to visulise data stability and alignment.
 
-4. - Metrics and stats, which shows the statistical/quantitative diagnostics outlined in the overview.
+<!-- -->
 
-5. - Seasonal and event behaviour, which shows seasonality preformance and dataset agreement during events.
+4.  Metrics and stats, which shows the statistical/quantitative diagnostics outlined in the overview.
 
-6. - Rotorua demo gives the reader a visual flow of the project using Lake Rotorua as the example lake.
+5.  Seasonal and event behaviour, which shows seasonality preformance and dataset agreement during events.
 
-7. - Reproducibility talks through the reusability of this project when accessing different lakes around New Zealand. 
+6.  Rotorua demo gives the reader a visual flow of the project using Lake Rotorua as the example lake.
 
+7.  Reproducibility talks through the reusability of this project when accessing different lakes around New Zealand.
 
 Desision of what data sets to use will depend on intended outcome. The objective tab will show outputs where the reader can decide how to use the project to answer their questions around meterological data sources.
-
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
@@ -102,7 +101,7 @@ vars_available <- Reduce(
 vars <- intersect(vars_requested, vars_available)
 ```
 
-## Data coverage
+## Data coverage overview
 
 ```{r}
 coverage <- bind_rows(
@@ -125,7 +124,7 @@ reactable(
 )
 ```
 
-## Metrics table (reference vs targets)
+## quick look Metrics table (reference vs targets)
 
 ```{r}
 metrics_all <- purrr::imap_dfr(
@@ -159,7 +158,3 @@ reactable(
   )
 )
 ```
-
-
-
-

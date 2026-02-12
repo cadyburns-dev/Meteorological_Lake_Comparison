@@ -52,7 +52,6 @@ vcs_on$Date <- as.Date(vcs_on$Date)
 
 
 
-
 # force Date to date so joins dont fail - avoids timezone drift, POSIXct vs date mismatch 
 datasets <- list(era5, buoy, ap1770, twn40177, vcs_on)
 

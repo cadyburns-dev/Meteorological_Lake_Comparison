@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>reproducibility – Meterological Lake Comparison</title>
+<title>Reproducibility / How to reuse – Meterological Lake Comparison</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -134,10 +134,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">Overview</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./rotorua.html"> 
-<span class="menu-text">Rotorua demo</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="./methods.html"> 
 <span class="menu-text">Methods</span></a>
   </li>  
@@ -154,8 +150,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">Metrics &amp; stats</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="./rotorua.html"> 
+<span class="menu-text">Rotorua demo</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link active" href="./Reproducibility.html" aria-current="page"> 
 <span class="menu-text">Reproducibility</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./Reference_List.html"> 
+<span class="menu-text">References</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -172,13 +176,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of Content</h2>
    
   <ul>
-  <li><a href="#set-up-the-environment" id="toc-set-up-the-environment" class="nav-link active" data-scroll-target="#set-up-the-environment">1. Set up the environment</a></li>
-  <li><a href="#scripts-overview-what-does-what" id="toc-scripts-overview-what-does-what" class="nav-link" data-scroll-target="#scripts-overview-what-does-what">2. Scripts overview (what does what)</a></li>
-  <li><a href="#prepare-data-for-a-new-lake" id="toc-prepare-data-for-a-new-lake" class="nav-link" data-scroll-target="#prepare-data-for-a-new-lake">3. Prepare data for a new lake</a></li>
-  <li><a href="#run-the-analyses" id="toc-run-the-analyses" class="nav-link" data-scroll-target="#run-the-analyses">4. Run the analyses</a></li>
-  <li><a href="#adapting-thresholds-and-subsets" id="toc-adapting-thresholds-and-subsets" class="nav-link" data-scroll-target="#adapting-thresholds-and-subsets">5. Adapting thresholds and subsets</a></li>
-  <li><a href="#what-to-document-for-each-lake" id="toc-what-to-document-for-each-lake" class="nav-link" data-scroll-target="#what-to-document-for-each-lake">6. What to document for each lake</a></li>
-  <li><a href="#example-new-lake-naming-template-lake-tutira" id="toc-example-new-lake-naming-template-lake-tutira" class="nav-link" data-scroll-target="#example-new-lake-naming-template-lake-tutira">Example: new lake naming template (Lake Tutira)</a></li>
+  <li><a href="#setup-once-per-machine" id="toc-setup-once-per-machine" class="nav-link active" data-scroll-target="#setup-once-per-machine">Setup (once per machine)</a></li>
+  <li><a href="#changes-for-a-new-lake-scripts" id="toc-changes-for-a-new-lake-scripts" class="nav-link" data-scroll-target="#changes-for-a-new-lake-scripts">Changes for a new lake: scripts</a></li>
+  <li><a href="#changes-for-a-new-lake-qmd-yaml" id="toc-changes-for-a-new-lake-qmd-yaml" class="nav-link" data-scroll-target="#changes-for-a-new-lake-qmd-yaml">Changes for a new lake: QMD + YAML</a></li>
+  <li><a href="#step-by-step-new-lake-run" id="toc-step-by-step-new-lake-run" class="nav-link" data-scroll-target="#step-by-step-new-lake-run">Step-by-step: new lake run</a></li>
+  <li><a href="#example-lake-tutera-template" id="toc-example-lake-tutera-template" class="nav-link" data-scroll-target="#example-lake-tutera-template">Example: Lake Tutera (template)</a></li>
+  <li><a href="#minimal-run-two-datasets-only-era5-vcs_on" id="toc-minimal-run-two-datasets-only-era5-vcs_on" class="nav-link" data-scroll-target="#minimal-run-two-datasets-only-era5-vcs_on">Minimal run: two datasets only (ERA5 + VCS_On)</a></li>
+  <li><a href="#minimal-run-one-variable-only" id="toc-minimal-run-one-variable-only" class="nav-link" data-scroll-target="#minimal-run-one-variable-only">Minimal run: one variable only</a></li>
   </ul>
 </nav>
 </nav>
@@ -208,93 +212,100 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Use this guide to rerun the Rotorua workflow or adapt it to a new lake. It assumes you want the same analysis structure (metrics, behaviour, diagnostics) but with different datasets and coordinates.</p>
-<section id="set-up-the-environment" class="level2">
-<h2 class="anchored" data-anchor-id="set-up-the-environment">1. Set up the environment</h2>
-<ul>
-<li>Install R (&gt;= 4.4) and quarto.</li>
-<li>From the project root, run <code>scripts/00_project_setup.R</code> to restore the <code>renv</code> environment and required GitHub packages.
-<ul>
-<li>If <code>renv::restore()</code> fails due to offline use, set <code>options(repos = ...)</code> to a reachable CRAN mirror first.</li>
-</ul></li>
-</ul>
-</section>
-<section id="scripts-overview-what-does-what" class="level2">
-<h2 class="anchored" data-anchor-id="scripts-overview-what-does-what">2. Scripts overview (what does what)</h2>
-<ul>
-<li><code>scripts/02_prepare_raw_data.R</code>: converts raw data to daily series, standardises units, and writes to <code>data/processed/</code>.</li>
-<li><code>scripts/03_analysis_helpers.R</code>: defines the core metrics functions and <code>metrics_vs_ref</code> logic.</li>
-<li><code>scripts/04_analysis_plotting.R</code>: defines plot helpers (time series, scatter, distributions, climatology, event skill, rolling diagnostics).</li>
-</ul>
-<p>If you add new data sources, update the prep script and keep naming consistent so downstream QMDs can read the files.</p>
-</section>
-<section id="prepare-data-for-a-new-lake" class="level2">
-<h2 class="anchored" data-anchor-id="prepare-data-for-a-new-lake">3. Prepare data for a new lake</h2>
+<p>Use this guide to rerun the Rotorua workflow or adapt it to a new lake. The project flow is:</p>
 <ol type="1">
-<li>Gather raw met data (buoy/station/reanalysis/gridded) into <code>data/raw/</code>, keeping original filenames.</li>
-<li>Update lake metadata in <code>params.yml</code>:
-<ul>
-<li><code>lake_name</code>, <code>lat</code>, <code>lon</code>, <code>buffer_km</code></li>
-<li><code>reference</code> (primary benchmark) and <code>targets</code> (comparison datasets)</li>
-<li>thresholds (<code>wet_threshold_mm</code>, <code>precip_event_threshold</code>, <code>windy_top_pct</code>, <code>windy_threshold_ms</code>, <code>window_days</code>)</li>
-</ul></li>
-<li>Update station coordinates (if used) in <code>Overview.qmd</code>.</li>
-<li>Adjust <code>file_map</code> paths in the QMDs or helper scripts if filenames differ.</li>
-<li>Run or adapt <code>scripts/02_prepare_raw_data.R</code> to:
-<ul>
-<li>Convert timestamps to UTC.</li>
-<li>Aggregate sub-daily to daily (means for state variables; sums for fluxes).</li>
-<li>Standardise column names to <code>Temp_C</code>, <code>Precip_mm</code>, <code>Wind_Spd_ms</code>, <code>RadSWD_Wm2</code>, <code>Date</code>.</li>
-<li>Convert radiation MJ/m^2 to W/m^2 when needed.</li>
-</ul></li>
-<li>Place processed daily CSVs in <code>data/processed/</code> following the pattern used for Rotorua (e.g., <code>lakeid_source_daily.csv</code>).</li>
+<li>Prepare raw data into daily, standardized CSVs (<code>scripts/02_prepare_raw_data.R</code>).</li>
+<li>Load those daily files in the QMDs, compute metrics, and render plots.</li>
+<li>Render the site with Quarto.</li>
 </ol>
-<p>Minimum required columns for each processed file: - <code>Date</code> (YYYY-MM-DD, UTC) - <code>Temp_C</code>, <code>Precip_mm</code>, <code>Wind_Spd_ms</code>, <code>RadSWD_Wm2</code> (if a variable is unavailable, remove it from <code>params.yml</code> and the analyses will skip it).</p>
+<p>This page separates required changes to scripts (data prep and helper code) from changes to QMDs/YAML (report configuration).</p>
+<section id="setup-once-per-machine" class="level2">
+<h2 class="anchored" data-anchor-id="setup-once-per-machine">Setup (once per machine)</h2>
+<ol type="1">
+<li>Install R (&gt;= 4.4) and Quarto.</li>
+<li>From the project root, run <code>scripts/00_project_setup.R</code> to restore <code>renv</code> and required GitHub packages.</li>
+<li>If <code>renv::restore()</code> fails (offline), set a reachable CRAN mirror with <code>options(repos = ...)</code> and try again.</li>
+</ol>
 </section>
-<section id="run-the-analyses" class="level2">
-<h2 class="anchored" data-anchor-id="run-the-analyses">4. Run the analyses</h2>
+<section id="changes-for-a-new-lake-scripts" class="level2">
+<h2 class="anchored" data-anchor-id="changes-for-a-new-lake-scripts">Changes for a new lake: scripts</h2>
+<p>Make these edits in scripts if you want to re-use the pipeline for another lake. These changes affect data creation and helper defaults.</p>
+<p><strong>scripts/02_prepare_raw_data.R</strong></p>
 <ul>
-<li>Render the whole site: <code>quarto render</code> (outputs to <code>docs/</code> as set in <code>_quarto.yml</code>).</li>
-<li>Or render a single page (e.g., <code>quarto render rotorua.qmd</code>) to iterate faster.</li>
-<li>Key tabs:
+<li>Update the raw file paths under <code>data/raw/</code> to your new lake folders and filenames.</li>
+<li>Update station IDs in file paths and any column name mappings that differ.</li>
+<li>Keep the UTC conversion and daily aggregation rules, using means for state variables (Temp_C, Wind_Spd_ms, RadSWD_Wm2) and sums for flux variables (Precip_mm).</li>
+<li>Keep or update unit conversions, including wind knots to m/s if needed, sub-daily precip rates to daily totals, and radiation MJ/m^2 to W/m^2 when required.</li>
+<li>Update any bad-data filtering to match your lake (e.g., remove known corrupt periods).</li>
+<li>Update the output filenames at the end so they match your new lake ID (for example: <code>data/processed/&lt;lake_id&gt;_era5_daily.csv</code>, <code>data/processed/&lt;lake_id&gt;_vcs_on_daily.csv</code>, plus station/buoy files as applicable).</li>
+</ul>
+<p><strong>scripts/03_analysis_helpers.R</strong></p>
 <ul>
-<li>Rotorua demo: full pipeline.</li>
-<li>Behaviour: event agreement and seasonal structure.</li>
-<li>Variable diagnostics: time-series overlays.</li>
-<li>Metrics and stats: quantitative tables and plots.</li>
-</ul></li>
+<li>This file currently reads Rotorua processed data when sourced.</li>
+<li>If you are not keeping Rotorua files, update the file paths to your new lake or remove/guard those read lines so sourcing does not error.</li>
+<li>The metrics functions (<code>metrics_vs_ref</code>) are reusable and do not need changes unless you change variable names.</li>
+</ul>
+<p><strong>scripts/04_analysis_plotting.R</strong></p>
+<ul>
+<li>This file also reads Rotorua processed data when sourced.</li>
+<li>If you are not keeping Rotorua files, update those read paths or guard them.</li>
+<li>Update <code>ref_df</code>, <code>targets_list</code>, and <code>target_colors</code> defaults if your reference/targets have different names.</li>
+<li>Plot functions are reusable. They assume column names <code>Date</code>, <code>Temp_C</code>, <code>Precip_mm</code>, <code>Wind_Spd_ms</code>, <code>RadSWD_Wm2</code>.</li>
+</ul>
+<p><strong>scripts/05_analysis_rotorua_plots.R</strong></p>
+<ul>
+<li>Rotorua-specific example driver. Update only if you want to run a stand-alone script for a new lake. The QMDs do not depend on this file.</li>
 </ul>
 </section>
-<section id="adapting-thresholds-and-subsets" class="level2">
-<h2 class="anchored" data-anchor-id="adapting-thresholds-and-subsets">5. Adapting thresholds and subsets</h2>
+<section id="changes-for-a-new-lake-qmd-yaml" class="level2">
+<h2 class="anchored" data-anchor-id="changes-for-a-new-lake-qmd-yaml">Changes for a new lake: QMD + YAML</h2>
+<p>These edits control the rendered report and are required even if you only update the scripts.</p>
+<p><strong>params.yml (optional single source of truth)</strong></p>
 <ul>
-<li>Set wet-day and windy thresholds in <code>params.yml</code> (<code>wet_threshold_mm</code>, <code>precip_event_threshold</code>, <code>windy_threshold_ms</code>, <code>windy_top_pct</code>).</li>
-<li>Re-render to propagate changes to all tabs; rolling window (<code>window_days</code>) controls drift diagnostics.</li>
-<li>If you change the reference dataset or add new targets, update both <code>params.yml</code> and the <code>file_map</code> in the QMDs so names align.</li>
+<li>This file contains <code>params:</code> used by QMDs if you remove local params blocks.</li>
+<li>If you keep local params inside each QMD (current setup), update them in each QMD instead.</li>
 </ul>
-<p>Tip: if a dataset does not contain a variable (e.g., radiation), keep the variable out of <code>params.yml</code> to prevent render errors.</p>
-</section>
-<section id="what-to-document-for-each-lake" class="level2">
-<h2 class="anchored" data-anchor-id="what-to-document-for-each-lake">6. What to document for each lake</h2>
+<p><strong>QMD front matter</strong></p>
+<p>Update these in each of: <code>index.qmd</code>, <code>Overview.qmd</code>, <code>Results.qmd</code>, <code>metrics_stats.qmd</code>, <code>Behaviour.qmd</code>, <code>rotorua.qmd</code>:</p>
 <ul>
-<li>Source metadata (station IDs, grid cell coords, units).</li>
-<li>Any timezone assumptions or corrections applied.</li>
-<li>Chosen reference dataset and reasons.</li>
-<li>Threshold choices for wet/windy subsets.</li>
-<li>Date span of overlapping data used in metrics.</li>
+<li><code>lake_name</code>, <code>lat</code>, <code>lon</code>, <code>buffer_km</code>, <code>lake_id</code></li>
+<li><code>reference</code> and <code>targets</code></li>
+<li><code>vars</code> and thresholds (<code>wet_threshold_mm</code>, <code>precip_event_threshold</code>, <code>windy_top_pct</code>, <code>windy_threshold_ms</code>, <code>window_days</code>)</li>
+<li>In <code>Overview.qmd</code>, update any station/point coordinates and labels used for the map.</li>
 </ul>
-<p>Keeping these notes with each new lake run ensures results are transparent and comparable.</p>
+<p><strong>QMD file_map blocks</strong></p>
+<p>Each of the QMDs listed above contains a <code>file_map &lt;- list(...)</code> block. Update those paths to your new processed files.</p>
+<p><strong>QMD plot calls</strong></p>
+<p>Some plots are hard-coded to specific variables (Temp, Wind, Precip). If you remove variables or change the reference name:</p>
+<ul>
+<li>Wrap plot calls with checks like <code>if ("Temp_C" %in% vars) ...</code> to avoid errors.</li>
+<li>Pass <code>ref_name = params$reference</code> into plot functions if your reference is not Airport_1770.</li>
+</ul>
+<p>**_quarto.yml**</p>
+<ul>
+<li>Add or remove QMD files in the <code>project.render</code> list if you change page names.</li>
+<li>The site outputs to <code>docs/</code> by default.</li>
+</ul>
 </section>
-<section id="example-new-lake-naming-template-lake-tutira" class="level2">
-<h2 class="anchored" data-anchor-id="example-new-lake-naming-template-lake-tutira">Example: new lake naming template (Lake Tutira)</h2>
-<p>Use the following as a starting template for <code>params.yml</code> and file naming:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lake_name</span><span class="kw">:</span><span class="at"> </span><span class="st">"Lake Tutira"</span></span>
+<section id="step-by-step-new-lake-run" class="level2">
+<h2 class="anchored" data-anchor-id="step-by-step-new-lake-run">Step-by-step: new lake run</h2>
+<ol type="1">
+<li>Place raw files under <code>data/raw/&lt;your_lake&gt;/...</code>.</li>
+<li>Edit <code>scripts/02_prepare_raw_data.R</code> for your new lake and run it to create <code>data/processed/&lt;lake_id&gt;_*.csv</code>.</li>
+<li>Update the QMD params and <code>file_map</code> blocks to point at your new processed files.</li>
+<li>Render the site: <code>quarto render</code>.</li>
+</ol>
+</section>
+<section id="example-lake-tutera-template" class="level2">
+<h2 class="anchored" data-anchor-id="example-lake-tutera-template">Example: Lake Tutera (template)</h2>
+<p>Use this as a starting point for naming and params:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lake_name</span><span class="kw">:</span><span class="at"> </span><span class="st">"Lake Tutera"</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lat</span><span class="kw">:</span><span class="at"> </span><span class="fl">-39.223588</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lon</span><span class="kw">:</span><span class="at"> </span><span class="fl">176.892553</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">buffer_km</span><span class="kw">:</span><span class="at"> </span><span class="dv">10</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lake_id</span><span class="kw">:</span><span class="at"> </span><span class="st">"tutira"</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lake_id</span><span class="kw">:</span><span class="at"> </span><span class="st">"tutera"</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">reference</span><span class="kw">:</span><span class="at"> </span><span class="st">"Airport_XXXX"</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">targets</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">"ERA5"</span><span class="kw">,</span><span class="at"> </span><span class="st">"Buoy"</span><span class="kw">,</span><span class="at"> </span><span class="st">"Town_YYYY"</span><span class="kw">,</span><span class="at"> </span><span class="st">"VCS_On"</span><span class="kw">]</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">targets</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">"ERA5"</span><span class="kw">,</span><span class="at"> </span><span class="st">"VCS_On"</span><span class="kw">]</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">vars</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">"Temp_C"</span><span class="kw">,</span><span class="at"> </span><span class="st">"Precip_mm"</span><span class="kw">,</span><span class="at"> </span><span class="st">"Wind_Spd_ms"</span><span class="kw">,</span><span class="at"> </span><span class="st">"RadSWD_Wm2"</span><span class="kw">]</span></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">wet_threshold_mm</span><span class="kw">:</span><span class="at"> </span><span class="dv">1</span></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">precip_event_threshold</span><span class="kw">:</span><span class="at"> </span><span class="fl">0.1</span></span>
@@ -303,13 +314,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">window_days</span><span class="kw">:</span><span class="at"> </span><span class="dv">30</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Example processed filenames:</p>
 <ul>
-<li><code>data/processed/tutira_era5_daily.csv</code></li>
-<li><code>data/processed/tutira_buoy_daily.csv</code></li>
-<li><code>data/processed/tutira_airport_XXXX_daily.csv</code></li>
-<li><code>data/processed/tutira_town_YYYY_daily.csv</code></li>
-<li><code>data/processed/tutira_vcs_on_daily.csv</code></li>
+<li><code>data/processed/tutera_era5_daily.csv</code></li>
+<li><code>data/processed/tutera_vcs_on_daily.csv</code></li>
+<li><code>data/processed/tutera_airport_XXXX_daily.csv</code></li>
 </ul>
-<p>Where airport will be the Napier Airport XXX will be its assosiated NIWA number and town may be the closest weather station to the area.</p>
+</section>
+<section id="minimal-run-two-datasets-only-era5-vcs_on" class="level2">
+<h2 class="anchored" data-anchor-id="minimal-run-two-datasets-only-era5-vcs_on">Minimal run: two datasets only (ERA5 + VCS_On)</h2>
+<ol type="1">
+<li>Set <code>reference</code> to the dataset you want as the benchmark (e.g., <code>VCS_On</code>).</li>
+<li>Set <code>targets: ["ERA5"]</code>.</li>
+<li>In each QMD <code>file_map</code>, keep only those two files (plus the reference file if it is separate).</li>
+<li>Update any plot calls or titles that still say Airport_1770 to use <code>params$reference</code>.</li>
+</ol>
+<p>This will produce the same metrics, plots, and diagnostics, but only for the chosen pair.</p>
+</section>
+<section id="minimal-run-one-variable-only" class="level2">
+<h2 class="anchored" data-anchor-id="minimal-run-one-variable-only">Minimal run: one variable only</h2>
+<ol type="1">
+<li>Set <code>vars</code> to a single variable (e.g., <code>["Wind_Spd_ms"]</code>).</li>
+<li>Ensure that variable exists in every processed dataset.</li>
+<li>In Results/Behaviour/Metrics QMDs, remove or guard plot chunks that reference other variables.</li>
+</ol>
+<p>This keeps the workflow identical but limits output to one variable.</p>
 
 
 </section>

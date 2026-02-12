@@ -21,11 +21,19 @@ params:
 
 ## Introduction
 
-The second largest lake (by surface area \~79.9km2) in New Zealand, Lake Rotorua is a relatively well studied lake with and round shape fitting it's distrinct culdera description. Although coined the second largest lake its mean depth of just 10meters results in a shallow lake clasification. Shallow lakes are particulary suseptible to climate driven shifts across short and long term scales. Shallow lakes heat up faster than deep lakes which results in larger seasonal and diurnal tempurature fluxtuations. **(Frassel. et.al 2018)** Shallow lakes also tend to be more suseptible to atmospheric forcing where wind, air temperature and precipitation patterms which influence water quality and consequental biology. Lake Rotorua experiance cyanobacteria blooms due to its location in the landscape (hydrothermal + Farm + Population density) recieving high nutirent content along with warmer temperatures. Additional to temperature fluxes influencing cyanobacterial fluxes, wind and rain play a role in the intensity and location of these blooms. Wind drives cyanobacterial location, often leading to cyano bloom intensification/ concentration in particular areas.
+The second largest lake (by surface area \~79.9km2) in New Zealand, Lake Rotorua is a relatively well studied lake with and round shape fitting it's distrinct culdera description.
+
+Although coined the second largest lake its mean depth of just 10meters results in a shallow lake clasification. Shallow lakes are particulary suseptible to climate driven shifts across short and long term scales. Shallow lakes heat up faster than deep lakes which results in larger seasonal and diurnal tempurature fluxtuations. **(Frassel. et.al 2018)** Shallow lakes also tend to be more suseptible to atmospheric forcing where wind, air temperature and precipitation patterms which influence water quality and consequental biology. Lake Rotorua experiance cyanobacteria blooms due to its location in the landscape (hydrothermal + Farm + Population density) recieving high nutirent content along with warmer temperatures. Additional to temperature fluxes influencing cyanobacterial fluxes, wind and rain play a role in the intensity and location of these blooms. Wind drives cyanobacterial location, often leading to cyano bloom intensification/ concentration in particular areas.
+
+Meterological data is utalised for many different lake assesments, from understanding lake regime shifts to modeling future lake dynamices. It is therfore vital to use the best avalable meterological data for the location and time of choice. Too often meterological data are incomplete and unreliable. ERA5 (ECMWF fifth gen) data is widely used due to its comprehensive and clean nature combining observations with model data , however it is coarse and some variables are known to misrepresent data at the land/lake surface (low atmosphere metorology). NIWAs virtual climate station takes captured observational station data and created a 5km grid conecting other weather stations to allow for intergrated data in a chosen location. The VCNS data is partly the product of the Airport data which is used as the Reference for the Rotorua Lake demo. Weather datations within higher population destinations or areas with large topographical gradients will experience micro metorological readings due to the physical nature these environments, In partucular wind, rain and even temperature in larger cities or stations placed in higher altitudes. Buoy data allows for more accurate readings due to its on water position, however precipitation data is often inaccurate as the buoy moves with the lake, especially large lakes that can develope waves. For this reason wind can also be scewed. Temperature for a given Lake from a Buoy is regarded the most likely accurate candidate as fulxtuations from a water body and fluxes from land follow different physical laws.
+
+The question here is how does coarse global, mpdelled national, Local, and Lake source metorological data compare. Is there a better data source in cool or warm periods? or in a storm event? or for a specific variable? or Is there a better data source for local models?
+
+## Additional infor afout data sources - to put in discussion? 
+
+ERA5 uncertancy - presious ERA-interim showed improved fit fro temp, wind and huidily in the troposphere but not in the stratosphere" (direct cite - rmets.oninelibrary.wiley.com/doi/10.1002/qj.3803)
 
 ## Site data sources
-
-note add what kindof lat long system used\_\_\_\_\_
 
 Limnotrack Buoy (lat:-380550S Lon:1761653E) on lake, NIWA virtual climate station network (VCSN) grid NO:27879 lat:-38.075 lon:176.275, ERA5 statlite data for Lat:-38.114908 and Lon:176.316662, Observational data "Airport" station 1770 (lat:-38.10592 lon:176.31481), Obresvational data "Town" station 41077 (lat:-38.14635 lon:176.2578).
 
@@ -181,6 +189,8 @@ if ("RadSWD_Wm2" %in% vars) plot_timeseries_line(ref_df, targets_list, "RadSWD_W
 ```
 
 ## Precipitation event structure
+
+Precipitation data collection can be achieved in many ways. Here Airport, Town
 
 ```{r}
 plot_precip_hydrograph(ref_df, targets_list, show_7day_sum = TRUE)
