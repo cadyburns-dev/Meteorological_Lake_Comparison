@@ -2,7 +2,6 @@
 title: "Rotorua demo"
 author: "Cady B"
 editor: visual
-bibliography: reference.bib
 params:
   lake_name: "Lake Rotorua"
   lat: -38.114908
@@ -20,6 +19,8 @@ params:
 ---
 
 ## Introduction
+
+
 
 The second largest lake (by surface area \~79.9km2) in New Zealand, Lake Rotorua is a relatively well studied lake with and round shape fitting it's distrinct culdera description.
 
@@ -179,11 +180,11 @@ reactable(
 ```{r}
 plot_timeseries_line(ref_df, targets_list, "Temp_C")
 ```
-### Wind
+#### Wind
 ```{r}
 plot_timeseries_line(ref_df, targets_list, "Wind_Spd_ms")
 ```
-## Precipitation
+### Precipitation
 ```{r}
 plot_timeseries_line(ref_df, targets_list, "Precip_mm")
 ```

@@ -72,6 +72,10 @@ Windy‑day metrics use the top 10% of reference wind speeds (`windy_top_pct = 0
 Wet‑day and windy‑day subsets\
 Wet‑day metrics were computed only when the reference precipitation exceeded 1 mm (Airport_1770), to focus on meaningful rain events. Windy‑day metrics used the top 10% of reference wind speeds, defined by the 90th percentile of Airport_1770 during the overlap period; metrics were computed only on those high‑wind days.
 
+For example: ERA5 vs Airport for precipitation where ap1770$precip_mm = refernce "obs" series ear5$precip_mm = dataset we are evaluating "sim" mertrics_all uses every day where both datasets have values (after NA removal) (baseline overall preformance) metrics_wet uses only days where the reference has “meaningful rain”:if threshold_mm = 1, it keeps days where ap1770$Precip_mm > 1.
+ This answers: “How well does ERA5 match rainy days?”(which usually matters more for modelling than dry days).
+ metrics_windy  uses only days where the reference indictes high wind :if threshold_ms = 10, it keeps days where ap1770$Wind_Spd_ms \>=10. This answers: “How well does ERA5 match wind-storm days?” which matters because correlation may look high but preform poorly in seasonal extremes, wind and rain heavy events
+
 Event‑agreement statistics [@Jolli2003] for precipitation (`threshold ≥ 0.1 mm/day`, as set in the event‑skill section) include:
 
 Hits (H) (ref event & target event), *both obs and sim say "event"*

@@ -3,7 +3,7 @@ project:
   output-dir: docs
   render:
     - index.qmd
-    - overview.qmd
+    - Overview.qmd
     - methods.qmd
     - behaviour_results.qmd
     - timeseries_results.qmd
@@ -20,7 +20,7 @@ website:
       - text: "Home"
         href: index.qmd
       - text: "Overview"
-        href: overview.qmd
+        href: Overview.qmd
       - text: "Methods"
         href: methods.qmd
       - text: "Seasonal and event behaviour"
