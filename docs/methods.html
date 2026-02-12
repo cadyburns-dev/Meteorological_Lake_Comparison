@@ -183,7 +183,7 @@ window.Quarto = {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./Overview.html"> 
+    <a class="nav-link" href="./overview.html"> 
 <span class="menu-text">Overview</span></a>
   </li>  
   <li class="nav-item">
@@ -191,15 +191,15 @@ window.Quarto = {
 <span class="menu-text">Methods</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./Behaviour.html"> 
+    <a class="nav-link" href="./behaviour_results.html"> 
 <span class="menu-text">Seasonal and event behaviour</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./Results.html"> 
-<span class="menu-text">Variable diagnostics</span></a>
+    <a class="nav-link" href="./timeseries_results.html"> 
+<span class="menu-text">Time Series</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./metrics_stats.html"> 
+    <a class="nav-link" href="./metrics_stats_results.html"> 
 <span class="menu-text">Metrics &amp; stats</span></a>
   </li>  
   <li class="nav-item">
@@ -207,11 +207,11 @@ window.Quarto = {
 <span class="menu-text">Rotorua demo</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./Reproducibility.html"> 
+    <a class="nav-link" href="./reproducibility.html"> 
 <span class="menu-text">Reproducibility</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./Reference_List.html"> 
+    <a class="nav-link" href="./reference_list.html"> 
 <span class="menu-text">References</span></a>
   </li>  
 </ul>
@@ -232,9 +232,6 @@ window.Quarto = {
   <li><a href="#data-harmonisation-units-and-time-step" id="toc-data-harmonisation-units-and-time-step" class="nav-link active" data-scroll-target="#data-harmonisation-units-and-time-step"><strong>Data harmonisation units and time step</strong></a>
   <ul class="collapse">
   <li><a href="#data-sources" id="toc-data-sources" class="nav-link" data-scroll-target="#data-sources">Data Sources</a></li>
-  </ul></li>
-  <li><a href="#seperate-files-need-to-be-joined-together---radiation-temperature-rainfall-wind-speed--" id="toc-seperate-files-need-to-be-joined-together---radiation-temperature-rainfall-wind-speed--" class="nav-link" data-scroll-target="#seperate-files-need-to-be-joined-together---radiation-temperature-rainfall-wind-speed--">Seperate files need to be joined together - radiation, temperature, rainfall, wind speed -</a>
-  <ul class="collapse">
   <li><a href="#reference-site-justification" id="toc-reference-site-justification" class="nav-link" data-scroll-target="#reference-site-justification">Reference site justification</a></li>
   </ul></li>
   <li><a href="#metrics" id="toc-metrics" class="nav-link" data-scroll-target="#metrics"><strong>Metrics</strong></a>
@@ -292,25 +289,21 @@ window.Quarto = {
 <section id="data-sources" class="level2">
 <h2 class="anchored" data-anchor-id="data-sources">Data Sources</h2>
 <p><br>
-Daily meteorological datasets were compiled for Lake Rotorua from ERA5‑Land reanalysis, the Limnotrack buoy (in‑situ), NIWA Airport_1770 observations, NIWA Town_40177 observations, and the NIWA Virtual Climate Station Network (VCS_On). ERA5 variables were extracted using <code>aemetools::get_era5_land_point_nz</code>, VCS and reference data were downloaded manually from NIWA “Earth Science New Zealand” datahub and save as CSV in “data/raw” folder # https://cliflo.niwa.co.nz/</p>
-</section>
-</section>
-<section id="seperate-files-need-to-be-joined-together---radiation-temperature-rainfall-wind-speed--" class="level1">
-<h1>Seperate files need to be joined together - radiation, temperature, rainfall, wind speed -</h1>
-<p>while the others were seperatly downloaded and inported to the file. All datasets were standardised to common variable names (<code>Temp_C</code>, <code>Precip_mm</code>, <code>Wind_Spd_ms</code>, <code>RadSWD_Wm2</code>) with a shared Date field.</p>
+Daily meteorological datasets were compiled for Lake Rotorua from ERA5‑Land reanalysis, the Limnotrack buoy (in‑situ) on Lake Rotorua, NIWA Airport_1770 observations, NIWA Town_40177 observations, and the NIWA Virtual Climate Station Network (VCS_On). ERA5 variables were extracted using <code>aemetools::get_era5_land_point_nz</code>, VCS and reference (Airport and town) data were downloaded manually (and separably at times - joined later in R) from NIWA “Earth Science New Zealand” <a href="https://cliflo.niwa.co.nz/">datahub</a> <a href="https://data.niwa.co.nz/pages/clidb-on-datahub">(click to access)</a> and saved as CSV in “data/raw” folder. All datasets were standardised to common variable names (<code>Temp_C</code>, <code>Precip_mm</code>, <code>Wind_Spd_ms</code>, <code>RadSWD_Wm2</code>) with a shared Date field.</p>
 <p><br>
 Sub‑daily records (5&amp;15 minute buoy and hourly station data) were parsed in UTC and aggregated to daily values, using sums for fluxes (precipitation) and means for temperature, wind speed, and radiation. Radiation in MJ m⁻² was converted to W m⁻² using <code>Rad_MJm2 * 1e6 / 86400</code> for daily totals and <code>Rad_MJm2 * 1e6 / 3600</code> for hourly values prior to daily means. Buoy wind speeds were corrected for a documented unit change (knots to m/s before a switch date), and buoy precipitation was converted from mm hr⁻¹ to 5‑minute depth before aggregation. Historical buoy records (15‑minute) were aggregated to daily means, with known incorrect wind periods set to <code>NA</code> to keep a continuous date. Town_40177 and Airport_1770 were assembled from hourly radiation/temperature (daily means) plus daily wind and rain. VCS_On daily data were converted to numeric, with temperature computed as the mean of Tmin and Tmax. All daily datasets were written as aligned CSVs, which were then used to compare overlapping dates.</p>
+</section>
 <section id="reference-site-justification" class="level2">
 <h2 class="anchored" data-anchor-id="reference-site-justification">Reference site justification</h2>
-<p>Airport station data were used as the primary reference because they are maintained, quality-controlled, and co-located near the lake with minimal missingness. All alternative sources (ERA5, VCSN, buoy, Town) were evaluated against this reference over their overlapping dates.</p>
+<p>Airport station data were used as the primary reference because they are maintained, quality-controlled, and co-located near the lake with low data gaps over a longer period. All alternative sources (ERA5, VCSN, buoy, Town) were evaluated against this reference over their overlapping dates.</p>
 </section>
 </section>
 <section id="metrics" class="level1">
 <h1><strong>Metrics</strong></h1>
-<p>Metrics are computed on paired daily values after joining by <code>Date</code> and dropping NA s. For each target (“sim”) vs reference (“obs”), the following are calculated.</p>
+<p>Metrics are computed on paired daily values after joining by <code>Date</code> and dropping NA s. For each target (“sim”) vs reference (“obs”), the following are calculated. The set up for this begins in 01-metrics_helpers script and continues after 02_prepare_raw_data script in the 03_analysis_helpers 04-analysis_plotting scripts.</p>
 <section id="core-performance-metrics-and-formulas-paired-daily-values" class="level2">
 <h2 class="anchored" data-anchor-id="core-performance-metrics-and-formulas-paired-daily-values">Core performance metrics and formulas (paired daily values)</h2>
-<p>Pearson correlation (r) <span class="citation" data-cites="pearson1895">(<a href="#ref-pearson1895" role="doc-biblioref"><strong>pearson1895?</strong></a>)</span> for overall co-variation <code>(cor(obs, sim) ).</code></p>
+<p><strong>Pearson correlation (r)</strong> <span class="citation" data-cites="pearson1896mathematical">(<a href="#ref-pearson1896mathematical" role="doc-biblioref">Pearson 1896</a>)</span> for overall co-variation <code>(cor(obs, sim) ).</code></p>
 <p><span class="math display">\[r = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}         {\sqrt{\sum_{i=1}^{n} (x_i - \bar{x})^2 \; \sum_{i=1}^{n} (y_i - \bar{y})^2}}
 \]</span>Pearson correlation coefficient between the reference series (obs; Airport_1770) and the target dataset (sim). Here, (x_i) denotes the reference value on day (i), (y_i) denotes the target value on day (i), and (\bar{x}), (\bar{y}) are their respective means over the overlap period (after removing missing values)</p>
 <p>Linear regression: Slope and intercept (scaling and offset bias) <code>lm(sim ~obs)</code></p>
@@ -318,7 +311,7 @@ Sub‑daily records (5&amp;15 minute buoy and hourly station data) were parsed i
 y_i = \beta_0 + \beta_1 x_i + \epsilon_i
 \]</span></p>
 <p>Linear regression model used to estimate agreement between the reference series (obs; Airport_1770) and each target dataset (sim). Here, (x_i) is the reference value on day (i), (y_i) is the target value on day (i), (\beta_0) is the intercept, (\beta_1) is the slope, and (\epsilon_i) is the residual error (using paired, non‑missing daily values).</p>
-<p>MAE: Mean absolute error <code>mean(|sim-obs|)</code>.</p>
+<p><strong>MAE: Mean absolute error</strong> <code>mean(|sim-obs|)</code>.</p>
 <p><span class="math display">\[
 \mathrm{MAE} = \frac{1}{n}\sum_{i=1}^{n}\left|\,y_i - x_i\,\right|
 \]</span>Mean Absolute Error (MAE) between the reference series (obs; (x_i)) and the target series (sim; (y_i)) over the overlapping days. Here (n) is the number of paired, non‑missing daily observations.</p>
@@ -326,8 +319,8 @@ y_i = \beta_0 + \beta_1 x_i + \epsilon_i
 <p><span class="math display">\[
 \mathrm{RMSE} = \sqrt{\frac{1}{n}\sum_{i=1}^{n}\left(y_i - x_i\right)^2}
 \]</span></p>
-<p>Root Mean Square Error (RMSE) between the reference series (obs; (x_i)) and the target series (sim; (y_i)) over the overlapping days. Here (n) is the number of paired, non‑missing daily observations.</p>
-<p>Lin’s concordance correlation coefficient (CCC) to combine accuracy and precision. Values were interpreted under the McBride 2005 scale.</p>
+<p><strong>Root Mean Square Error (RMSE)</strong> between the reference series (obs; (x_i)) and the target series (sim; (y_i)) over the overlapping days. Here (n) is the number of paired, non‑missing daily observations.</p>
+<p><strong>Lin’s concordance correlation coefficient (CCC)</strong> to combine accuracy and precision <span class="citation" data-cites="lin1989">(<a href="#ref-lin1989" role="doc-biblioref">L. I.-K. Lin 1989</a>)</span>. Values were interpreted under the McBride 2005 scale, where; &gt; 0.99: Almost perfect, 0.95–0.99: Substantial, 0.90–0.95: Moderate and &lt; 0.90: Poor strength of agreement <span class="citation" data-cites="rekasi2024">(<a href="#ref-rekasi2024" role="doc-biblioref">Rekasi 2024</a>)</span>.</p>
 <p><span class="math display">\[
 [\text{CCC} = \frac{2 r \sigma_{obs} \sigma_{sim}}{\sigma_{obs}^2 + \sigma_{sim}^2 + (\mu_{obs} - \mu_{sim})^2}]
 \]</span></p>
@@ -522,7 +515,7 @@ Plots are generated from overlap‑aligned daily data to ensure consistent compa
 <span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p><strong>Distribution plots</strong>: <code>geom_density</code> kernel density overlays for temperature and wind; zero‑inflated precipitation histograms for all days; wet‑day precipitation histograms (ref &gt; 1 mm).</p>
+<p><strong>Distribution plots</strong>: <code>geom_density</code> kernel density overlays for temperature and wind; zero‑inflated precipitation histograms for all days; wet‑day precipitation histograms (ref &gt; 1 mm), <span class="citation" data-cites="scott2015multivariate">(<a href="#ref-scott2015multivariate" role="doc-biblioref">Scott 2015</a>)</span></p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show example function: plot_distribution()</summary>
@@ -779,8 +772,8 @@ Plots are generated from overlap‑aligned daily data to ensure consistent compa
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>season_defs_warmcool <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">warm =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">11</span>, <span class="dv">12</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>),</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">cool =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">warm =</span> <span class="fu">c</span>(<span class="dv">11</span>, <span class="dv">12</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>),</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">cool =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>)</span>
 <span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>assign_season <span class="ot">&lt;-</span> <span class="cf">function</span>(date, <span class="at">season_defs =</span> season_defs_default) {</span>
@@ -1022,23 +1015,7 @@ Plots are generated from overlap‑aligned daily data to ensure consistent compa
 </section>
 <section id="software-and-packages" class="level1">
 <h1>Software and packages</h1>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate package citations to a separate file to avoid overwriting</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># manual/Zotero entries in reference.bib. If needed, copy entries</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># from reference_packages.bib into reference.bib.</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>pkgs <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"dplyr"</span>,<span class="st">"ggplot2"</span>,<span class="st">"tidyr"</span>,<span class="st">"readr"</span>,<span class="st">"purrr"</span>,<span class="st">"tibble"</span>,<span class="st">"lubridate"</span>,</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"slider"</span>,<span class="st">"reactable"</span>,<span class="st">"plotly"</span>,<span class="st">"here"</span>,<span class="st">"gt"</span>,<span class="st">"sf"</span>,<span class="st">"tmap"</span>,</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"leaflet"</span>,<span class="st">"osmdata"</span>,<span class="st">"rnaturalearth"</span>,<span class="st">"rnaturalearthdata"</span>,</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"htmltools"</span>,<span class="st">"knitr"</span>,<span class="st">"rmarkdown"</span>,<span class="st">"renv"</span>,<span class="st">"shiny"</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">write_bib</span>(pkgs, <span class="at">file =</span> <span class="st">"reference_packages.bib"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-</div>
-<p>Analyses were performed in R <span class="citation" data-cites="r-alan2024">(<a href="#ref-r-alan2024" role="doc-biblioref">R Core Team 2024</a>)</span>. Data wrangling and visualization use tidyverse packages (dplyr, tidyr, ggplot2, readr, purrr, tibble, lubridate) <span class="citation" data-cites="tidyverse">(<a href="#ref-tidyverse" role="doc-biblioref">Wickham et al. 2019</a>)</span>. Spatial processing relies on the sf framework <span class="citation" data-cites="R-sf">(<a href="#ref-R-sf" role="doc-biblioref">Pebesma 2026</a>)</span>, with leaflet <span class="citation" data-cites="R-leaflet">(<a href="#ref-R-leaflet" role="doc-biblioref">Cheng et al. 2025</a>)</span>, tmap <span class="citation" data-cites="R-tmap">(<a href="#ref-R-tmap" role="doc-biblioref">Tennekes 2025</a>)</span>, osmdata <span class="citation" data-cites="R-osmdata">(<a href="#ref-R-osmdata" role="doc-biblioref">Maspons et al. 2025</a>)</span>, and rnaturalearth <span class="citation" data-cites="R-rnaturalearth">(<a href="#ref-R-rnaturalearth" role="doc-biblioref">Massicotte and South 2026</a>)</span> used for mapping. Interactive figures are produced with plotly <span class="citation" data-cites="R-plotly">(<a href="#ref-R-plotly" role="doc-biblioref">Sievert et al. 2025</a>)</span> and tables with reactable <span class="citation" data-cites="R-reactable">(<a href="#ref-R-reactable" role="doc-biblioref">Lin 2025</a>)</span> and gt <span class="citation" data-cites="R-gt">(<a href="#ref-R-gt" role="doc-biblioref">Iannone et al. 2026</a>)</span>. Reproducibility is managed with renv <span class="citation" data-cites="R-renv">(<a href="#ref-R-renv" role="doc-biblioref">Ushey and Wickham 2025</a>)</span>, and report generation uses Quarto with knitr/rmarkdown and htmltools <span class="citation" data-cites="R-htmltools">(<a href="#ref-R-htmltools" role="doc-biblioref">Cheng et al. 2024</a>)</span>; here is used for stable file paths.</p>
+<p>Analyses were performed in R <span class="citation" data-cites="R-alan2024">(<a href="#ref-R-alan2024" role="doc-biblioref">R Core Team 2024</a>)</span>. Data wrangling and visualization use tidyverse packages (dplyr, tidyr, ggplot2, readr, purrr, tibble, lubridate) <span class="citation" data-cites="R-tidyverse">(<a href="#ref-R-tidyverse" role="doc-biblioref">Wickham et al. 2019</a>)</span>. Spatial processing relies on the sf framework <span class="citation" data-cites="R-sf">(<a href="#ref-R-sf" role="doc-biblioref">Pebesma 2026</a>)</span>, with leaflet <span class="citation" data-cites="R-leaflet">(<a href="#ref-R-leaflet" role="doc-biblioref">Cheng et al. 2025</a>)</span>, tmap <span class="citation" data-cites="R-tmap">(<a href="#ref-R-tmap" role="doc-biblioref">Tennekes 2025</a>)</span>, osmdata <span class="citation" data-cites="R-osmdata">(<a href="#ref-R-osmdata" role="doc-biblioref">Maspons et al. 2025</a>)</span>, and rnaturalearth <span class="citation" data-cites="R-rnaturalearth">(<a href="#ref-R-rnaturalearth" role="doc-biblioref">Massicotte and South 2026</a>)</span> used for mapping. Interactive figures are produced with plotly <span class="citation" data-cites="R-plotly">(<a href="#ref-R-plotly" role="doc-biblioref">Sievert et al. 2025</a>)</span> and tables with reactable <span class="citation" data-cites="R-reactable">(<a href="#ref-R-reactable" role="doc-biblioref">G. Lin 2025</a>)</span> and gt <span class="citation" data-cites="R-gt">(<a href="#ref-R-gt" role="doc-biblioref">Iannone et al. 2026</a>)</span>. Reproducibility is managed with renv <span class="citation" data-cites="R-renv">(<a href="#ref-R-renv" role="doc-biblioref">Ushey and Wickham 2025</a>)</span>, and report generation uses Quarto with knitr/rmarkdown and htmltools <span class="citation" data-cites="R-htmltools">(<a href="#ref-R-htmltools" role="doc-biblioref">Cheng et al. 2024</a>)</span>; here is used for stable file paths.</p>
 </section>
 <section id="limitations" class="level1">
 <h1>Limitations</h1>
@@ -1079,17 +1056,29 @@ Iannone, Richard, Joe Cheng, Barret Schloerke, Shannon Haughton, Ellis Hughes, A
 <div id="ref-R-reactable" class="csl-entry" role="listitem">
 Lin, Greg. 2025. <em>Reactable: Interactive Data Tables for r</em>. <a href="https://glin.github.io/reactable/">https://glin.github.io/reactable/</a>.
 </div>
+<div id="ref-lin1989" class="csl-entry" role="listitem">
+Lin, Lawrence I-Kuei. 1989. <span>“A Concordance Correlation Coefficient to Evaluate Reproducibility.”</span> <em>Biometrics</em> 45 (1): 255–68. <a href="https://doi.org/10.2307/2532051">https://doi.org/10.2307/2532051</a>.
+</div>
 <div id="ref-R-osmdata" class="csl-entry" role="listitem">
 Maspons, Joan, Mark Padgham, Bob Rudis, Robin Lovelace, and Maëlle Salmon. 2025. <em>Osmdata: Import OpenStreetMap Data as Simple Features or Spatial Objects</em>. <a href="https://docs.ropensci.org/osmdata/">https://docs.ropensci.org/osmdata/</a>.
 </div>
 <div id="ref-R-rnaturalearth" class="csl-entry" role="listitem">
 Massicotte, Philippe, and Andy South. 2026. <em>Rnaturalearth: World Map Data from Natural Earth</em>. <a href="https://docs.ropensci.org/rnaturalearth/">https://docs.ropensci.org/rnaturalearth/</a>.
 </div>
+<div id="ref-pearson1896mathematical" class="csl-entry" role="listitem">
+Pearson, Karl. 1896. <span>“Mathematical Contributions to the Theory of Evolution. III. Regression, Heredity, and Panmixia.”</span> <em>Philosophical Transactions of the Royal Society of London. Series A</em> 187: 253–318.
+</div>
 <div id="ref-R-sf" class="csl-entry" role="listitem">
 Pebesma, Edzer. 2026. <em>Sf: Simple Features for r</em>. <a href="https://r-spatial.github.io/sf/">https://r-spatial.github.io/sf/</a>.
 </div>
-<div id="ref-r-alan2024" class="csl-entry" role="listitem">
+<div id="ref-R-alan2024" class="csl-entry" role="listitem">
 R Core Team. 2024. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.
+</div>
+<div id="ref-rekasi2024" class="csl-entry" role="listitem">
+Rekasi, Andrea. 2024. <span>“Step-by-Step Guide to Using the Concordance Correlation Coefficient | Python-Bloggers.”</span> <a href="https://python-bloggers.com/2024/10/step-by-step-guide-to-using-the-concordance-correlation-coefficient/">https://python-bloggers.com/2024/10/step-by-step-guide-to-using-the-concordance-correlation-coefficient/</a>.
+</div>
+<div id="ref-scott2015multivariate" class="csl-entry" role="listitem">
+Scott, David W. 2015. <em>Multivariate Density Estimation: Theory, Practice, and Visualization</em>. John Wiley &amp; Sons.
 </div>
 <div id="ref-R-plotly" class="csl-entry" role="listitem">
 Sievert, Carson, Chris Parmer, Toby Hocking, Scott Chamberlain, Karthik Ram, Marianne Corvellec, and Pedro Despouy. 2025. <em>Plotly: Create Interactive Web Graphics via Plotly.js</em>. <a href="https://plotly-r.com">https://plotly-r.com</a>.
@@ -1100,8 +1089,8 @@ Tennekes, Martijn. 2025. <em>Tmap: Thematic Maps</em>. <a href="https://github.c
 <div id="ref-R-renv" class="csl-entry" role="listitem">
 Ushey, Kevin, and Hadley Wickham. 2025. <em>Renv: Project Environments</em>. <a href="https://rstudio.github.io/renv/">https://rstudio.github.io/renv/</a>.
 </div>
-<div id="ref-tidyverse" class="csl-entry" role="listitem">
-Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy D’Agostino McGowan, Romain Francois, Garrett Grolemund, et al. 2019. <span>“Welcome to the Tidyverse.”</span> <em>Journal of Open Source Software</em> 4 (43): 1686. <a href="https://doi.org/10.21105/joss.01686">https://doi.org/10.21105/joss.01686</a>.
+<div id="ref-R-tidyverse" class="csl-entry" role="listitem">
+Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy D’Agostino McGowan, Romain François, Garrett Grolemund, et al. 2019. <span>“Welcome to the <span class="nocase">tidyverse</span>.”</span> <em>Journal of Open Source Software</em> 4 (43): 1686. <a href="https://doi.org/10.21105/joss.01686">https://doi.org/10.21105/joss.01686</a>.
 </div>
 </div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

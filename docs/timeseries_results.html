@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Variable diagnostics – Meterological Lake Comparison</title>
+<title>Time-series – Meterological Lake Comparison</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -115,7 +115,7 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./Overview.html"> 
+    <a class="nav-link" href="./overview.html"> 
 <span class="menu-text">Overview</span></a>
   </li>  
   <li class="nav-item">
@@ -123,15 +123,15 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Methods</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./Behaviour.html"> 
+    <a class="nav-link" href="./behaviour_results.html"> 
 <span class="menu-text">Seasonal and event behaviour</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./Results.html" aria-current="page"> 
-<span class="menu-text">Variable diagnostics</span></a>
+    <a class="nav-link active" href="./timeseries_results.html" aria-current="page"> 
+<span class="menu-text">Time Series</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./metrics_stats.html"> 
+    <a class="nav-link" href="./metrics_stats_results.html"> 
 <span class="menu-text">Metrics &amp; stats</span></a>
   </li>  
   <li class="nav-item">
@@ -139,11 +139,11 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Rotorua demo</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./Reproducibility.html"> 
+    <a class="nav-link" href="./reproducibility.html"> 
 <span class="menu-text">Reproducibility</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./Reference_List.html"> 
+    <a class="nav-link" href="./reference_list.html"> 
 <span class="menu-text">References</span></a>
   </li>  
 </ul>
@@ -175,7 +175,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Variable diagnostics</h1>
+<h1 class="title">Time-series</h1>
 </div>
 
 
@@ -200,7 +200,7 @@ ul.task-list li input[type="checkbox"] {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Results_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="960"></p>
+<p><img src="timeseries_results_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -209,7 +209,7 @@ ul.task-list li input[type="checkbox"] {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Results_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="960"></p>
+<p><img src="timeseries_results_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -218,7 +218,7 @@ ul.task-list li input[type="checkbox"] {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Results_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="960"></p>
+<p><img src="timeseries_results_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -229,8 +229,8 @@ ul.task-list li input[type="checkbox"] {
 <p>Quick look at the most recent reported day from each dataset.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div class="reactable html-widget html-fill-item" id="htmlwidget-59172fcd34f3bdc63759" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-59172fcd34f3bdc63759">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Dataset":["Airport_1770","ERA5","Buoy","Town_40177","VCS_On"],"Date":["2025-07-27","2025-08-31","2025-09-01","2025-11-28","2025-06-30"],"Temp_C":[11.5857142857143,8.231,9.80763859722222,22.1,10.5],"Precip_mm":[0.2,24.029,0,"NA",0],"Wind_Spd_ms":[2.54,5.689,9.64310825442118,"NA",4.4],"RadSWD_Wm2":["NA",57.449,"NA","NA",63.6574074074074]},"columns":[{"id":"Dataset","name":"Dataset","type":"character"},{"id":"Date","name":"Date","type":"Date"},{"id":"Temp_C","name":"Temp_C","type":"numeric"},{"id":"Precip_mm","name":"Precip_mm","type":"numeric"},{"id":"Wind_Spd_ms","name":"Wind_Spd_ms","type":"numeric"},{"id":"RadSWD_Wm2","name":"RadSWD_Wm2","type":"numeric"}],"searchable":true,"defaultPageSize":5,"highlight":true,"striped":true,"dataKey":"c2468207ccdf881bdeec8aacf6463547"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+<div class="reactable html-widget html-fill-item" id="htmlwidget-d7d72734655ca57aab3b" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-d7d72734655ca57aab3b">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Dataset":["Airport_1770","ERA5","Buoy","Town_40177","VCS_On"],"Date":["2025-07-27","2025-08-31","2025-09-01","2025-11-28","2025-06-30"],"Temp_C":[11.5857142857143,8.231,9.80763859722222,22.1,10.5],"Precip_mm":[0.2,24.029,0,"NA",0],"Wind_Spd_ms":[2.54,5.689,9.64310825442118,"NA",4.4],"RadSWD_Wm2":["NA",57.449,"NA","NA",63.6574074074074]},"columns":[{"id":"Dataset","name":"Dataset","type":"character"},{"id":"Date","name":"Date","type":"Date"},{"id":"Temp_C","name":"Temp_C","type":"numeric"},{"id":"Precip_mm","name":"Precip_mm","type":"numeric"},{"id":"Wind_Spd_ms","name":"Wind_Spd_ms","type":"numeric"},{"id":"RadSWD_Wm2","name":"RadSWD_Wm2","type":"numeric"}],"searchable":true,"defaultPageSize":5,"highlight":true,"striped":true,"dataKey":"c2468207ccdf881bdeec8aacf6463547"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 

@@ -154,7 +154,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./Overview.html" aria-current="page"> 
+    <a class="nav-link active" href="./overview.html" aria-current="page"> 
 <span class="menu-text">Overview</span></a>
   </li>  
   <li class="nav-item">
@@ -162,15 +162,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">Methods</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./Behaviour.html"> 
+    <a class="nav-link" href="./behaviour_results.html"> 
 <span class="menu-text">Seasonal and event behaviour</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./Results.html"> 
-<span class="menu-text">Variable diagnostics</span></a>
+    <a class="nav-link" href="./timeseries_results.html"> 
+<span class="menu-text">Time Series</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./metrics_stats.html"> 
+    <a class="nav-link" href="./metrics_stats_results.html"> 
 <span class="menu-text">Metrics &amp; stats</span></a>
   </li>  
   <li class="nav-item">
@@ -178,11 +178,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">Rotorua demo</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./Reproducibility.html"> 
+    <a class="nav-link" href="./reproducibility.html"> 
 <span class="menu-text">Reproducibility</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./Reference_List.html"> 
+    <a class="nav-link" href="./reference_list.html"> 
 <span class="menu-text">References</span></a>
   </li>  
 </ul>
@@ -242,7 +242,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="data-sources" class="level2">
 <h2 class="anchored" data-anchor-id="data-sources">Data sources</h2>
 <p>Limnotrack Buoy on lake, NIWA virtual climate station network (VCSN) , ERA5 statlite data, Observational data “Airport” station, Obresvational data “Town” station.</p>
-<p>Data source and station names will vary from location to location. Selecting stations from these websites is laid out in the data wrangling section</p>
+<p>Data source and station names will vary from location to location. Selecting stations from these websites is laid out in the 02_prepare_raw_data script.</p>
 </section>
 <section id="outputs" class="level2">
 <h2 class="anchored" data-anchor-id="outputs">Outputs</h2>
@@ -292,8 +292,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setView</span>(<span class="at">lng =</span> params<span class="sc">$</span>lon, <span class="at">lat =</span> params<span class="sc">$</span>lat, <span class="at">zoom =</span> <span class="dv">11</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div class="leaflet html-widget html-fill-item" id="htmlwidget-740c84bcce69f24c9d0e" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-740c84bcce69f24c9d0e">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addCircles","args":[-38.114908,176.316662,10000,null,null,{"interactive":true,"className":"","stroke":true,"color":"dodgerblue","weight":5,"opacity":0.5,"fill":true,"fillColor":"dodgerblue","fillOpacity":0.25},"Lake Rotorua",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null,null]},{"method":"addCircleMarkers","args":[-38.114908,176.316662,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"navy","weight":5,"opacity":0.5,"fill":true,"fillColor":"navy","fillOpacity":0.9},null,null,"Lake Rotorua",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[-38.114908,-38.114908],"lng":[176.316662,176.316662]},"setView":[[-38.114908,176.316662],11,[]]},"evals":[],"jsHooks":[]}</script>
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-eb0e50a2f7cbd1f2b2e6" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-eb0e50a2f7cbd1f2b2e6">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addCircles","args":[-38.114908,176.316662,10000,null,null,{"interactive":true,"className":"","stroke":true,"color":"dodgerblue","weight":5,"opacity":0.5,"fill":true,"fillColor":"dodgerblue","fillOpacity":0.25},"Lake Rotorua",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null,null]},{"method":"addCircleMarkers","args":[-38.114908,176.316662,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"navy","weight":5,"opacity":0.5,"fill":true,"fillColor":"navy","fillOpacity":0.9},null,null,"Lake Rotorua",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[-38.114908,-38.114908],"lng":[176.316662,176.316662]},"setView":[[-38.114908,176.316662],11,[]]},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
@@ -415,12 +415,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Overview_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="overview_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>Rotorua Lake, North Island, New Zealand</p>
 
 
 </section>

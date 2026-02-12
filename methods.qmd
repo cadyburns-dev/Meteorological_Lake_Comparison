@@ -11,27 +11,22 @@ This section documents how the meteorological datasets were prepared, aligned, a
 ## Data Sources
 
 \
-Daily meteorological datasets were compiled for Lake Rotorua from ERA5‑Land reanalysis, the Limnotrack buoy (in‑situ), NIWA Airport_1770 observations, NIWA Town_40177 observations, and the NIWA Virtual Climate Station Network (VCS_On). ERA5 variables were extracted using `aemetools::get_era5_land_point_nz`, VCS and reference data were downloaded manually from NIWA "Earth Science New Zealand" datahub  and save as CSV in "data/raw" folder
-# https://cliflo.niwa.co.nz/
-
-# Seperate files need to be joined together - radiation, temperature, rainfall, wind speed - 
-while the others were seperatly downloaded and inported to the file. All datasets were standardised to common variable names (`Temp_C`, `Precip_mm`, `Wind_Spd_ms`, `RadSWD_Wm2`) with a shared Date field.
-
+Daily meteorological datasets were compiled for Lake Rotorua from ERA5‑Land reanalysis, the Limnotrack buoy (in‑situ) on Lake Rotorua, NIWA Airport_1770 observations, NIWA Town_40177 observations, and the NIWA Virtual Climate Station Network (VCS_On). ERA5 variables were extracted using `aemetools::get_era5_land_point_nz`, VCS and reference (Airport and town) data were downloaded manually (and separably at times - joined later in R) from NIWA "Earth Science New Zealand" [datahub](https://cliflo.niwa.co.nz/) [(click to access)](https://data.niwa.co.nz/pages/clidb-on-datahub) and saved as CSV in "data/raw" folder. All datasets were standardised to common variable names (`Temp_C`, `Precip_mm`, `Wind_Spd_ms`, `RadSWD_Wm2`) with a shared Date field.
 
 \
 Sub‑daily records (5&15 minute buoy and hourly station data) were parsed in UTC and aggregated to daily values, using sums for fluxes (precipitation) and means for temperature, wind speed, and radiation. Radiation in MJ m⁻² was converted to W m⁻² using `Rad_MJm2 * 1e6 / 86400` for daily totals and `Rad_MJm2 * 1e6 / 3600` for hourly values prior to daily means. Buoy wind speeds were corrected for a documented unit change (knots to m/s before a switch date), and buoy precipitation was converted from mm hr⁻¹ to 5‑minute depth before aggregation. Historical buoy records (15‑minute) were aggregated to daily means, with known incorrect wind periods set to `NA` to keep a continuous date. Town_40177 and Airport_1770 were assembled from hourly radiation/temperature (daily means) plus daily wind and rain. VCS_On daily data were converted to numeric, with temperature computed as the mean of Tmin and Tmax. All daily datasets were written as aligned CSVs, which were then used to compare overlapping dates.
 
 ## Reference site justification
 
-Airport station data were used as the primary reference because they are maintained, quality-controlled, and co-located near the lake with minimal missingness. All alternative sources (ERA5, VCSN, buoy, Town) were evaluated against this reference over their overlapping dates.
+Airport station data were used as the primary reference because they are maintained, quality-controlled, and co-located near the lake with low data gaps over a longer period. All alternative sources (ERA5, VCSN, buoy, Town) were evaluated against this reference over their overlapping dates.
 
 # **Metrics**
 
-Metrics are computed on paired daily values after joining by `Date` and dropping NA s. For each target ("sim") vs reference ("obs"), the following are calculated.
+Metrics are computed on paired daily values after joining by `Date` and dropping NA s. For each target ("sim") vs reference ("obs"), the following are calculated. The set up for this begins in 01-metrics_helpers script and continues after 02_prepare_raw_data script in the 03_analysis_helpers 04-analysis_plotting scripts.
 
 ## Core performance metrics and formulas (paired daily values)
 
-Pearson correlation (r) [@pearson1895] for overall co-variation `(cor(obs, sim) ).`
+**Pearson correlation (r)** [@pearson1896mathematical] for overall co-variation `(cor(obs, sim) ).`
 
 $$r = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}         {\sqrt{\sum_{i=1}^{n} (x_i - \bar{x})^2 \; \sum_{i=1}^{n} (y_i - \bar{y})^2}}
 $$Pearson correlation coefficient between the reference series (obs; Airport_1770) and the target dataset (sim). Here, (x_i) denotes the reference value on day (i), (y_i) denotes the target value on day (i), and (\\bar{x}), (\\bar{y}) are their respective means over the overlap period (after removing missing values)
@@ -44,7 +39,7 @@ $$
 
 Linear regression model used to estimate agreement between the reference series (obs; Airport_1770) and each target dataset (sim). Here, (x_i) is the reference value on day (i), (y_i) is the target value on day (i), (\\beta_0) is the intercept, (\\beta_1) is the slope, and (\\epsilon_i) is the residual error (using paired, non‑missing daily values).
 
-MAE: Mean absolute error `mean(|sim-obs|)`.
+**MAE: Mean absolute error** `mean(|sim-obs|)`.
 
 $$
 \mathrm{MAE} = \frac{1}{n}\sum_{i=1}^{n}\left|\,y_i - x_i\,\right|
@@ -56,9 +51,9 @@ $$
 \mathrm{RMSE} = \sqrt{\frac{1}{n}\sum_{i=1}^{n}\left(y_i - x_i\right)^2}
 $$
 
-Root Mean Square Error (RMSE) between the reference series (obs; (x_i)) and the target series (sim; (y_i)) over the overlapping days. Here (n) is the number of paired, non‑missing daily observations.
+**Root Mean Square Error (RMSE)** between the reference series (obs; (x_i)) and the target series (sim; (y_i)) over the overlapping days. Here (n) is the number of paired, non‑missing daily observations.
 
-Lin's concordance correlation coefficient (CCC) to combine accuracy and precision. Values were interpreted under the McBride 2005 scale.
+**Lin's concordance correlation coefficient (CCC)** to combine accuracy and precision [@lin1989]. Values were interpreted under the McBride 2005 scale, where; \> 0.99: Almost perfect, 0.95–0.99: Substantial, 0.90–0.95: Moderate and \< 0.90: Poor strength of agreement [@rekasi2024].
 
 $$
 [\text{CCC} = \frac{2 r \sigma_{obs} \sigma_{sim}}{\sigma_{obs}^2 + \sigma_{sim}^2 + (\mu_{obs} - \mu_{sim})^2}]
@@ -77,7 +72,7 @@ Windy‑day metrics use the top 10% of reference wind speeds (`windy_top_pct = 0
 Wet‑day and windy‑day subsets\
 Wet‑day metrics were computed only when the reference precipitation exceeded 1 mm (Airport_1770), to focus on meaningful rain events. Windy‑day metrics used the top 10% of reference wind speeds, defined by the 90th percentile of Airport_1770 during the overlap period; metrics were computed only on those high‑wind days.
 
-Event‑agreement statistics for precipitation (`threshold ≥ 0.1 mm/day`, as set in the event‑skill section) include:
+Event‑agreement statistics [@Jolli2003] for precipitation (`threshold ≥ 0.1 mm/day`, as set in the event‑skill section) include:
 
 Hits (H) (ref event & target event), *both obs and sim say "event"*
 
@@ -104,12 +99,7 @@ These quantify detection performance separately from continuous error metrics.
 # **Plotting and Diagnostics**
 
 \
-Plots are generated from overlap‑aligned daily data to ensure consistent comparisons. 
-Where plotting code avalable: `ref_df`: reference dataset (Airport_1770) in daily format.
-`targets_list`: list of target datasets (ERA5, Buoy, Town_40177, VCS_On).
-`var`: variable name string, e.g., `"Temp_C"`, `"Wind_Spd_ms"`, `"Precip_mm"`.
-`make_long_overlap()`: helper that aligns datasets to overlapping dates and returns a long table with `Date`, `value`, and `source`.
-`target_colors`: named palette used consistently across plots
+Plots are generated from overlap‑aligned daily data to ensure consistent comparisons. Where plotting code avalable: `ref_df`: reference dataset (Airport_1770) in daily format. `targets_list`: list of target datasets (ERA5, Buoy, Town_40177, VCS_On). `var`: variable name string, e.g., `"Temp_C"`, `"Wind_Spd_ms"`, `"Precip_mm"`. `make_long_overlap()`: helper that aligns datasets to overlapping dates and returns a long table with `Date`, `value`, and `source`. `target_colors`: named palette used consistently across plots
 
 ```{r}
 #| eval: false
@@ -281,8 +271,7 @@ plot_precip_hydrograph <- function(ref_df, targets_list, ref_name = "Airport_177
 
 ```
 
-**Distribution plots**: `geom_density` kernel density overlays for temperature and wind; zero‑inflated precipitation histograms for all days; wet‑day precipitation histograms (ref \> 1 mm).
-
+**Distribution plots**: `geom_density` kernel density overlays for temperature and wind; zero‑inflated precipitation histograms for all days; wet‑day precipitation histograms (ref \> 1 mm), [@scott2015multivariate]
 
 ```{r}
 #| eval: false
@@ -540,7 +529,8 @@ plot_monthly_climatology <- function(ref_df, targets_list, var,
 }
 
 ```
-**Seasonal analysis** set warm and cool periods and seasonal monthly bins 
+
+**Seasonal analysis** set warm and cool periods and seasonal monthly bins
 
 ```{r}
 #| eval: false
@@ -554,8 +544,8 @@ season_defs_default <- list(
 )
 
 season_defs_warmcool <- list(
-  warm = c(10, 11, 12, 1, 2, 3),
-  cool = c(4, 5, 6, 7, 8, 9)
+  warm = c(11, 12, 1, 2, 3, 4),
+  cool = c(5, 6, 7, 8, 9, 10)
 )
 
 assign_season <- function(date, season_defs = season_defs_default) {
@@ -805,38 +795,14 @@ To detect drift through time, moving-window diagnostics (window = 30 days by def
 
 # Software and packages
 
-```{r}
-#| echo: true
-#| eval: false
-# Generate package citations to a separate file to avoid overwriting
-# manual/Zotero entries in reference.bib. If needed, copy entries
-# from reference_packages.bib into reference.bib.
-pkgs <- c(
-  "dplyr","ggplot2","tidyr","readr","purrr","tibble","lubridate",
-  "slider","reactable","plotly","here","gt","sf","tmap",
-  "leaflet","osmdata","rnaturalearth","rnaturalearthdata",
-  "htmltools","knitr","rmarkdown","renv","shiny"
-)
-
-knitr::write_bib(pkgs, file = "reference_packages.bib")
-```
-
-Analyses were performed in R [@r-alan2024]. Data wrangling and visualization use tidyverse packages (dplyr, tidyr, ggplot2, readr, purrr, tibble, lubridate) [@tidyverse]. Spatial processing relies on the sf framework [@R-sf], with leaflet [@R-leaflet], tmap [@R-tmap], osmdata [@R-osmdata], and rnaturalearth [@R-rnaturalearth] used for mapping. Interactive figures are produced with plotly [@R-plotly] and tables with reactable [@R-reactable] and gt [@R-gt]. Reproducibility is managed with renv [@R-renv], and report generation uses Quarto with knitr/rmarkdown and htmltools [@R-htmltools]; here is used for stable file paths.
+Analyses were performed in R [@R-alan2024]. Data wrangling and visualization use tidyverse packages (dplyr, tidyr, ggplot2, readr, purrr, tibble, lubridate) [@R-tidyverse]. Spatial processing relies on the sf framework [@R-sf], with leaflet [@R-leaflet], tmap [@R-tmap], osmdata [@R-osmdata], and rnaturalearth [@R-rnaturalearth] used for mapping. Interactive figures are produced with plotly [@R-plotly] and tables with reactable [@R-reactable] and gt [@R-gt]. Reproducibility is managed with renv [@R-renv], and report generation uses Quarto with knitr/rmarkdown and htmltools [@R-htmltools]; here is used for stable file paths.
 
 # Limitations
 
--   Spatial representativeness differs: point sensors (buoy, airport) capture local effects, while gridded/reanalysis products smooth extremes.
--   Residual timestamp misalignment could affect daily aggregates despite UTC standardisation.
--   Zero-inflated precipitation can inflate r; wet-day metrics mitigate but do not eliminate this effect.
--   Findings depend on the overlapping period; results may change with different seasons or longer records.
--   Wet/windy thresholds are pragmatic; sensitivity checks are recommended if thresholds influence decisions.
+Spatial representativeness differs: point sensors (buoy, airport) capture local effects, while gridded/reanalysis products smooth extremes. Differences in wind measurement points/heights result in dataset differences, while precipitation measurements are subject to topographical and equipment differences. Residual timestamp misalignment could affect daily aggregates despite UTC standardisation. Zero-inflated precipitation can inflate r; wet-day metrics mitigate but do not eliminate this effect. Findings depend on the overlapping period; results may change with different seasons or longer records. Wet/windy thresholds are pragmatic; sensitivity checks are recommended if thresholds influence decisions.
 
 Future users should adapt thresholds, reference choice, and aggregation rules to their lake, documenting any deviations.
 
 # References (methods background)
 
-1.  Lin, L.I.-K. (1989). A concordance correlation coefficient to evaluate reproducibility.
-2.  Jolliffe, I.T., Stephenson, D.B. (eds.). Forecast Verification: A Practitioner’s Guide in Atmospheric Science.
-3.  Wilks, D.S. Statistical Methods in the Atmospheric Sciences.
-
-## Refernces R code
+##

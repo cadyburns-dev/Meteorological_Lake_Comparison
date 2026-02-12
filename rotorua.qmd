@@ -172,14 +172,18 @@ reactable(
 
 ## Time series overlays
 
+
+## Time Series {.panel-tabset}
+
+### Temperature
 ```{r}
 plot_timeseries_line(ref_df, targets_list, "Temp_C")
 ```
-
+### Wind
 ```{r}
 plot_timeseries_line(ref_df, targets_list, "Wind_Spd_ms")
 ```
-
+## Precipitation
 ```{r}
 plot_timeseries_line(ref_df, targets_list, "Precip_mm")
 ```
