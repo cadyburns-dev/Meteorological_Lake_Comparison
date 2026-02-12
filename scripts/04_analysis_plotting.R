@@ -633,8 +633,8 @@ season_defs_default <- list(
 )
 
 season_defs_warmcool <- list(
-  warm = c(10, 11, 12, 1, 2, 3),
-  cool = c(4, 5, 6, 7, 8, 9)
+  warm = c(11, 12, 1, 2, 3, 4),
+  cool = c(5, 6, 7, 8, 9, 10)
 )
 
 assign_season <- function(date, season_defs = season_defs_default) {

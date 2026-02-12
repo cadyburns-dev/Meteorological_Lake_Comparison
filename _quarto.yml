@@ -3,14 +3,14 @@ project:
   output-dir: docs
   render:
     - index.qmd
-    - Overview.qmd
+    - overview.qmd
     - methods.qmd
-    - Behaviour.qmd
-    - Results.qmd
-    - metrics_stats.qmd
+    - behaviour_results.qmd
+    - timeseries_results.qmd
+    - metrics_stats_results.qmd
     - rotorua.qmd
-    - Reproducibility.qmd
-    - Reference_List.qmd
+    - reproducibility.qmd
+    - reference_list.qmd
 
 website:
   title: "Meterological Lake Comparison"
