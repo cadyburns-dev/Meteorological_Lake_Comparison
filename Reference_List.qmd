@@ -1,0 +1,9 @@
+---
+title: "Reference List"
+format: html
+bibliography: reference.bib
+nocite: |
+  @*
+---
+
+This page lists all entries in the project bibliography.
