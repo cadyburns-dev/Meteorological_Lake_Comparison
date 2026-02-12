@@ -13,14 +13,11 @@ params:
 
 To analyse different meterological data avalable for a given location.
 
-
-
 ## Data sources
-
 
 Limnotrack Buoy on lake, NIWA virtual climate station network (VCSN) , ERA5 statlite data, Observational data "Airport" station, Obresvational data "Town" station.
 
-Data source and station names will vary from location to location. Selecting stations from these websites is laid out in the data wrangling section
+Data source and station names will vary from location to location. Selecting stations from these websites is laid out in the 02_prepare_raw_data script.
 
 ## Outputs
 
@@ -40,7 +37,7 @@ The outputs of this project will show:
 
 7.  Event score
 
-8.  Rolling window/drift 
+8.  Rolling window/drift
 
 9.  Probability detection (POD)
 
@@ -193,5 +190,3 @@ tm_shape(lake_poly, bbox = st_bbox(map_extent)) +
   )
 
 ```
-
-Rotorua Lake, North Island, New Zealand
