@@ -20,21 +20,21 @@ website:
       - text: "Home"
         href: index.qmd
       - text: "Overview"
-        href: Overview.qmd
+        href: overview.qmd
       - text: "Methods"
         href: methods.qmd
       - text: "Seasonal and event behaviour"
-        href: Behaviour.qmd
-      - text: "Variable diagnostics"
-        href: Results.qmd
+        href: behaviour_results.qmd
+      - text: "Time Series"
+        href: timeseries_results.qmd
       - text: "Metrics & stats"
-        href: metrics_stats.qmd
+        href: metrics_stats_results.qmd
       - text: "Rotorua demo"
         href: rotorua.qmd
       - text: "Reproducibility"
-        href: Reproducibility.qmd
+        href: reproducibility.qmd
       - text: "References"
-        href: Reference_List.qmd
+        href: reference_list.qmd
 
 metadata-files:
   - params.yml
