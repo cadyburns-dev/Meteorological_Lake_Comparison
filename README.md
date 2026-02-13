@@ -1,3 +1,10 @@
+
+LIVE SITE -> 
+
+
+
+
+
 Where to put raw files: data/raw/
 What variables to expect: Temperature (C), Wind (ms), Radiation (Short wave Wm2), Precipitation (mm)
 What scripts to run in order: Scripts numbered by order 00, 01, 02, 03, 04, 05
