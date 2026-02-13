@@ -21,6 +21,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -41,7 +76,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-cc1d64809b8ed731f92ea1275fe9f05b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-d069fa62bda395c7865d16499bcb44f1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -69,6 +104,26 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+
+<link href="site_libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
+
+<script src="site_libs/leaflet-1.3.1/leaflet.js"></script>
+
+<link href="site_libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
+
+<script src="site_libs/proj4-2.6.2/proj4.min.js"></script>
+
+<script src="site_libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+
+<link href="site_libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
+
+<script src="site_libs/leaflet-binding-2.2.3/leaflet.js"></script>
+
 <script src="site_libs/core-js-2.5.3/shim.min.js"></script>
 
 <script src="site_libs/react-18.2.0/react.min.js"></script>
@@ -76,10 +131,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/react-18.2.0/react-dom.min.js"></script>
 
 <script src="site_libs/reactwidget-2.0.0/react-tools.js"></script>
-
-<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
-
-<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
 
 <link href="site_libs/reactable-0.4.5/reactable.css" rel="stylesheet">
 
@@ -124,16 +175,16 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Methods</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./behaviour_results.html"> 
-<span class="menu-text">Seasonal and event behaviour</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="./timeseries_results.html"> 
 <span class="menu-text">Time Series</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./metrics_stats_results.html"> 
 <span class="menu-text">Metrics &amp; stats</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./behaviour_results.html"> 
+<span class="menu-text">Seasonal and event behaviour</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link active" href="./rotorua.html" aria-current="page"> 
@@ -162,16 +213,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of Content</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#additional-infor-afout-data-sources---to-put-in-discussion" id="toc-additional-infor-afout-data-sources---to-put-in-discussion" class="nav-link" data-scroll-target="#additional-infor-afout-data-sources---to-put-in-discussion">Additional infor afout data sources - to put in discussion?</a></li>
-  <li><a href="#site-data-sources" id="toc-site-data-sources" class="nav-link" data-scroll-target="#site-data-sources">Site data sources</a></li>
-  <li><a href="#data-coverage" id="toc-data-coverage" class="nav-link" data-scroll-target="#data-coverage">Data coverage</a></li>
-  <li><a href="#metrics-table-reference-vs-targets" id="toc-metrics-table-reference-vs-targets" class="nav-link" data-scroll-target="#metrics-table-reference-vs-targets">Metrics table (reference vs targets)</a></li>
-  <li><a href="#time-series-overlays" id="toc-time-series-overlays" class="nav-link" data-scroll-target="#time-series-overlays">Time series overlays</a></li>
-  <li><a href="#precipitation-event-structure" id="toc-precipitation-event-structure" class="nav-link" data-scroll-target="#precipitation-event-structure">Precipitation event structure</a></li>
+  <li><a href="#study-area" id="toc-study-area" class="nav-link active" data-scroll-target="#study-area">Study area</a></li>
+  <li><a href="#polygon-and-plot" id="toc-polygon-and-plot" class="nav-link" data-scroll-target="#polygon-and-plot">Polygon and plot</a></li>
   <li><a href="#distribution-variability-bias" id="toc-distribution-variability-bias" class="nav-link" data-scroll-target="#distribution-variability-bias">Distribution (variability / bias)</a></li>
   <li><a href="#scatter-vs-reference" id="toc-scatter-vs-reference" class="nav-link" data-scroll-target="#scatter-vs-reference">Scatter vs reference</a></li>
-  <li><a href="#rolling-diagnostics-drift-thrugh-time" id="toc-rolling-diagnostics-drift-thrugh-time" class="nav-link" data-scroll-target="#rolling-diagnostics-drift-thrugh-time">Rolling diagnostics (drift thrugh time)</a></li>
   <li><a href="#precipitation-event-agreement" id="toc-precipitation-event-agreement" class="nav-link" data-scroll-target="#precipitation-event-agreement">Precipitation event agreement</a></li>
   <li><a href="#monthly-climatology-seasonal-structure" id="toc-monthly-climatology-seasonal-structure" class="nav-link" data-scroll-target="#monthly-climatology-seasonal-structure">Monthly climatology (seasonal structure)</a></li>
   <li><a href="#seasonal-performance-nzsouthern-hemisphere" id="toc-seasonal-performance-nzsouthern-hemisphere" class="nav-link" data-scroll-target="#seasonal-performance-nzsouthern-hemisphere">Seasonal performance (NZ/Southern Hemisphere)</a></li>
@@ -211,74 +256,228 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Meterological data is utalised for many different lake assesments, from understanding lake regime shifts to modeling future lake dynamices. It is therfore vital to use the best avalable meterological data for the location and time of choice. Too often meterological data are incomplete and unreliable. ERA5 (ECMWF fifth gen) data gridded at 31km is widely used due to its comprehensive and clean nature combining observations with model data, however it is coarse and some variables are known to misrepresent data at the land/lake surface (low atmosphere metorology). NIWAs virtual climate station network takes captured observational station data and created a 5km grid conecting other weather stations to allow for intergrated data in a chosen location. The VCSN data is somewhat intertwined with the Airport data which is used as the Reference for the Rotorua Lake demo. Meterological datasets in more densely populated areas or with large topographical gradients will typically result in micro-climatic datasets due to the physical nature of these environments. In partucular wind, rain and even temperature in larger cities. Additionally, stations placed in higher altitudes can often misrepresent lower altitudes. When wanting to use datasets for lake specific projects Buoy data has the opportunity to allow for more accurate readings due to its on water position. However precipitation data is often inaccurate, especially in higher wind events, causing movement of monitoring equipment. This is especially true in large lakes that can develope substantial waves. For this reason wind can also be skewed in events. Temperature for a given Lake from a Buoy is regarded the most likely accurate candidate as fulxtuations from a water body and fluxes from land follow different physical laws.</p>
+<p>The question here is how does coarse global, modelled national, Local, and Lake source metorological data compare. Is there a better data source in cool or warm periods? or in a storm event? or for a specific variable? or Is there a better data source for local models?</p>
+<p>By analysing the different datasets in a given location compared to a verifiable meteorological dataset we can start to see where datasets perform well and where they lack agreement.</p>
 <p>The second largest lake (by surface area ~79.9km2) in New Zealand, Lake Rotorua is a relatively well studied lake with and round shape fitting it’s distrinct culdera description.</p>
 <p>Although coined the second largest lake its mean depth of just 10meters results in a shallow lake clasification. Shallow lakes are particulary suseptible to climate driven shifts across short and long term scales. Shallow lakes heat up faster than deep lakes which results in larger seasonal and diurnal tempurature fluxtuations. <strong>(Frassel. et.al 2018)</strong> Shallow lakes also tend to be more suseptible to atmospheric forcing where wind, air temperature and precipitation patterms which influence water quality and consequental biology. Lake Rotorua experiance cyanobacteria blooms due to its location in the landscape (hydrothermal + Farm + Population density) recieving high nutirent content along with warmer temperatures. Additional to temperature fluxes influencing cyanobacterial fluxes, wind and rain play a role in the intensity and location of these blooms. Wind drives cyanobacterial location, often leading to cyano bloom intensification/ concentration in particular areas.</p>
-<p>Meterological data is utalised for many different lake assesments, from understanding lake regime shifts to modeling future lake dynamices. It is therfore vital to use the best avalable meterological data for the location and time of choice. Too often meterological data are incomplete and unreliable. ERA5 (ECMWF fifth gen) data is widely used due to its comprehensive and clean nature combining observations with model data , however it is coarse and some variables are known to misrepresent data at the land/lake surface (low atmosphere metorology). NIWAs virtual climate station takes captured observational station data and created a 5km grid conecting other weather stations to allow for intergrated data in a chosen location. The VCNS data is partly the product of the Airport data which is used as the Reference for the Rotorua Lake demo. Weather datations within higher population destinations or areas with large topographical gradients will experience micro metorological readings due to the physical nature these environments, In partucular wind, rain and even temperature in larger cities or stations placed in higher altitudes. Buoy data allows for more accurate readings due to its on water position, however precipitation data is often inaccurate as the buoy moves with the lake, especially large lakes that can develope waves. For this reason wind can also be scewed. Temperature for a given Lake from a Buoy is regarded the most likely accurate candidate as fulxtuations from a water body and fluxes from land follow different physical laws.</p>
-<p>The question here is how does coarse global, mpdelled national, Local, and Lake source metorological data compare. Is there a better data source in cool or warm periods? or in a storm event? or for a specific variable? or Is there a better data source for local models?</p>
+<p>for lake Rotorua the sites selected were; Limnotrack Buoy (lat:-380550S Lon:1761653E) on lake, NIWA virtual climate station network (VCSN) grid NO:27879 lat:-38.075 lon:176.275, ERA5 statlite data for Lat:-38.114908 and Lon:176.316662, Observational data “Airport” station 1770 (lat:-38.10592 lon:176.31481), Obresvational data “Town” station 41077 (lat:-38.14635 lon:176.2578).</p>
+<section id="study-area" class="level2">
+<h2 class="anchored" data-anchor-id="study-area">Study area</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: Chage Quarto title Lat and lon to render your location of choice</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaflet)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Interactive overview map centred on the lake</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">leaflet</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addTiles</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addCircles</span>(</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">lng =</span> params<span class="sc">$</span>lon,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">lat =</span> params<span class="sc">$</span>lat,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">radius =</span> params<span class="sc">$</span>buffer_km <span class="sc">*</span> <span class="dv">1000</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"dodgerblue"</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">fillOpacity =</span> <span class="fl">0.25</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">popup =</span> params<span class="sc">$</span>lake_name</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addCircleMarkers</span>(</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">lng =</span> params<span class="sc">$</span>lon,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">lat =</span> params<span class="sc">$</span>lat,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">radius =</span> <span class="dv">6</span>,</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"navy"</span>,</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">fillOpacity =</span> <span class="fl">0.9</span>,</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">popup =</span> params<span class="sc">$</span>lake_name</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setView</span>(<span class="at">lng =</span> params<span class="sc">$</span>lon, <span class="at">lat =</span> params<span class="sc">$</span>lat, <span class="at">zoom =</span> <span class="dv">11</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-9a67076efece44fda1e7" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-9a67076efece44fda1e7">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addCircles","args":[-38.114908,176.316662,10000,null,null,{"interactive":true,"className":"","stroke":true,"color":"dodgerblue","weight":5,"opacity":0.5,"fill":true,"fillColor":"dodgerblue","fillOpacity":0.25},"Lake Rotorua",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null,null]},{"method":"addCircleMarkers","args":[-38.114908,176.316662,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"navy","weight":5,"opacity":0.5,"fill":true,"fillColor":"navy","fillOpacity":0.9},null,null,"Lake Rotorua",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[-38.114908,-38.114908],"lng":[176.316662,176.316662]},"setView":[[-38.114908,176.316662],11,[]]},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
 </section>
-<section id="additional-infor-afout-data-sources---to-put-in-discussion" class="level2">
-<h2 class="anchored" data-anchor-id="additional-infor-afout-data-sources---to-put-in-discussion">Additional infor afout data sources - to put in discussion?</h2>
-<p>ERA5 uncertancy - presious ERA-interim showed improved fit fro temp, wind and huidily in the troposphere but not in the stratosphere” (direct cite - rmets.oninelibrary.wiley.com/doi/10.1002/qj.3803)</p>
-</section>
-<section id="site-data-sources" class="level2">
-<h2 class="anchored" data-anchor-id="site-data-sources">Site data sources</h2>
-<p>Limnotrack Buoy (lat:-380550S Lon:1761653E) on lake, NIWA virtual climate station network (VCSN) grid NO:27879 lat:-38.075 lon:176.275, ERA5 statlite data for Lat:-38.114908 and Lon:176.316662, Observational data “Airport” station 1770 (lat:-38.10592 lon:176.31481), Obresvational data “Town” station 41077 (lat:-38.14635 lon:176.2578).</p>
+<section id="polygon-and-plot" class="level2">
+<h2 class="anchored" data-anchor-id="polygon-and-plot">Polygon and plot</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(osmdata)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tmap)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rnaturalearth)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rnaturalearthdata)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)  <span class="co"># for tribble()</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Download nearby water polygons to outline the lake</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">timeout =</span> <span class="dv">10</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>bb <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  params<span class="sc">$</span>lon <span class="sc">-</span> <span class="fl">0.1</span>,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  params<span class="sc">$</span>lat <span class="sc">-</span> <span class="fl">0.1</span>,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  params<span class="sc">$</span>lon <span class="sc">+</span> <span class="fl">0.1</span>,</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  params<span class="sc">$</span>lat <span class="sc">+</span> <span class="fl">0.1</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>osm_lake <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>(</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">opq</span>(<span class="at">bbox =</span> bb) <span class="sc">|&gt;</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_osm_feature</span>(<span class="at">key =</span> <span class="st">"natural"</span>, <span class="at">value =</span> <span class="st">"water"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">osmdata_sf</span>(),</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">error =</span> <span class="cf">function</span>(e) <span class="cn">NULL</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>lake_poly <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(osm_lake) <span class="sc">&amp;&amp;</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span><span class="fu">is.null</span>(osm_lake<span class="sc">$</span>osm_multipolygons) <span class="sc">&amp;&amp;</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">nrow</span>(osm_lake<span class="sc">$</span>osm_multipolygons) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  lake_poly <span class="ot">&lt;-</span> <span class="fu">st_make_valid</span>(osm_lake<span class="sc">$</span>osm_multipolygons)</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Fallback: if no polygon returned (or OSM query failed), use the bounding box</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">is.null</span>(lake_poly) <span class="sc">||</span> <span class="fu">nrow</span>(lake_poly) <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  lake_poly <span class="ot">&lt;-</span> <span class="fu">st_polygon</span>(<span class="fu">list</span>(<span class="fu">rbind</span>(</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(bb[<span class="dv">1</span>], bb[<span class="dv">2</span>]),</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(bb[<span class="dv">3</span>], bb[<span class="dv">2</span>]),</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(bb[<span class="dv">3</span>], bb[<span class="dv">4</span>]),</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(bb[<span class="dv">1</span>], bb[<span class="dv">4</span>]),</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(bb[<span class="dv">1</span>], bb[<span class="dv">2</span>])</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>  ))) <span class="sc">|&gt;</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_sfc</span>(<span class="at">crs =</span> <span class="dv">4326</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_as_sf</span>()</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a><span class="co"># Change lon and lat to render your location of choice </span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a><span class="co">#change names to match locations</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a><span class="co"># Station metadata (decimal degrees)</span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>stations <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>name,           <span class="sc">~</span>lon,       <span class="sc">~</span>lat,       </span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Airport_1770"</span>,  <span class="fl">176.31481</span>, <span class="sc">-</span><span class="fl">38.10592</span>,  </span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ERA5"</span>,          <span class="fl">176.316662</span>,<span class="sc">-</span><span class="fl">38.114908</span>,  </span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Buoy"</span>,          <span class="fl">176.2653</span>,  <span class="sc">-</span><span class="fl">38.0740</span>,    </span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Town_40177"</span>,    <span class="fl">176.2578</span>,  <span class="sc">-</span><span class="fl">38.14635</span>,   </span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>  <span class="st">"VCS_On"</span>,        <span class="fl">176.275</span>,   <span class="sc">-</span><span class="fl">38.075</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>stations <span class="ot">&lt;-</span> stations <span class="sc">|&gt;</span></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">trimws</span>(name))</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a><span class="co">#Change names to match your Data set where nessesary</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>station_palette <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>  <span class="at">Airport_1770 =</span> <span class="st">"black"</span>,</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>  <span class="at">ERA5         =</span> <span class="st">"#d95f02"</span>,</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>  <span class="at">Buoy         =</span> <span class="st">"#7570b3"</span>,</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>  <span class="at">Town_40177   =</span> <span class="st">"#f0c400"</span>,</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>  <span class="at">VCS_On       =</span> <span class="st">"#1b9e77"</span></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>stations <span class="ot">&lt;-</span> stations <span class="sc">|&gt;</span></span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(name), name <span class="sc">%in%</span> <span class="fu">names</span>(station_palette)) <span class="sc">|&gt;</span></span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">factor</span>(name, <span class="at">levels =</span> <span class="fu">names</span>(station_palette)))</span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>stations_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(stations, <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"lon"</span>, <span class="st">"lat"</span>), <span class="at">crs =</span> <span class="dv">4326</span>)</span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a><span class="co"># Use combined extent of lake + stations, with a small buffer (degrees)</span></span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>map_extent <span class="ot">&lt;-</span> <span class="fu">st_union</span>(lake_poly, <span class="fu">st_geometry</span>(stations_sf)) <span class="sc">|&gt;</span></span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_bbox</span>() <span class="sc">|&gt;</span></span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_as_sfc</span>() <span class="sc">|&gt;</span></span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_buffer</span>(<span class="at">dist =</span> <span class="fl">0.005</span>)   <span class="co"># shrink/expand to taste</span></span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(lake_poly, <span class="at">bbox =</span> <span class="fu">st_bbox</span>(map_extent)) <span class="sc">+</span></span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">col =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(stations_sf) <span class="sc">+</span></span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_symbols</span>(</span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"name"</span>,</span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> station_palette,</span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>    <span class="at">shape =</span> <span class="dv">21</span>,</span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">1</span>,</span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>    <span class="at">border.col =</span> <span class="st">"black"</span></span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_compass</span>(</span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">"arrow"</span>,</span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>    <span class="at">position =</span> <span class="fu">c</span>(<span class="st">"left"</span>, <span class="st">"top"</span>),</span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>    <span class="at">color.dark =</span> <span class="st">"black"</span>,</span>
+<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>    <span class="at">color.light =</span> <span class="st">"gray80"</span></span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_scale_bar</span>(<span class="at">position =</span> <span class="fu">c</span>(<span class="st">"left"</span>, <span class="st">"bottom"</span>)) <span class="sc">+</span></span>
+<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(</span>
+<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> params<span class="sc">$</span>lake_name,</span>
+<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a>    <span class="at">frame =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.outside =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title.size =</span> <span class="fl">0.8</span>,</span>
+<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.text.size =</span> <span class="fl">0.7</span>,</span>
+<span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.format =</span> <span class="fu">list</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span>
+<span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 <p>Methods</p>
 <p>All work was completed in R code <span class="citation" data-cites="r:alan2024">(<a href="#ref-r:alan2024" role="doc-biblioref"><strong>r:alan2024?</strong></a>)</span> following the script order stated on README in git reposotory (00, 01, 02, 03, 04, 05).</p>
 <p>Please refer to methods tab for further detail</p>
-</section>
-<section id="data-coverage" class="level2">
-<h2 class="anchored" data-anchor-id="data-coverage">Data coverage</h2>
+<p>For Rotorua there seems to be no single “best” dataset, rather, there are better choices to make depending on what variable you wish to use and for what purpose. All quantitative performance statements below are relative to the Airport_1770 reference and overlap period (Table: <a href="./metrics_stats_results.html#tbl-metrics">Metrics</a>; Table: <a href="./metrics_stats_results.html#tbl-coverage">Coverages</a>).</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Click to see data coverage table
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <div class="cell">
 <div class="cell-output-display">
-<div class="reactable html-widget html-fill-item" id="htmlwidget-e85cd03aef1817f27805" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-e85cd03aef1817f27805">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Dataset":["Buoy","ERA5","Reference","Town_40177","VCS_On"],"first_date":["2007-07-13","1990-01-01","2009-06-29","2015-09-24","1960-01-01"],"last_date":["2025-09-01","2025-08-31","2025-07-27","2025-11-28","2025-06-30"],"n_days":[6590,13027,5873,3654,23923]},"columns":[{"id":"Dataset","name":"Dataset","type":"character"},{"id":"first_date","name":"first_date","type":"Date"},{"id":"last_date","name":"last_date","type":"Date"},{"id":"n_days","name":"n_days","type":"numeric"}],"pagination":false,"striped":true,"dataKey":"7ab4c88afb01d04f54b42035a5032604"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+<div class="reactable html-widget html-fill-item" id="htmlwidget-20d6216c0dcde42cbce8" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-20d6216c0dcde42cbce8">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Dataset":["Buoy","ERA5","Reference","Town_40177","VCS_On"],"first_date":["2007-07-13","1990-01-01","2009-06-29","2015-09-24","1960-01-01"],"last_date":["2025-09-01","2025-08-31","2025-07-27","2025-11-28","2025-06-30"],"n_days":[6590,13027,5873,3654,23923]},"columns":[{"id":"Dataset","name":"Dataset","type":"character"},{"id":"first_date","name":"first_date","type":"Date"},{"id":"last_date","name":"last_date","type":"Date"},{"id":"n_days","name":"n_days","type":"numeric"}],"pagination":false,"striped":true,"dataKey":"7ab4c88afb01d04f54b42035a5032604"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
-</section>
-<section id="metrics-table-reference-vs-targets" class="level2">
-<h2 class="anchored" data-anchor-id="metrics-table-reference-vs-targets">Metrics table (reference vs targets)</h2>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Click to see metrics table
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <div class="cell">
 <div class="cell-output-display">
-<div class="reactable html-widget html-fill-item" id="htmlwidget-cf73481418db0ec8eba9" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-cf73481418db0ec8eba9">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"target":["ERA5","ERA5","ERA5","ERA5","ERA5","Buoy","Buoy","Buoy","Buoy","Buoy","Town_40177","Town_40177","Town_40177","Town_40177","Town_40177","VCS_On","VCS_On","VCS_On","VCS_On","VCS_On"],"var":["Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms"],"subset":["all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs"],"n":[5873,5829,1799,5854,588,5491,1246,417,5442,554,3519,3462,1101,3512,355,5846,5802,1789,5827,586],"cor":[0.950252726263742,0.741249024236475,0.67431636909125,0.606393155341196,0.202352666779504,0.923679980700124,0.610776596436927,0.555737937323425,0.784614606192337,0.31361065431878,0.993523541694969,0.927727505844174,0.908752364819289,0.884974987196444,0.727268238915944,0.914770965293676,0.947898015007699,0.928074207258292,0.822134183330596,0.425332331613507],"slope":[0.882440597429375,0.873042895451712,0.74450910126041,0.413238038168765,0.209763580348193,0.827350288767713,0.336701182510668,0.337291395166382,0.879467853449804,0.555470237405179,1.00166451159841,0.830816719267625,0.795081195311294,0.597634516035904,0.74585101846782,0.90166498186377,1.02463410075137,0.991222656419513,0.777390508576691,0.584731478239795],"intercept":[0.990114265176521,3.12251727307789,7.32500023937001,0.650308415288529,2.00137814653436,3.12863896634716,0.280888326973165,0.256896363571603,1.09330703859897,3.13780546905575,-0.013860360669776,0.487804562202073,1.67307840471515,0.684516044231292,-0.31724627206801,1.75419784752098,0.38475932953196,1.47974123074671,0.947923136517395,2.19211560546403],"mae":[1.15386341645304,4.16337519300051,9.04532406892718,1.57904988042364,3.46403401360544,1.35635418690091,3.93232143739968,11.0438369868106,0.978142295018613,1.11179588111854,0.354806576606159,1.45684575389948,4.12706630336058,0.891480637813212,2.09729577464789,1.41336360519805,1.36356428817649,3.98026830631638,0.700401578857045,1.20085324232082],"rmse":[1.41555448747477,8.86946127120353,14.2341676187537,1.95487627601514,3.70517131169121,1.82068764387213,10.0334222233155,17.1156148511674,1.29348823466425,1.75703221512302,0.479666914260097,4.0831868423009,6.82779687546213,1.1471362530857,2.23439590726947,1.78540246223107,3.67696698070302,6.47907281733944,0.932972445285637,1.50448306181108],"ccc":[0.939515902763934,0.713125950941946,0.651607296459391,0.352113960138051,0.0309773822460065,0.896421541912313,0.493187885727772,0.404469167514134,0.724935242161359,0.268237241627964,0.99348864500982,0.921905693753109,0.898860629964187,0.697054538771047,0.241273601778792,0.90869487971212,0.944125926435051,0.92287924486931,0.817678222425936,0.35120818455802],"bias":[-0.53343589580586,2.62003808543489,4.10320177876598,-1.48949538776905,-3.46403401360544,0.869477375018544,-2.99248601391118,-9.40593543285372,0.652744988611671,0.067388649995119,0.00803602166618504,-0.217331022530329,-0.970299727520436,-0.809578587699317,-2.09712676056338,0.477827095145039,0.482040675629093,1.36920067076579,0.135802299639609,-0.679317406143345],"rel_bias":[-4.11607092609458,66.1982540398086,32.5386805843303,-40.8438958103125,-50.0859908869824,6.64472246235729,-60.6381130807177,-64.5089812094997,17.8582686887154,0.975641495902197,0.0610879508001442,-5.2144263022205,-7.52191515578243,-21.8022656185899,-29.9448549375143,3.68130780022946,12.2064908084705,10.8719774171786,3.72246092996606,-9.82433279532475],"wind_threshold":["NA","NA","NA","NA",5.78,"NA","NA","NA","NA",5.78,"NA","NA","NA","NA",5.84,"NA","NA","NA","NA",5.78]},"columns":[{"id":"target","name":"target","type":"character"},{"id":"var","name":"var","type":"character"},{"id":"subset","name":"subset","type":"character"},{"id":"n","name":"n","type":"numeric"},{"id":"cor","name":"cor","type":"numeric"},{"id":"slope","name":"slope","type":"numeric"},{"id":"intercept","name":"intercept","type":"numeric"},{"id":"mae","name":"mae","type":"numeric"},{"id":"rmse","name":"rmse","type":"numeric"},{"id":"ccc","name":"ccc","type":"numeric"},{"id":"bias","name":"bias","type":"numeric"},{"id":"rel_bias","name":"rel_bias","type":"numeric"},{"id":"wind_threshold","name":"wind_threshold","type":"numeric"}],"searchable":true,"defaultPageSize":12,"highlight":true,"dataKey":"6d8486f6d4eaa5eb0c372bac7a1616ac"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
-</div>
-</div>
-</section>
-<section id="time-series-overlays" class="level2">
-<h2 class="anchored" data-anchor-id="time-series-overlays">Time series overlays</h2>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Time Series</a></li></ul>
-<div class="tab-content">
-<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<section id="temperature" class="level3">
-<h3 class="anchored" data-anchor-id="temperature">Temperature</h3>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="rotorua_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="960"></p>
-</figure>
+<div class="reactable html-widget html-fill-item" id="htmlwidget-44f2ec68ab919b66d978" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-44f2ec68ab919b66d978">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"target":["ERA5","ERA5","ERA5","ERA5","ERA5","Buoy","Buoy","Buoy","Buoy","Buoy","Town_40177","Town_40177","Town_40177","Town_40177","Town_40177","VCS_On","VCS_On","VCS_On","VCS_On","VCS_On"],"var":["Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms"],"subset":["all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs"],"n":[5873,5829,1799,5854,588,5491,1246,417,5442,554,3519,3462,1101,3512,355,5846,5802,1789,5827,586],"cor":[0.950252726263742,0.741249024236475,0.67431636909125,0.606393155341196,0.202352666779504,0.923679980700124,0.610776596436927,0.555737937323425,0.784614606192337,0.31361065431878,0.993523541694969,0.927727505844174,0.908752364819289,0.884974987196444,0.727268238915944,0.914770965293676,0.947898015007699,0.928074207258292,0.822134183330596,0.425332331613507],"slope":[0.882440597429375,0.873042895451712,0.74450910126041,0.413238038168765,0.209763580348193,0.827350288767713,0.336701182510668,0.337291395166382,0.879467853449804,0.555470237405179,1.00166451159841,0.830816719267625,0.795081195311294,0.597634516035904,0.74585101846782,0.90166498186377,1.02463410075137,0.991222656419513,0.777390508576691,0.584731478239795],"intercept":[0.990114265176521,3.12251727307789,7.32500023937001,0.650308415288529,2.00137814653436,3.12863896634716,0.280888326973165,0.256896363571603,1.09330703859897,3.13780546905575,-0.013860360669776,0.487804562202073,1.67307840471515,0.684516044231292,-0.31724627206801,1.75419784752098,0.38475932953196,1.47974123074671,0.947923136517395,2.19211560546403],"mae":[1.15386341645304,4.16337519300051,9.04532406892718,1.57904988042364,3.46403401360544,1.35635418690091,3.93232143739968,11.0438369868106,0.978142295018613,1.11179588111854,0.354806576606159,1.45684575389948,4.12706630336058,0.891480637813212,2.09729577464789,1.41336360519805,1.36356428817649,3.98026830631638,0.700401578857045,1.20085324232082],"rmse":[1.41555448747477,8.86946127120353,14.2341676187537,1.95487627601514,3.70517131169121,1.82068764387213,10.0334222233155,17.1156148511674,1.29348823466425,1.75703221512302,0.479666914260097,4.0831868423009,6.82779687546213,1.1471362530857,2.23439590726947,1.78540246223107,3.67696698070302,6.47907281733944,0.932972445285637,1.50448306181108],"ccc":[0.939515902763934,0.713125950941946,0.651607296459391,0.352113960138051,0.0309773822460065,0.896421541912313,0.493187885727772,0.404469167514134,0.724935242161359,0.268237241627964,0.99348864500982,0.921905693753109,0.898860629964187,0.697054538771047,0.241273601778792,0.90869487971212,0.944125926435051,0.92287924486931,0.817678222425936,0.35120818455802],"bias":[-0.53343589580586,2.62003808543489,4.10320177876598,-1.48949538776905,-3.46403401360544,0.869477375018544,-2.99248601391118,-9.40593543285372,0.652744988611671,0.067388649995119,0.00803602166618504,-0.217331022530329,-0.970299727520436,-0.809578587699317,-2.09712676056338,0.477827095145039,0.482040675629093,1.36920067076579,0.135802299639609,-0.679317406143345],"rel_bias":[-4.11607092609458,66.1982540398086,32.5386805843303,-40.8438958103125,-50.0859908869824,6.64472246235729,-60.6381130807177,-64.5089812094997,17.8582686887154,0.975641495902197,0.0610879508001442,-5.2144263022205,-7.52191515578243,-21.8022656185899,-29.9448549375143,3.68130780022946,12.2064908084705,10.8719774171786,3.72246092996606,-9.82433279532475],"wind_threshold":["NA","NA","NA","NA",5.78,"NA","NA","NA","NA",5.78,"NA","NA","NA","NA",5.84,"NA","NA","NA","NA",5.78]},"columns":[{"id":"target","name":"target","type":"character"},{"id":"var","name":"var","type":"character"},{"id":"subset","name":"subset","type":"character"},{"id":"n","name":"n","type":"numeric"},{"id":"cor","name":"cor","type":"numeric"},{"id":"slope","name":"slope","type":"numeric"},{"id":"intercept","name":"intercept","type":"numeric"},{"id":"mae","name":"mae","type":"numeric"},{"id":"rmse","name":"rmse","type":"numeric"},{"id":"ccc","name":"ccc","type":"numeric"},{"id":"bias","name":"bias","type":"numeric"},{"id":"rel_bias","name":"rel_bias","type":"numeric"},{"id":"wind_threshold","name":"wind_threshold","type":"numeric"}],"searchable":true,"defaultPageSize":12,"highlight":true,"dataKey":"6d8486f6d4eaa5eb0c372bac7a1616ac"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </div>
-<section id="wind" class="level4">
-<h4 class="anchored" data-anchor-id="wind">Wind</h4>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="rotorua_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="960"></p>
-</figure>
 </div>
 </div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-</section>
-</section>
-<section id="precipitation" class="level3">
-<h3 class="anchored" data-anchor-id="precipitation">Precipitation</h3>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Click for precipitation event structure
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -288,14 +487,15 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-</section>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
 </div>
 </div>
 </div>
-</section>
-<section id="precipitation-event-structure" class="level2">
-<h2 class="anchored" data-anchor-id="precipitation-event-structure">Precipitation event structure</h2>
-<p>Precipitation data collection can be achieved in many ways. Here Airport, Town</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -305,6 +505,12 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
+</div>
+</div>
+</div>
+</section>
+<section id="distribution-variability-bias" class="level2">
+<h2 class="anchored" data-anchor-id="distribution-variability-bias">Distribution (variability / bias)</h2>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -323,9 +529,6 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-</section>
-<section id="distribution-variability-bias" class="level2">
-<h2 class="anchored" data-anchor-id="distribution-variability-bias">Distribution (variability / bias)</h2>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -335,6 +538,21 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
+</section>
+<section id="scatter-vs-reference" class="level2">
+<h2 class="anchored" data-anchor-id="scatter-vs-reference">Scatter vs reference</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Click to see Scatter plot
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -353,9 +571,6 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-</section>
-<section id="scatter-vs-reference" class="level2">
-<h2 class="anchored" data-anchor-id="scatter-vs-reference">Scatter vs reference</h2>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -365,6 +580,98 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
+</div>
+</div>
+</div>
+<p>The general strong correlation for ERA5 temperature indicates good temporal tracking most of the time (Figure: <a href="./metrics_stats_results.html#fig-rolling-temp">Rolling 30-day temperature diagnostics</a>). with consistent performance rather than episodic failures shown in steady MAE/RMSE. Although ERA5 wind looks suitable in the case of temperature variability it should be bias‑corrected for absolute values with the understanding it shows a cool overall bias. Buoy temperatures tend to exceed airport temperatures with an overall warm bias. Two distinct short periods show large negative bias and severe error spikes, consistent with data issues or equipment errors. In fact, the historical data for this project was not quality assured and does have errors. For example, a times temperature sits at 10.5 degrees for a week. Additionally in late 2019 equipment errors occur showing a consistent 90 degrees for around two months. This temporally long 90 degree reading was redacted for better comparison in this project. This shows the unstable nature of the historical data used, which is evident in the time series data where at times the variables were not consistently recorded accurately. Outside these events, correlation is high, and errors are low, suggesting strong agreement. Overall the Buoy temperature is reliable for most of the record, but errors should be excluded or corrected. Town station closely matches the airport on average with a near-zero bias for most of the year. Sharp shifts near the end of the series, with increase in error and reduced correlation mirroring the shifts indicate recording errors. Temporal coherence is high except during the 2025 anomaly showing high correlation. Although the Town_40177 temperature is generally consistent with the airport, recent data should be checked for change or quality issues before use suggesting stable but less tightly aligned agreement than station‑station comparisons. VCS_On temperatures have a consistent warm bias compared to the airport values across the record. The lack of outliers show more a more stable nature. VCS_On can represent temperature trends rather accurately. Advise would be to bias correct and have caution around the daily‑scale accuracy. It is key to note the VCSN it the closest data point to the Buoy, so temperature fluctuations may be more representative of a water based temperature dynamics rather than land based. Town wind shows a consistent negative bias. The rolling bias below zero throughout the record, indicates that the Town_40177 data underestimates wind speed relative to Airport_1770. There is generally strong temporal agreement but the short sharp drops in correlation and sharp peaks in MAE and RMSE, indicate times of poorer agreement. The overall relationship is stable but occasionally disrupted (e.g., by local site effects or data issues). Town_40177 wind is suitable for capturing wind variability trends, but absolute values should be bias‑corrected if used for magnitude‑sensitive applications. ERA5 wind-speed performance is regime dependent. it reproduces the broad seasonal cycle and event timing, but underestimates magnitude most strongly during high wind peak events, while showing smaller bias under lower winds. The seasonal oscillation in bias indicates this damping effect varies through the year, consistent with stronger mismatch during storm periods. More caution is needed if using ERA5 wind data depending on what season you look at. The ocilation bias shows a greater underesimation in some seasons (stronger =cooler, weaker = warmer). ERA5 is useful for capturing wider scale temporal patterns in wind but should be bias‑corrected and evaluated seasonally before use in applications sensitive to wind magnitude. ERA5 tends to smooth out local extreme weather events.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Rolling diagnostics plots (Temp)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div id="fig-rolling-tempr" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rolling-tempr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-rolling-tempr" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-rolling-tempr-1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-rolling-tempr-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="rotorua_files/figure-html/fig-rolling-tempr-1.png" class="img-fluid figure-img" data-ref-parent="fig-rolling-tempr" width="960">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-rolling-tempr-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) ERA5 vs Airport
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-rolling-tempr" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-rolling-tempr-2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-rolling-tempr-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="rotorua_files/figure-html/fig-rolling-tempr-2.png" class="img-fluid figure-img" data-ref-parent="fig-rolling-tempr" width="960">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-rolling-tempr-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Buoy vs Airport
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-rolling-tempr" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-rolling-tempr-3" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-rolling-tempr-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="rotorua_files/figure-html/fig-rolling-tempr-3.png" class="img-fluid figure-img" data-ref-parent="fig-rolling-tempr" width="960">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-rolling-tempr-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) Town vs Airport
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-rolling-tempr" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-rolling-tempr-4" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-rolling-tempr-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="rotorua_files/figure-html/fig-rolling-tempr-4.png" class="img-fluid figure-img" data-ref-parent="fig-rolling-tempr" width="960">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-rolling-tempr-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(d) VSCN vs Airport
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rolling-tempr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Rolling 30‑day diagnostics for daily temp (°C) comparing data target sources (Town_40177, ERA5, VSCN and Buoy data) to the reference (Airport_1770). Panels show 30‑day moving bias (source/target − reference), Pearson correlation (cor), mean absolute error (MAE), and Root mean square error (RMSE).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Rolling diagnostics plots (Wind)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -373,7 +680,43 @@ ul.task-list li input[type="checkbox"] {
 </figure>
 </div>
 </div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-16-2.png" class="img-fluid figure-img" width="960"></p>
+</figure>
 </div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-16-3.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-16-4.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Rolling diagnostics plots (rain)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -382,10 +725,67 @@ ul.task-list li input[type="checkbox"] {
 </figure>
 </div>
 </div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-17-2.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-17-3.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-17-4.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 </section>
-<section id="rolling-diagnostics-drift-thrugh-time" class="level2">
-<h2 class="anchored" data-anchor-id="rolling-diagnostics-drift-thrugh-time">Rolling diagnostics (drift thrugh time)</h2>
+<section id="precipitation-event-agreement" class="level2">
+<h2 class="anchored" data-anchor-id="precipitation-event-agreement">Precipitation event agreement</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Event agreement plot
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="cell-output-display">
+<div class="reactable html-widget html-fill-item" id="htmlwidget-e3cbfff772dd386e600a" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-e3cbfff772dd386e600a">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"target":["ERA5","Buoy","Town_40177","VCS_On"],"var":["Precip_mm","Precip_mm","Precip_mm","Precip_mm"],"threshold":[1,1,1,1],"ref":["Airport_1770","Airport_1770","Airport_1770","Airport_1770"],"n":[5829,1246,3462,5802],"hits":[1776,186,1035,1764],"misses":[97,235,109,99],"false_alarms":[1331,34,112,270],"correct_neg":[2625,791,2206,3669],"POD":[0.948211425520555,0.441805225653207,0.90472027972028,0.946859903381642],"FAR":[0.42838751206952,0.154545454545455,0.0976460331299041,0.132743362831858],"CSI":[0.554307116104869,0.408791208791209,0.824044585987261,0.827004219409283],"bias_score":[1.65883609183129,0.522565320665083,1.00262237762238,1.09178743961353]},"columns":[{"id":"target","name":"target","type":"character"},{"id":"var","name":"var","type":"character"},{"id":"threshold","name":"threshold","type":"numeric"},{"id":"ref","name":"ref","type":"character"},{"id":"n","name":"n","type":"numeric"},{"id":"hits","name":"hits","type":"numeric"},{"id":"misses","name":"misses","type":"numeric"},{"id":"false_alarms","name":"false_alarms","type":"numeric"},{"id":"correct_neg","name":"correct_neg","type":"numeric"},{"id":"POD","name":"POD","type":"numeric"},{"id":"FAR","name":"FAR","type":"numeric"},{"id":"CSI","name":"CSI","type":"numeric"},{"id":"bias_score","name":"bias_score","type":"numeric"}],"striped":true,"dataKey":"392c4192a908b11f5126aff48cfae77b"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Event outcomes plot
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -394,28 +794,22 @@ ul.task-list li input[type="checkbox"] {
 </figure>
 </div>
 </div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="rotorua_files/figure-html/unnamed-chunk-19-2.png" class="img-fluid figure-img" width="960"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="rotorua_files/figure-html/unnamed-chunk-19-3.png" class="img-fluid figure-img" width="960"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="rotorua_files/figure-html/unnamed-chunk-19-4.png" class="img-fluid figure-img" width="960"></p>
-</figure>
 </div>
 </div>
 </div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Event scores plot
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -424,28 +818,22 @@ ul.task-list li input[type="checkbox"] {
 </figure>
 </div>
 </div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="rotorua_files/figure-html/unnamed-chunk-20-2.png" class="img-fluid figure-img" width="960"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="rotorua_files/figure-html/unnamed-chunk-20-3.png" class="img-fluid figure-img" width="960"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="rotorua_files/figure-html/unnamed-chunk-20-4.png" class="img-fluid figure-img" width="960"></p>
-</figure>
 </div>
 </div>
 </div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>false alarm magnitude plot
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -454,35 +842,32 @@ ul.task-list li input[type="checkbox"] {
 </figure>
 </div>
 </div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="rotorua_files/figure-html/unnamed-chunk-21-2.png" class="img-fluid figure-img" width="960"></p>
-</figure>
 </div>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="rotorua_files/figure-html/unnamed-chunk-21-3.png" class="img-fluid figure-img" width="960"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="rotorua_files/figure-html/unnamed-chunk-21-4.png" class="img-fluid figure-img" width="960"></p>
-</figure>
 </div>
 </div>
 </div>
 </section>
-<section id="precipitation-event-agreement" class="level2">
-<h2 class="anchored" data-anchor-id="precipitation-event-agreement">Precipitation event agreement</h2>
+<section id="monthly-climatology-seasonal-structure" class="level2">
+<h2 class="anchored" data-anchor-id="monthly-climatology-seasonal-structure">Monthly climatology (seasonal structure)</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Climatology plots
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <div class="cell">
 <div class="cell-output-display">
-<div class="reactable html-widget html-fill-item" id="htmlwidget-273e45d0cb5a1ed76c3a" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-273e45d0cb5a1ed76c3a">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"target":["ERA5","Buoy","Town_40177","VCS_On"],"var":["Precip_mm","Precip_mm","Precip_mm","Precip_mm"],"threshold":[0.1,0.1,0.1,0.1],"ref":["Airport_1770","Airport_1770","Airport_1770","Airport_1770"],"n":[5829,1246,3462,5802],"hits":[2562,356,1392,1985],"misses":[123,241,234,679],"false_alarms":[1832,53,125,49],"correct_neg":[1312,596,1711,3089],"POD":[0.954189944134078,0.596314907872697,0.856088560885609,0.74512012012012],"FAR":[0.41693218024579,0.12958435207824,0.0823994726433751,0.0240904621435595],"CSI":[0.567190613238875,0.547692307692308,0.794974300399772,0.731662366384077],"bias_score":[1.6364990689013,0.685092127303183,0.932964329643296,0.763513513513513]},"columns":[{"id":"target","name":"target","type":"character"},{"id":"var","name":"var","type":"character"},{"id":"threshold","name":"threshold","type":"numeric"},{"id":"ref","name":"ref","type":"character"},{"id":"n","name":"n","type":"numeric"},{"id":"hits","name":"hits","type":"numeric"},{"id":"misses","name":"misses","type":"numeric"},{"id":"false_alarms","name":"false_alarms","type":"numeric"},{"id":"correct_neg","name":"correct_neg","type":"numeric"},{"id":"POD","name":"POD","type":"numeric"},{"id":"FAR","name":"FAR","type":"numeric"},{"id":"CSI","name":"CSI","type":"numeric"},{"id":"bias_score","name":"bias_score","type":"numeric"}],"striped":true,"dataKey":"dfb76af3607b91fc7df4355b14125e53"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
 </div>
 </div>
 <div class="cell">
@@ -503,6 +888,25 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
+</div>
+</div>
+</div>
+</section>
+<section id="seasonal-performance-nzsouthern-hemisphere" class="level2">
+<h2 class="anchored" data-anchor-id="seasonal-performance-nzsouthern-hemisphere">Seasonal performance (NZ/Southern Hemisphere)</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Seasonal performance plots
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<section id="seasonal-performance-nzsouthern-hemisphere-1" class="level2 callout-body-container callout-body">
+<h2 class="anchored" data-anchor-id="seasonal-performance-nzsouthern-hemisphere-1">Seasonal performance (NZ/Southern Hemisphere)</h2>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -512,9 +916,6 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-</section>
-<section id="monthly-climatology-seasonal-structure" class="level2">
-<h2 class="anchored" data-anchor-id="monthly-climatology-seasonal-structure">Monthly climatology (seasonal structure)</h2>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -533,18 +934,22 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="rotorua_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="960"></p>
-</figure>
-</div>
+</section>
 </div>
 </div>
 </section>
-<section id="seasonal-performance-nzsouthern-hemisphere" class="level2">
-<h2 class="anchored" data-anchor-id="seasonal-performance-nzsouthern-hemisphere">Seasonal performance (NZ/Southern Hemisphere)</h2>
+<section id="interactive-table" class="level2">
+<h2 class="anchored" data-anchor-id="interactive-table">Interactive table</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div class="reactable html-widget html-fill-item" id="htmlwidget-82840c7f5463fe0e7d83" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-82840c7f5463fe0e7d83">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Dataset":["Airport_1770","ERA5","Buoy","Town_40177","VCS_On"],"Date":["2025-07-27","2025-08-31","2025-09-01","2025-11-28","2025-06-30"],"Temp_C":[11.5857142857143,8.231,9.80763859722222,22.1,10.5],"Precip_mm":[0.2,24.029,0,"NA",0],"Wind_Spd_ms":[2.54,5.689,9.64310825442118,"NA",4.4],"RadSWD_Wm2":["NA",57.449,"NA","NA",63.6574074074074]},"columns":[{"id":"Dataset","name":"Dataset","type":"character"},{"id":"Date","name":"Date","type":"Date"},{"id":"Temp_C","name":"Temp_C","type":"numeric"},{"id":"Precip_mm","name":"Precip_mm","type":"numeric"},{"id":"Wind_Spd_ms","name":"Wind_Spd_ms","type":"numeric"},{"id":"RadSWD_Wm2","name":"RadSWD_Wm2","type":"numeric"}],"searchable":true,"defaultPageSize":5,"highlight":true,"striped":true,"dataKey":"c2468207ccdf881bdeec8aacf6463547"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Precipitation Scatter</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Precip Seasonal scatter</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Hydrograph</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">CDF</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href="">Wet day dist</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false" href="">Distribution</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -554,6 +959,8 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -563,6 +970,8 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -572,13 +981,40 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-</section>
-<section id="interactive-table" class="level2">
-<h2 class="anchored" data-anchor-id="interactive-table">Interactive table</h2>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
 <div class="cell">
 <div class="cell-output-display">
-<div class="reactable html-widget html-fill-item" id="htmlwidget-f14834de26ed4012b2cd" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-f14834de26ed4012b2cd">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Dataset":["Airport_1770","ERA5","Buoy","Town_40177","VCS_On"],"Date":["2025-07-27","2025-08-31","2025-09-01","2025-11-28","2025-06-30"],"Temp_C":[11.5857142857143,8.231,9.80763859722222,22.1,10.5],"Precip_mm":[0.2,24.029,0,"NA",0],"Wind_Spd_ms":[2.54,5.689,9.64310825442118,"NA",4.4],"RadSWD_Wm2":["NA",57.449,"NA","NA",63.6574074074074]},"columns":[{"id":"Dataset","name":"Dataset","type":"character"},{"id":"Date","name":"Date","type":"Date"},{"id":"Temp_C","name":"Temp_C","type":"numeric"},{"id":"Precip_mm","name":"Precip_mm","type":"numeric"},{"id":"Wind_Spd_ms","name":"Wind_Spd_ms","type":"numeric"},{"id":"RadSWD_Wm2","name":"RadSWD_Wm2","type":"numeric"}],"searchable":true,"defaultPageSize":5,"highlight":true,"striped":true,"dataKey":"c2468207ccdf881bdeec8aacf6463547"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rotorua_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 

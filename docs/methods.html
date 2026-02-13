@@ -95,7 +95,7 @@ div.csl-indent {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-cc1d64809b8ed731f92ea1275fe9f05b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-d069fa62bda395c7865d16499bcb44f1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -191,16 +191,16 @@ window.Quarto = {
 <span class="menu-text">Methods</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./behaviour_results.html"> 
-<span class="menu-text">Seasonal and event behaviour</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="./timeseries_results.html"> 
 <span class="menu-text">Time Series</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./metrics_stats_results.html"> 
 <span class="menu-text">Metrics &amp; stats</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./behaviour_results.html"> 
+<span class="menu-text">Seasonal and event behaviour</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./rotorua.html"> 
@@ -291,7 +291,7 @@ window.Quarto = {
 <p><br>
 Daily meteorological datasets were compiled for Lake Rotorua from ERA5‑Land reanalysis, the Limnotrack buoy (in‑situ) on Lake Rotorua, NIWA Airport_1770 observations, NIWA Town_40177 observations, and the NIWA Virtual Climate Station Network (VCS_On). ERA5 variables were extracted using <code>aemetools::get_era5_land_point_nz</code>, VCS and reference (Airport and town) data were downloaded manually (and separably at times - joined later in R) from NIWA “Earth Science New Zealand” <a href="https://cliflo.niwa.co.nz/">datahub</a> <a href="https://data.niwa.co.nz/pages/clidb-on-datahub">(click to access)</a> and saved as CSV in “data/raw” folder. All datasets were standardised to common variable names (<code>Temp_C</code>, <code>Precip_mm</code>, <code>Wind_Spd_ms</code>, <code>RadSWD_Wm2</code>) with a shared Date field.</p>
 <p><br>
-Sub‑daily records (5&amp;15 minute buoy and hourly station data) were parsed in UTC and aggregated to daily values, using sums for fluxes (precipitation) and means for temperature, wind speed, and radiation. Radiation in MJ m⁻² was converted to W m⁻² using <code>Rad_MJm2 * 1e6 / 86400</code> for daily totals and <code>Rad_MJm2 * 1e6 / 3600</code> for hourly values prior to daily means. Buoy wind speeds were corrected for a documented unit change (knots to m/s before a switch date), and buoy precipitation was converted from mm hr⁻¹ to 5‑minute depth before aggregation. Historical buoy records (15‑minute) were aggregated to daily means, with known incorrect wind periods set to <code>NA</code> to keep a continuous date. Town_40177 and Airport_1770 were assembled from hourly radiation/temperature (daily means) plus daily wind and rain. VCS_On daily data were converted to numeric, with temperature computed as the mean of Tmin and Tmax. All daily datasets were written as aligned CSVs, which were then used to compare overlapping dates.</p>
+Sub‑daily records (5&amp;15 minute buoy and hourly station data) were parsed in UTC and aggregated to daily values, using sums for fluxes (precipitation) and means for temperature, wind speed, and radiation. Radiation in MJ m⁻² was converted to W m⁻² using <code>Rad_MJm2 * 1e6 / 86400</code> for daily totals and <code>Rad_MJm2 * 1e6 / 3600</code> for hourly values prior to daily means. Buoy wind speeds were corrected for a documented unit change (knots to m/s before a switch date), and buoy precipitation was converted from mm hr⁻¹ to 5‑minute depth before aggregation. Historical buoy records (15‑minute) were aggregated to daily means, with known incorrect wind periods set to <code>NA</code> to keep a continuous date. Town_40177 and Airport_1770 were assembled from hourly radiation/temperature (daily means) plus daily wind and rain. VCS_On daily data were converted to numeric, with temperature computed as the mean of Tmin and Tmax. All daily datasets were written as aligned CSVs, which were then used to compare overlappin</p>
 </section>
 <section id="reference-site-justification" class="level2">
 <h2 class="anchored" data-anchor-id="reference-site-justification">Reference site justification</h2>
@@ -329,11 +329,9 @@ y_i = \beta_0 + \beta_1 x_i + \epsilon_i
 </section>
 <section id="eventbased-performance-evaluated-using-referencedefined-subsets" class="level2">
 <h2 class="anchored" data-anchor-id="eventbased-performance-evaluated-using-referencedefined-subsets">Event‑based performance evaluated using reference‑defined subsets</h2>
-<p>Wet‑day precipitation metrics use <code>Precip_mm &gt; 1 mm</code> in the reference (set via <code>wet_threshold_mm = 1</code>), to assess performance on meaningful rain days.</p>
-<p>Windy‑day metrics use the top 10% of reference wind speeds (<code>windy_top_pct = 0.10</code>), i.e., the 90th percentile of the reference wind during the overlap period. (A fixed threshold of 10 m/s is coded as an alternative but not used in the current runs.)</p>
-<p>Wet‑day and windy‑day subsets<br>
-Wet‑day metrics were computed only when the&nbsp;reference precipitation exceeded 1 mm&nbsp;(Airport_1770), to focus on meaningful rain events. Windy‑day metrics used the&nbsp;top 10% of reference wind speeds, defined by the 90th percentile of Airport_1770 during the overlap period; metrics were computed only on those high‑wind days.</p>
-<p>For example: ERA5 vs Airport for precipitation where airport precipitation= reference “obs” series ERA5 precipitation = dataset/source we are evaluating “sim”. mertrics_all uses every day where both datasets have values (after NA removal) (baseline overall preformance) metrics_wet uses only days where the reference has “meaningful rain”:if threshold_mm = 1, it keeps days where airport precipitation mm &gt; 1. This answers: “How well does ERA5 match rainy days?”(which usually matters more for modelling than dry days). metrics_windy uses only days where the reference indictes high wind :if threshold_ms = 10, it keeps days where airport wind speed m/s &gt;=10. This answers: “How well does ERA5 match wind-storm days?” which matters because correlation may look high but preform poorly in seasonal extremes, wind and rain heavy events</p>
+<p>Wet‑day precipitation metrics use <code>Precip_mm &gt; 1 mm</code> in the reference (set via <code>wet_threshold_mm = 1</code>), to assess performance on meaningful rain days. et‑day metrics were computed only when the&nbsp;reference precipitation exceeded 1 mm&nbsp;(Airport_1770), to focus on “meaningful” rain events.</p>
+<p>Windy‑day metrics used the top 10% of the reference dataset wind speeds (<code>windy_top_pct = 0.10</code>), defined by the the 90th percentile of the reference (e.g Airport) wind during the overlap period, metrics were computed only on those high‑wind days for the windy_day componend. (A fixed threshold of 10 m/s is coded for as an alternative but not used)</p>
+<p>For example: ERA5 vs Airport for precipitation where airport precipitation= reference “obs” series ERA5 precipitation = dataset/source we are evaluating “sim”. mertrics_all uses every day where both datasets have values (after NA removal) (baseline overall preformance) metrics_wet uses only days where the reference has “meaningful rain”:if threshold_mm = 1, it keeps days where airport precipitation mm &gt; 1. This answers: “How well does ERA5 match rainy days?”(which usually matters more for modelling than dry days). metrics_windy uses only days where the reference indictes high wind :if threshold_ms = 10, it keeps days where airport wind speed m/s &gt;=10. This answers: “How well does ERA5 match wind-storm days?” which matters because correlation may look high but preform poorly in seasonal extremes, wind and rain heavy events.</p>
 <p>Event‑agreement statistics <span class="citation" data-cites="Jolli2003">(<a href="#ref-Jolli2003" role="doc-biblioref"><strong>Jolli2003?</strong></a>)</span> for precipitation (<code>threshold ≥ 1 mm/day</code>, as set in the event‑skill section) include:</p>
 <p>Hits (H) (ref event &amp; target event), <em>both obs and sim say “event”</em></p>
 <p>Misses (M) (ref event &amp; target no event), <em>obs says “event” but sim does not</em></p>
@@ -961,7 +959,7 @@ Plots are generated from overlap‑aligned daily data to ensure consistent compa
 <span id="cb12-87"><a href="#cb12-87" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Magnitude when disagreement occurs (precip example) ---</span></span>
 <span id="cb12-88"><a href="#cb12-88" aria-hidden="true" tabindex="-1"></a><span class="co"># "Ref dry but target wet": how much rain do they report?</span></span>
 <span id="cb12-89"><a href="#cb12-89" aria-hidden="true" tabindex="-1"></a>plot_false_alarm_magnitude <span class="ot">&lt;-</span> <span class="cf">function</span>(ref_df, targets_list,</span>
-<span id="cb12-90"><a href="#cb12-90" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">threshold_mm =</span> <span class="dv">1</span>,</span>
+<span id="cb12-90"><a href="#cb12-90" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">threshold_mm =</span> <span class="fl">0.1</span>,</span>
 <span id="cb12-91"><a href="#cb12-91" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">ref_name =</span> <span class="st">"Airport_1770"</span>) {</span>
 <span id="cb12-92"><a href="#cb12-92" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-93"><a href="#cb12-93" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Build paired dataset</span></span>
@@ -990,8 +988,8 @@ Plots are generated from overlap‑aligned daily data to ensure consistent compa
 <span id="cb12-116"><a href="#cb12-116" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>()</span>
 <span id="cb12-117"><a href="#cb12-117" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb12-118"><a href="#cb12-118" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-119"><a href="#cb12-119" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Example calls (precip threshold default = 1 mm; easy to change) ---</span></span>
-<span id="cb12-120"><a href="#cb12-120" aria-hidden="true" tabindex="-1"></a>precip_event_threshold <span class="ot">&lt;-</span> <span class="dv">1</span>  <span class="co"># change to 5 if you want sensitivity tests later</span></span>
+<span id="cb12-119"><a href="#cb12-119" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Example calls (precip threshold default = 0.1 mm; easy to change) ---</span></span>
+<span id="cb12-120"><a href="#cb12-120" aria-hidden="true" tabindex="-1"></a>precip_event_threshold <span class="ot">&lt;-</span> <span class="fl">0.1</span>  <span class="co"># change to 1 or 5 if you want sensitivity tests later</span></span>
 <span id="cb12-121"><a href="#cb12-121" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-122"><a href="#cb12-122" aria-hidden="true" tabindex="-1"></a>skill_precip <span class="ot">&lt;-</span> <span class="fu">event_skill_all_targets</span>(</span>
 <span id="cb12-123"><a href="#cb12-123" aria-hidden="true" tabindex="-1"></a>  ref_df, targets_list,</span>
@@ -1001,7 +999,6 @@ Plots are generated from overlap‑aligned daily data to ensure consistent compa
 </details>
 </div>
 <p>This workflow ensures statistical results are computed on matched daily observations, with targeted event thresholds and seasonally resolved diagnostics to interpret both mean agreement and extreme‑event performance.</p>
-<p>If you want, I can format this directly into a Methods section for your report (with citations or numbering).</p>
 <section id="section" class="level2">
 <h2 class="anchored" data-anchor-id="section"></h2>
 </section>
@@ -1021,6 +1018,7 @@ Plots are generated from overlap‑aligned daily data to ensure consistent compa
 <section id="limitations" class="level1">
 <h1>Limitations</h1>
 <p>Spatial representativeness differs: point sensors (buoy, airport) capture local effects, while gridded/reanalysis products smooth extremes. Differences in wind measurement points/heights result in dataset differences, while precipitation measurements are subject to topographical and equipment differences. Residual timestamp misalignment could affect daily aggregates despite UTC standardisation. Zero-inflated precipitation can inflate r; wet-day metrics mitigate but do not eliminate this effect. Findings depend on the overlapping period; results may change with different seasons or longer records. Wet/windy thresholds are pragmatic; sensitivity checks are recommended if thresholds influence decisions.</p>
+<p>Although ground based meterological datasets are often considered the best reference, they are often plagued with gaps and at times succumb to the limitations of routine record keeping maintance.</p>
 <p>Future users should adapt thresholds, reference choice, and aggregation rules to their lake, documenting any deviations.</p>
 </section>
 <section id="references-methods-background" class="level1">
