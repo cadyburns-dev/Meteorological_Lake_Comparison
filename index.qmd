@@ -15,6 +15,10 @@ params:
 
 ![](images/update.png){fig-align="center"}
 
+Precipitation, wind, and temperature are unavoidable physical forms when it comes to Lymnological science.
+Choosing the right meteorological dataset/source can play a critical role in both physical and biological results. 
+However, it is often difficult to know which dataset/source is best to apply. Therefore, by critically comparing and analysing different datasources for a given location we can gather more confidence in what data set, which variable and when sed sataset is best to use.
+
 ## Project description
 
 This project aims to take meteorological data in close proximity from different sources/forcing choices (stations, grided, reanalysis) and evaluate their validity across variables and time.

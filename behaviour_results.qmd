@@ -11,7 +11,7 @@ params:
   targets: ["ERA5", "Buoy", "Town_40177", "VCS_On"]
   vars: ["Temp_C", "Precip_mm", "Wind_Spd_ms", "RadSWD_Wm2"]
   wet_threshold_mm: 1
-  precip_event_threshold: 0.1
+  precip_event_threshold: 1
   windy_top_pct: 0.10
   windy_threshold_ms: 10
   window_days: 30
@@ -89,10 +89,14 @@ vars <- intersect(vars_requested, vars_available)
 The following plots show how precipitation volumes and timing align across datasets.
 
 ```{r}
+#| label: fig-timeseries-hydrograph
+#| fig-cap: "Hydrograph of daily precipitation (mm) for all datasets (Airport, Buoy, Town, ERA5, VCS) for Lake Rotorua."
 plot_precip_hydrograph(ref_df, targets_list, show_7day_sum = TRUE)
 ```
 
 ```{r}
+#| label: fig-cumulative-freq
+#| fig-cap: "Cumulative distribution functions (CDFs) of daily precipitation for each dataset (Airport, Buoy, Town, ERA5, VCS) for Lake Rotorua. Curves further to the right indicate heavier tails (more high‑rain days), while curves higher at low precipitation indicate more light‑rain or dry days."
 plot_precip_cdf(ref_df, targets_list)
 ```
 
@@ -101,6 +105,8 @@ plot_precip_cdf(ref_df, targets_list)
 ERA5’s curve is shifted rightward, indicating more frequent moderate–high rainfall (wet bias). The buoy curve rises faster at low precipitation, indicating fewer heavy‑rain days and a tendency toward under‑reporting. Town_40177 and VCS_On track the reference most closely across the distribution, suggesting better alignment in both light and heavy rain frequencies.
 
 ```{r}
+#| label: fig-histogram-ncol2-rain
+#| fig-cap: "Histograms of daily precipitation on wet days only (reference\> 1 mm), shown separately for each dataset (Airport, Buoy, Town, ERA5, VCS) for Lake Rotorua. This removes zero‑inflation and highlights agreement in the distribution of event magnitudes"
 plot_precip_wetday_distribution(ref_df, targets_list, threshold_mm = wet_threshold_mm)
 ```
 
@@ -132,36 +138,42 @@ reactable(
 ```
 
 ```{r}
+#| label: fig-precip-events
+#| fig-cap: "Stacked counts of precipitation event outcomes (threshold ≥ 1 mm/day) for each dataset (ERA5, Buoy, Town, VCS) relative to the reference (Airport)."
 plot_event_outcomes(
   skill_precip,
   title = paste0("Precip events (\u2265 ", precip_event_threshold, " mm/day): outcomes vs reference")
 )
 ```
 
-*Stacked counts of precipitation event outcomes (threshold ≥ 0.1 mm/day) for each dataset relative to the reference.*
+*Stacked counts of precipitation event outcomes (threshold ≥ 1 mm/day) for each dataset relative to the reference.*
 
 ERA5 produces many hits but also the largest false‑alarm count, while Town_40177 shows the most balanced outcomes (high hits, low false alarms). VCS_On is conservative (few false alarms but more misses), and Buoy has fewer hits overall.
 
 ```{r}
+#| label: fig-Rain-event-scores
+#| fig-cap: "Event‑detection skill for precipitation ≥ 1 mm/day, showing Probability detection (POD), false alarm ration (FAR), critical success index (CSI) and bias."
 plot_event_skill_scores(
   skill_precip,
   title = paste0("Precip events (\u2265 ", precip_event_threshold, " mm/day): skill vs reference")
 )
 ```
 
-*Event‑detection skill for precipitation ≥ 0.1 mm/day.*
+*Event‑detection skill for precipitation ≥ 1 mm/day.*
 
 Town_40177 has the highest CSI and low FAR, indicating the most robust event agreement. ERA5 shows the highest POD but also the highest FAR and bias_score (\>1), reflecting over‑prediction. VCS_On is conservative (low FAR, lower POD), and Buoy has the weakest skill overall.
 
 ```{r}
+#| label: fig-false-alarm-mag
+#| fig-cap: "Distribution of false‑alarm precipitation amounts (ref ≤ 1 mm/day, target \> 1 mm/day) on a log1p scale."
 plot_false_alarm_magnitude(ref_df, targets_list, threshold_mm = precip_event_threshold)
 ```
 
-*Distribution of false‑alarm precipitation amounts (ref ≤ 0.1 mm/day, target \> 0.1 mm/day) on a log1p scale.*
+*Distribution of false‑alarm precipitation amounts (ref ≤ 1 mm/day, target \> 1 mm/day) on a log1p scale.*
 
 ERA5 shows the largest and most frequent false‑alarm magnitudes, while Town_40177 and VCS_On are more constrained. Buoy contributes few false alarms but also fewer detected events overall.
 
-ERA5 has very high POD (0.95) but high FAR (0.42) and bias_score \> 1 (1.64), meaning it detects most events but over‑predicts rain (many false alarms). Town_40177 shows the best balance: high POD (0.86), low FAR (0.08), and the highest CSI (0.795), indicating the most reliable event agreement overall. VCS_On has low FAR (0.024) but a lower POD (0.75), indicating it is conservative—it misses more events but rarely produces false alarms. Buoy is least reliable for event detection: lower POD (0.60) and CSI (0.548) despite a moderate FAR. False‑alarm magnitudes (when ref ≤ 0.1 mm):
+ERA5 has very high POD (0.95) but high FAR (0.42) and bias_score \> 1 (1.64), meaning it detects most events but over‑predicts rain (many false alarms). Town_40177 shows the best balance: high POD (0.86), low FAR (0.08), and the highest CSI (0.795), indicating the most reliable event agreement overall. VCS_On has low FAR (0.024) but a lower POD (0.75), indicating it is conservative—it misses more events but rarely produces false alarms. Buoy is least reliable for event detection: lower POD (0.60) and CSI (0.548) despite a moderate FAR. False‑alarm magnitudes (when ref ≤ 1 mm):
 
 ERA5 false alarms are numerous and span large magnitudes, indicating systematic wet bias. Town_40177 and VCS_On false alarms are fewer and generally smaller. Buoy has the fewest false alarms but also the poorest detection rate.
 
@@ -170,6 +182,8 @@ ERA5 false alarms are numerous and span large magnitudes, indicating systematic 
 Climatology and seasonal bias plots highlight over/under-capture of extremes across the year.
 
 ```{r}
+#| label: fig-climatology-temp
+#| fig-cap: "Monthly climatology of daily temperature (°C) for each dataset (Airport, ERA5, Buoy, Town, VCS), showing monthly means (lines) and interquartile ranges (shaded bands 25 and 75). Airport_1770 is the reference; other datasets are overlaid to highlight seasonal offsets and variability. Showing any systematic seasonal bias in mean and variability. Uses overlap with reference dates to ensure fair comparison."
 plot_monthly_climatology(ref_df, targets_list, "Temp_C")
 ```
 
@@ -179,6 +193,8 @@ plot_monthly_climatology(ref_df, targets_list, "Temp_C")
 All datasets reproduce the same seasonal cycle (summer peak, winter minimum). ERA5 is consistently cooler than the reference, while Buoy and VCS_On are warmer. Town_40177 tracks the airport most closely across all months. IQR bands broadly overlap, indicating similar seasonal variability, but the persistent offsets indicate systematic seasonal bias rather than random error.
 
 ```{r}
+#| label: fig-climatology-wind
+#| fig-cap: "Monthly climatology of daily wind speed (m s⁻¹) from datasets (Airport, Buoy, ERA5, Town, VCS), with monthly means and IQR shading. Differences in mean level and spread reveal seasonal wind biases relative to the reference."
 plot_monthly_climatology(ref_df, targets_list, "Wind_Spd_ms")
 ```
 
@@ -187,6 +203,8 @@ plot_monthly_climatology(ref_df, targets_list, "Wind_Spd_ms")
 All datasets show higher winds in spring–summer and lower in winter, but the magnitude differs. ERA5 is consistently lower than the reference across all months (systematic low bias). Buoy and VCS_On are higher than the reference, while Town_40177 is slightly low but closer. The Buoy and VCS_On bands are wider, suggesting greater variability or local effects.
 
 ```{r}
+#| label: fig-climatology-pracip
+#| fig-cap: "Monthly climatology of daily precipitation (mm) for each dataset (Airport, Buoy, ERA5, Town, VCS), showing monthly means and IQRs. This highlights seasonal rainfall patterns and dataset‑specific wet biases."
 plot_monthly_climatology(ref_df, targets_list, "Precip_mm")
 ```
 
@@ -195,6 +213,8 @@ plot_monthly_climatology(ref_df, targets_list, "Precip_mm")
 All datasets show a winter–spring enhancement and a relative summer minimum, but the magnitude differs substantially. ERA5 is consistently wetter than the reference across months, while Buoy is markedly drier. Town_40177 aligns closely with the airport, and VCS_On is slightly wetter in several months. Wider IQRs for ERA5 indicate more variability and heavier tails.
 
 ```{r}
+#| label: fig-seasonal-bias-temp
+#| fig-cap: "Seasonal mean temperature bias of ((target (Buoy, ERA5, Town, VCS) − reference(airport)) with interquartile ranges. Positive values indicate warm bias; negative values indicate cool bias."
 season_defs <- season_defs_default
 plot_seasonal_bias(ref_df, targets_list, "Temp_C", season_defs = season_defs)
 ```
@@ -203,11 +223,10 @@ plot_seasonal_bias(ref_df, targets_list, "Temp_C", season_defs = season_defs)
 
 ERA5 is cool‑biased in all seasons, strongest in spring. Buoy shows a warm bias in all seasons, especially autumn/winter. Town_40177 is near zero in every season (best match). VCS_On is consistently warm‑biased but smaller than Buoy.
 
-```{r}
-plot_seasonal_scatter(ref_df, targets_list, "Temp_C", season_defs = season_defs)
-```
 
 ```{r}
+#| label: fig-scatter-season-temp
+#| fig-cap: "Seasonal scatter plots of daily Temperature comparing each dataset (ERA5, Buoy, Town, VCS) to the reference (Airport) dataset. Dashed lines indicate 1:1 agreement; solid lines are fitted regressions. Rows represent seasons; columns represent datasets."
 plot_seasonal_scatter(ref_df, targets_list, "Wind_Spd_ms", season_defs = season_defs)
 ```
 
@@ -216,6 +235,8 @@ plot_seasonal_scatter(ref_df, targets_list, "Wind_Spd_ms", season_defs = season_
 Town_40177 and VCS_On show tighter clustering around the 1:1 line across seasons, indicating stronger agreement. ERA5 shows systematic underestimation (regression slope \< 1) in all seasons, especially at higher winds. Buoy shows reasonable agreement but with more spread in summer and spring.
 
 ```{r}
+#| label: fig-seasonal-scatter-wind
+#| fig-cap: "Seasonal scatter plots of daily wind speed comparing each dataset (ERA5, Buoy, Town, VCS) to the reference (Airport) dataset. Dashed lines indicate 1:1 agreement; solid lines are fitted regressions. Rows represent seasons; columns represent datasets."
 plot_seasonal_scatter(ref_df, targets_list, "Precip_mm", season_defs = season_defs)
 ```
 
