@@ -183,7 +183,7 @@ window.Quarto = {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./overview.html"> 
+    <a class="nav-link" href="./Overview.html"> 
 <span class="menu-text">Overview</span></a>
   </li>  
   <li class="nav-item">
@@ -251,7 +251,7 @@ window.Quarto = {
   <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">Limitations</a></li>
   <li><a href="#references-methods-background" id="toc-references-methods-background" class="nav-link" data-scroll-target="#references-methods-background">References (methods background)</a>
   <ul class="collapse">
-  <li><a href="#refernces-r-code" id="toc-refernces-r-code" class="nav-link" data-scroll-target="#refernces-r-code">Refernces R code</a></li>
+  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1"></a></li>
   </ul></li>
   </ul>
 </nav>
@@ -320,7 +320,7 @@ y_i = \beta_0 + \beta_1 x_i + \epsilon_i
 \mathrm{RMSE} = \sqrt{\frac{1}{n}\sum_{i=1}^{n}\left(y_i - x_i\right)^2}
 \]</span></p>
 <p><strong>Root Mean Square Error (RMSE)</strong> between the reference series (obs; (x_i)) and the target series (sim; (y_i)) over the overlapping days. Here (n) is the number of paired, non‑missing daily observations.</p>
-<p><strong>Lin’s concordance correlation coefficient (CCC)</strong> to combine accuracy and precision <span class="citation" data-cites="lin1989">(<a href="#ref-lin1989" role="doc-biblioref">L. I.-K. Lin 1989</a>)</span>. Values were interpreted under the McBride 2005 scale, where; &gt; 0.99: Almost perfect, 0.95–0.99: Substantial, 0.90–0.95: Moderate and &lt; 0.90: Poor strength of agreement <span class="citation" data-cites="rekasi2024">(<a href="#ref-rekasi2024" role="doc-biblioref">Rekasi 2024</a>)</span>.</p>
+<p><strong>Lin’s concordance correlation coefficient (CCC)</strong> to combine accuracy and precision <span class="citation" data-cites="lin1989">(<a href="#ref-lin1989" role="doc-biblioref"><strong>lin1989?</strong></a>)</span>. Values were interpreted under the McBride 2005 scale, where; &gt; 0.99: Almost perfect, 0.95–0.99: Substantial, 0.90–0.95: Moderate and &lt; 0.90: Poor strength of agreement <span class="citation" data-cites="rekasi2024">(<a href="#ref-rekasi2024" role="doc-biblioref"><strong>rekasi2024?</strong></a>)</span>.</p>
 <p><span class="math display">\[
 [\text{CCC} = \frac{2 r \sigma_{obs} \sigma_{sim}}{\sigma_{obs}^2 + \sigma_{sim}^2 + (\mu_{obs} - \mu_{sim})^2}]
 \]</span></p>
@@ -333,7 +333,8 @@ y_i = \beta_0 + \beta_1 x_i + \epsilon_i
 <p>Windy‑day metrics use the top 10% of reference wind speeds (<code>windy_top_pct = 0.10</code>), i.e., the 90th percentile of the reference wind during the overlap period. (A fixed threshold of 10 m/s is coded as an alternative but not used in the current runs.)</p>
 <p>Wet‑day and windy‑day subsets<br>
 Wet‑day metrics were computed only when the&nbsp;reference precipitation exceeded 1 mm&nbsp;(Airport_1770), to focus on meaningful rain events. Windy‑day metrics used the&nbsp;top 10% of reference wind speeds, defined by the 90th percentile of Airport_1770 during the overlap period; metrics were computed only on those high‑wind days.</p>
-<p>Event‑agreement statistics for precipitation (<code>threshold ≥ 0.1 mm/day</code>, as set in the event‑skill section) include:</p>
+<p>For example: ERA5 vs Airport for precipitation where airport precipitation= reference “obs” series ERA5 precipitation = dataset/source we are evaluating “sim”. mertrics_all uses every day where both datasets have values (after NA removal) (baseline overall preformance) metrics_wet uses only days where the reference has “meaningful rain”:if threshold_mm = 1, it keeps days where airport precipitation mm &gt; 1. This answers: “How well does ERA5 match rainy days?”(which usually matters more for modelling than dry days). metrics_windy uses only days where the reference indictes high wind :if threshold_ms = 10, it keeps days where airport wind speed m/s &gt;=10. This answers: “How well does ERA5 match wind-storm days?” which matters because correlation may look high but preform poorly in seasonal extremes, wind and rain heavy events</p>
+<p>Event‑agreement statistics <span class="citation" data-cites="Jolli2003">(<a href="#ref-Jolli2003" role="doc-biblioref"><strong>Jolli2003?</strong></a>)</span> for precipitation (<code>threshold ≥ 1 mm/day</code>, as set in the event‑skill section) include:</p>
 <p>Hits (H) (ref event &amp; target event), <em>both obs and sim say “event”</em></p>
 <p>Misses (M) (ref event &amp; target no event), <em>obs says “event” but sim does not</em></p>
 <p>False alarms (FA), <em>sim says “event” but obs does not</em></p>
@@ -960,7 +961,7 @@ Plots are generated from overlap‑aligned daily data to ensure consistent compa
 <span id="cb12-87"><a href="#cb12-87" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Magnitude when disagreement occurs (precip example) ---</span></span>
 <span id="cb12-88"><a href="#cb12-88" aria-hidden="true" tabindex="-1"></a><span class="co"># "Ref dry but target wet": how much rain do they report?</span></span>
 <span id="cb12-89"><a href="#cb12-89" aria-hidden="true" tabindex="-1"></a>plot_false_alarm_magnitude <span class="ot">&lt;-</span> <span class="cf">function</span>(ref_df, targets_list,</span>
-<span id="cb12-90"><a href="#cb12-90" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">threshold_mm =</span> <span class="fl">0.1</span>,</span>
+<span id="cb12-90"><a href="#cb12-90" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">threshold_mm =</span> <span class="dv">1</span>,</span>
 <span id="cb12-91"><a href="#cb12-91" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">ref_name =</span> <span class="st">"Airport_1770"</span>) {</span>
 <span id="cb12-92"><a href="#cb12-92" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-93"><a href="#cb12-93" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Build paired dataset</span></span>
@@ -989,8 +990,8 @@ Plots are generated from overlap‑aligned daily data to ensure consistent compa
 <span id="cb12-116"><a href="#cb12-116" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>()</span>
 <span id="cb12-117"><a href="#cb12-117" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb12-118"><a href="#cb12-118" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-119"><a href="#cb12-119" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Example calls (precip threshold default = 0.1 mm; easy to change) ---</span></span>
-<span id="cb12-120"><a href="#cb12-120" aria-hidden="true" tabindex="-1"></a>precip_event_threshold <span class="ot">&lt;-</span> <span class="fl">0.1</span>  <span class="co"># change to 1 or 5 if you want sensitivity tests later</span></span>
+<span id="cb12-119"><a href="#cb12-119" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Example calls (precip threshold default = 1 mm; easy to change) ---</span></span>
+<span id="cb12-120"><a href="#cb12-120" aria-hidden="true" tabindex="-1"></a>precip_event_threshold <span class="ot">&lt;-</span> <span class="dv">1</span>  <span class="co"># change to 5 if you want sensitivity tests later</span></span>
 <span id="cb12-121"><a href="#cb12-121" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-122"><a href="#cb12-122" aria-hidden="true" tabindex="-1"></a>skill_precip <span class="ot">&lt;-</span> <span class="fu">event_skill_all_targets</span>(</span>
 <span id="cb12-123"><a href="#cb12-123" aria-hidden="true" tabindex="-1"></a>  ref_df, targets_list,</span>
@@ -1015,27 +1016,16 @@ Plots are generated from overlap‑aligned daily data to ensure consistent compa
 </section>
 <section id="software-and-packages" class="level1">
 <h1>Software and packages</h1>
-<p>Analyses were performed in R <span class="citation" data-cites="R-alan2024">(<a href="#ref-R-alan2024" role="doc-biblioref">R Core Team 2024</a>)</span>. Data wrangling and visualization use tidyverse packages (dplyr, tidyr, ggplot2, readr, purrr, tibble, lubridate) <span class="citation" data-cites="R-tidyverse">(<a href="#ref-R-tidyverse" role="doc-biblioref">Wickham et al. 2019</a>)</span>. Spatial processing relies on the sf framework <span class="citation" data-cites="R-sf">(<a href="#ref-R-sf" role="doc-biblioref">Pebesma 2026</a>)</span>, with leaflet <span class="citation" data-cites="R-leaflet">(<a href="#ref-R-leaflet" role="doc-biblioref">Cheng et al. 2025</a>)</span>, tmap <span class="citation" data-cites="R-tmap">(<a href="#ref-R-tmap" role="doc-biblioref">Tennekes 2025</a>)</span>, osmdata <span class="citation" data-cites="R-osmdata">(<a href="#ref-R-osmdata" role="doc-biblioref">Maspons et al. 2025</a>)</span>, and rnaturalearth <span class="citation" data-cites="R-rnaturalearth">(<a href="#ref-R-rnaturalearth" role="doc-biblioref">Massicotte and South 2026</a>)</span> used for mapping. Interactive figures are produced with plotly <span class="citation" data-cites="R-plotly">(<a href="#ref-R-plotly" role="doc-biblioref">Sievert et al. 2025</a>)</span> and tables with reactable <span class="citation" data-cites="R-reactable">(<a href="#ref-R-reactable" role="doc-biblioref">G. Lin 2025</a>)</span> and gt <span class="citation" data-cites="R-gt">(<a href="#ref-R-gt" role="doc-biblioref">Iannone et al. 2026</a>)</span>. Reproducibility is managed with renv <span class="citation" data-cites="R-renv">(<a href="#ref-R-renv" role="doc-biblioref">Ushey and Wickham 2025</a>)</span>, and report generation uses Quarto with knitr/rmarkdown and htmltools <span class="citation" data-cites="R-htmltools">(<a href="#ref-R-htmltools" role="doc-biblioref">Cheng et al. 2024</a>)</span>; here is used for stable file paths.</p>
+<p>Analyses were performed in R <span class="citation" data-cites="R-alan2024">(<a href="#ref-R-alan2024" role="doc-biblioref">R Core Team 2024</a>)</span>. Data wrangling and visualization use tidyverse packages (dplyr, tidyr, ggplot2, readr, purrr, tibble, lubridate) <span class="citation" data-cites="R-tidyverse">(<a href="#ref-R-tidyverse" role="doc-biblioref">Wickham et al. 2019</a>)</span>. Spatial processing relies on the sf framework <span class="citation" data-cites="R-sf">(<a href="#ref-R-sf" role="doc-biblioref">Pebesma 2026</a>)</span>, with leaflet <span class="citation" data-cites="R-leaflet">(<a href="#ref-R-leaflet" role="doc-biblioref">Cheng et al. 2025</a>)</span>, tmap <span class="citation" data-cites="R-tmap">(<a href="#ref-R-tmap" role="doc-biblioref">Tennekes 2025</a>)</span>, osmdata <span class="citation" data-cites="R-osmdata">(<a href="#ref-R-osmdata" role="doc-biblioref">Maspons et al. 2025</a>)</span>, and rnaturalearth <span class="citation" data-cites="R-rnaturalearth">(<a href="#ref-R-rnaturalearth" role="doc-biblioref">Massicotte and South 2026</a>)</span> used for mapping. Interactive figures are produced with plotly <span class="citation" data-cites="R-plotly">(<a href="#ref-R-plotly" role="doc-biblioref">Sievert et al. 2025</a>)</span> and tables with reactable <span class="citation" data-cites="R-reactable">(<a href="#ref-R-reactable" role="doc-biblioref">Lin 2025</a>)</span> and gt <span class="citation" data-cites="R-gt">(<a href="#ref-R-gt" role="doc-biblioref">Iannone et al. 2026</a>)</span>. Reproducibility is managed with renv <span class="citation" data-cites="R-renv">(<a href="#ref-R-renv" role="doc-biblioref">Ushey and Wickham 2025</a>)</span>, and report generation uses Quarto with knitr/rmarkdown and htmltools <span class="citation" data-cites="R-htmltools">(<a href="#ref-R-htmltools" role="doc-biblioref">Cheng et al. 2024</a>)</span>; here is used for stable file paths.</p>
 </section>
 <section id="limitations" class="level1">
 <h1>Limitations</h1>
-<ul>
-<li>Spatial representativeness differs: point sensors (buoy, airport) capture local effects, while gridded/reanalysis products smooth extremes.</li>
-<li>Residual timestamp misalignment could affect daily aggregates despite UTC standardisation.</li>
-<li>Zero-inflated precipitation can inflate r; wet-day metrics mitigate but do not eliminate this effect.</li>
-<li>Findings depend on the overlapping period; results may change with different seasons or longer records.</li>
-<li>Wet/windy thresholds are pragmatic; sensitivity checks are recommended if thresholds influence decisions.</li>
-</ul>
+<p>Spatial representativeness differs: point sensors (buoy, airport) capture local effects, while gridded/reanalysis products smooth extremes. Differences in wind measurement points/heights result in dataset differences, while precipitation measurements are subject to topographical and equipment differences. Residual timestamp misalignment could affect daily aggregates despite UTC standardisation. Zero-inflated precipitation can inflate r; wet-day metrics mitigate but do not eliminate this effect. Findings depend on the overlapping period; results may change with different seasons or longer records. Wet/windy thresholds are pragmatic; sensitivity checks are recommended if thresholds influence decisions.</p>
 <p>Future users should adapt thresholds, reference choice, and aggregation rules to their lake, documenting any deviations.</p>
 </section>
 <section id="references-methods-background" class="level1">
 <h1>References (methods background)</h1>
-<ol type="1">
-<li>Lin, L.I.-K. (1989). A concordance correlation coefficient to evaluate reproducibility.</li>
-<li>Jolliffe, I.T., Stephenson, D.B. (eds.). Forecast Verification: A Practitioner’s Guide in Atmospheric Science.</li>
-<li>Wilks, D.S. Statistical Methods in the Atmospheric Sciences.</li>
-</ol>
-<section id="refernces-r-code" class="level2">
+<section id="section-1" class="level2">
 
 
 
@@ -1043,7 +1033,7 @@ Plots are generated from overlap‑aligned daily data to ensure consistent compa
 </section>
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">Refernces R code</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-R-leaflet" class="csl-entry" role="listitem">
 Cheng, Joe, Barret Schloerke, Bhaskar Karambelkar, Yihui Xie, and Garrick Aden-Buie. 2025. <em>Leaflet: Create Interactive Web Maps with the JavaScript Leaflet Library</em>. <a href="https://rstudio.github.io/leaflet/">https://rstudio.github.io/leaflet/</a>.
 </div>
@@ -1055,9 +1045,6 @@ Iannone, Richard, Joe Cheng, Barret Schloerke, Shannon Haughton, Ellis Hughes, A
 </div>
 <div id="ref-R-reactable" class="csl-entry" role="listitem">
 Lin, Greg. 2025. <em>Reactable: Interactive Data Tables for r</em>. <a href="https://glin.github.io/reactable/">https://glin.github.io/reactable/</a>.
-</div>
-<div id="ref-lin1989" class="csl-entry" role="listitem">
-Lin, Lawrence I-Kuei. 1989. <span>“A Concordance Correlation Coefficient to Evaluate Reproducibility.”</span> <em>Biometrics</em> 45 (1): 255–68. <a href="https://doi.org/10.2307/2532051">https://doi.org/10.2307/2532051</a>.
 </div>
 <div id="ref-R-osmdata" class="csl-entry" role="listitem">
 Maspons, Joan, Mark Padgham, Bob Rudis, Robin Lovelace, and Maëlle Salmon. 2025. <em>Osmdata: Import OpenStreetMap Data as Simple Features or Spatial Objects</em>. <a href="https://docs.ropensci.org/osmdata/">https://docs.ropensci.org/osmdata/</a>.
@@ -1073,9 +1060,6 @@ Pebesma, Edzer. 2026. <em>Sf: Simple Features for r</em>. <a href="https://r-spa
 </div>
 <div id="ref-R-alan2024" class="csl-entry" role="listitem">
 R Core Team. 2024. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.
-</div>
-<div id="ref-rekasi2024" class="csl-entry" role="listitem">
-Rekasi, Andrea. 2024. <span>“Step-by-Step Guide to Using the Concordance Correlation Coefficient | Python-Bloggers.”</span> <a href="https://python-bloggers.com/2024/10/step-by-step-guide-to-using-the-concordance-correlation-coefficient/">https://python-bloggers.com/2024/10/step-by-step-guide-to-using-the-concordance-correlation-coefficient/</a>.
 </div>
 <div id="ref-scott2015multivariate" class="csl-entry" role="listitem">
 Scott, David W. 2015. <em>Multivariate Density Estimation: Theory, Practice, and Visualization</em>. John Wiley &amp; Sons.
