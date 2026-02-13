@@ -9,20 +9,22 @@ params:
   buffer_km: 10
 ---
 
-Precipitation, wind, and temperature are unavoidable physical forms when it comes to Lymnological science.
-Choosing the right meteorological dataset/source can play a critical role in both physical and biological results. 
-However, it is often difficult to know which dataset/source is best to apply. Therefore, by critically comparing and analysing different datasources for a given location we can gather more confidence in what data set, which variable and when sed sataset is best to use.
 
+Meterological data is utalised for many different lake assesments, from understanding lake regime shifts to modeling future lake dynamices. It is therfore vital to use the best avalable meterological data for the location and time of choice. Too often meterological data are incomplete and unreliable. ERA5 (ECMWF fifth gen) data gridded at 31km is widely used due to its comprehensive and clean nature combining observations with model data, however it is coarse and some variables are known to misrepresent data at the land/lake surface (low atmosphere metorology). NIWAs virtual climate station network takes captured observational station data and created a 5km grid conecting other weather stations to allow for intergrated data in a chosen location. The VCSN data is somewhat intertwined with the Airport data which is used as the Reference for the Rotorua Lake demo. Meterological datasets in more densely populated areas or with large topographical gradients will typically result in micro-climatic datasets due to the physical nature of these environments. In partucular wind, rain and even temperature in larger cities. Additionally, stations placed in higher altitudes can often misrepresent lower altitudes. When wanting to use datasets for lake specific projects Buoy data has the opportunity to allow for more accurate readings due to its on water position. However precipitation data is often inaccurate, especially in higher wind events, causing movement of monitoring equipment. This is especially true in large lakes that can develope substantial waves. For this reason wind can also be skewed in events. Temperature for a given Lake from a Buoy is regarded the most likely accurate candidate as fulxtuations from a water body and fluxes from land follow different physical laws. 
+
+The question here is how does coarse global, modelled national, Local, and Lake source metorological data compare. Is there a better data source in cool or warm periods? or in a storm event? or for a specific variable? or Is there a better data source for local models?
+
+By analysing the different datasets in a given location compared to a verifiable meteorological dataset we can start to see where datasets perform well and where they lack agreement. 
 
 ## Objective
 
-To analyse different meterological data avalable for a given location, access accuarcy, precision, bias and over aggreability. 
+To analyse different meterological data avalable for a given location, access accuarcy, precision, bias and overall aggreability. 
 
 ## Data sources
 
 Limnotrack Buoy on lake, NIWA virtual climate station network (VCSN) , ERA5 statlite data, Observational data "Airport" station, Obresvational data "Town" station.
 
-Data source and station names will vary from location to location. Selecting stations from these websites is laid out in the 02_prepare_raw_data script.
+Data source and station names will vary from location to location. Selecting stations from these websites is laid out in the reproducibility tab, methods tab and 02_prepare_raw_data R script.
 
 ## Outputs
 

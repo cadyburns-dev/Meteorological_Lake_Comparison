@@ -14,7 +14,7 @@ This section documents how the meteorological datasets were prepared, aligned, a
 Daily meteorological datasets were compiled for Lake Rotorua from ERA5‑Land reanalysis, the Limnotrack buoy (in‑situ) on Lake Rotorua, NIWA Airport_1770 observations, NIWA Town_40177 observations, and the NIWA Virtual Climate Station Network (VCS_On). ERA5 variables were extracted using `aemetools::get_era5_land_point_nz`, VCS and reference (Airport and town) data were downloaded manually (and separably at times - joined later in R) from NIWA "Earth Science New Zealand" [datahub](https://cliflo.niwa.co.nz/) [(click to access)](https://data.niwa.co.nz/pages/clidb-on-datahub) and saved as CSV in "data/raw" folder. All datasets were standardised to common variable names (`Temp_C`, `Precip_mm`, `Wind_Spd_ms`, `RadSWD_Wm2`) with a shared Date field.
 
 \
-Sub‑daily records (5&15 minute buoy and hourly station data) were parsed in UTC and aggregated to daily values, using sums for fluxes (precipitation) and means for temperature, wind speed, and radiation. Radiation in MJ m⁻² was converted to W m⁻² using `Rad_MJm2 * 1e6 / 86400` for daily totals and `Rad_MJm2 * 1e6 / 3600` for hourly values prior to daily means. Buoy wind speeds were corrected for a documented unit change (knots to m/s before a switch date), and buoy precipitation was converted from mm hr⁻¹ to 5‑minute depth before aggregation. Historical buoy records (15‑minute) were aggregated to daily means, with known incorrect wind periods set to `NA` to keep a continuous date. Town_40177 and Airport_1770 were assembled from hourly radiation/temperature (daily means) plus daily wind and rain. VCS_On daily data were converted to numeric, with temperature computed as the mean of Tmin and Tmax. All daily datasets were written as aligned CSVs, which were then used to compare overlapping dates.
+Sub‑daily records (5&15 minute buoy and hourly station data) were parsed in UTC and aggregated to daily values, using sums for fluxes (precipitation) and means for temperature, wind speed, and radiation. Radiation in MJ m⁻² was converted to W m⁻² using `Rad_MJm2 * 1e6 / 86400` for daily totals and `Rad_MJm2 * 1e6 / 3600` for hourly values prior to daily means. Buoy wind speeds were corrected for a documented unit change (knots to m/s before a switch date), and buoy precipitation was converted from mm hr⁻¹ to 5‑minute depth before aggregation. Historical buoy records (15‑minute) were aggregated to daily means, with known incorrect wind periods set to `NA` to keep a continuous date. Town_40177 and Airport_1770 were assembled from hourly radiation/temperature (daily means) plus daily wind and rain. VCS_On daily data were converted to numeric, with temperature computed as the mean of Tmin and Tmax. All daily datasets were written as aligned CSVs, which were then used to compare overlappin
 
 ## Reference site justification
 
@@ -67,16 +67,14 @@ Relative bias: Expressed as percent (%) of mean observed, `100xbias/mean(obs)`.
 
 Wet‑day precipitation metrics use `Precip_mm > 1 mm` in the reference (set via `wet_threshold_mm = 1`), to assess performance on meaningful rain days.
 
-Windy‑day metrics use the top 10% of reference wind speeds (`windy_top_pct = 0.10`), i.e., the 90th percentile of the reference wind during the overlap period. (A fixed threshold of 10 m/s is coded as an alternative but not used in the current runs.)
+Windy‑day metrics use the top 10% of reference wind speeds (`windy_top_pct = 0.10`), i.e., the 90th percentile of the reference wind during the overlap period. (A fixed threshold of 10 m/s is coded as an alternative but not used in th
 
 Wet‑day and windy‑day subsets\
 Wet‑day metrics were computed only when the reference precipitation exceeded 1 mm (Airport_1770), to focus on meaningful rain events. Windy‑day metrics used the top 10% of reference wind speeds, defined by the 90th percentile of Airport_1770 during the overlap period; metrics were computed only on those high‑wind days.
 
-For example: ERA5 vs Airport for precipitation where ap1770$precip_mm = refernce "obs" series ear5$precip_mm = dataset we are evaluating "sim" mertrics_all uses every day where both datasets have values (after NA removal) (baseline overall preformance) metrics_wet uses only days where the reference has “meaningful rain”:if threshold_mm = 1, it keeps days where ap1770$Precip_mm > 1.
- This answers: “How well does ERA5 match rainy days?”(which usually matters more for modelling than dry days).
- metrics_windy  uses only days where the reference indictes high wind :if threshold_ms = 10, it keeps days where ap1770$Wind_Spd_ms \>=10. This answers: “How well does ERA5 match wind-storm days?” which matters because correlation may look high but preform poorly in seasonal extremes, wind and rain heavy events
+For example: ERA5 vs Airport for precipitation where airport precipitation= reference "obs" series ERA5 precipitation = dataset/source we are evaluating "sim". mertrics_all uses every day where both datasets have values (after NA removal) (baseline overall preformance) metrics_wet uses only days where the reference has “meaningful rain”:if threshold_mm = 1, it keeps days where airport precipitation mm \> 1. This answers: “How well does ERA5 match rainy days?”(which usually matters more for modelling than dry days). metrics_windy uses only days where the reference indictes high wind :if threshold_ms = 10, it keeps days where airport wind speed m/s \>=10. This answers: “How well does ERA5 match wind-storm days?” which matters because correlation may look high but preform poorly in seasonal extremes, wind and rain heavy events.
 
-Event‑agreement statistics [@Jolli2003] for precipitation (`threshold ≥ 0.1 mm/day`, as set in the event‑skill section) include:
+Event‑agreement statistics [@Jolli2003] for precipitation (`threshold ≥ 1 mm/day`, as set in the event‑skill section) include:
 
 Hits (H) (ref event & target event), *both obs and sim say "event"*
 
@@ -785,8 +783,6 @@ skill_precip <- event_skill_all_targets(
 
 This workflow ensures statistical results are computed on matched daily observations, with targeted event thresholds and seasonally resolved diagnostics to interpret both mean agreement and extreme‑event performance.
 
-If you want, I can format this directly into a Methods section for your report (with citations or numbering).
-
 ## 
 
 # Data availability / overlap
@@ -804,6 +800,8 @@ Analyses were performed in R [@R-alan2024]. Data wrangling and visualization use
 # Limitations
 
 Spatial representativeness differs: point sensors (buoy, airport) capture local effects, while gridded/reanalysis products smooth extremes. Differences in wind measurement points/heights result in dataset differences, while precipitation measurements are subject to topographical and equipment differences. Residual timestamp misalignment could affect daily aggregates despite UTC standardisation. Zero-inflated precipitation can inflate r; wet-day metrics mitigate but do not eliminate this effect. Findings depend on the overlapping period; results may change with different seasons or longer records. Wet/windy thresholds are pragmatic; sensitivity checks are recommended if thresholds influence decisions.
+
+Although ground based meterological datasets are often considered the best reference, they are often plagued with gaps and at times succumb to the limitations of routine record keeping maintance.
 
 Future users should adapt thresholds, reference choice, and aggregation rules to their lake, documenting any deviations.
 

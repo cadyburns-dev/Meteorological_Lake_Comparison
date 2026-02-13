@@ -18,17 +18,162 @@ params:
   window_days: 30
 ---
 
-## Introduction
+Meterological data is utalised for many different lake assesments, from understanding lake regime shifts to modeling future lake dynamices. It is therfore vital to use the best avalable meterological data for the location and time of choice. Too often meterological data are incomplete and unreliable. ERA5 (ECMWF fifth gen) data gridded at 31km is widely used due to its comprehensive and clean nature combining observations with model data, however it is coarse and some variables are known to misrepresent data at the land/lake surface (low atmosphere metorology). NIWAs virtual climate station network takes captured observational station data and created a 5km grid conecting other weather stations to allow for intergrated data in a chosen location. The VCSN data is somewhat intertwined with the Airport data which is used as the Reference for the Rotorua Lake demo. Meterological datasets in more densely populated areas or with large topographical gradients will typically result in micro-climatic datasets due to the physical nature of these environments. In partucular wind, rain and even temperature in larger cities. Additionally, stations placed in higher altitudes can often misrepresent lower altitudes. When wanting to use datasets for lake specific projects Buoy data has the opportunity to allow for more accurate readings due to its on water position. However precipitation data is often inaccurate, especially in higher wind events, causing movement of monitoring equipment. This is especially true in large lakes that can develope substantial waves. For this reason wind can also be skewed in events. Temperature for a given Lake from a Buoy is regarded the most likely accurate candidate as fulxtuations from a water body and fluxes from land follow different physical laws. 
 
+The question here is how does coarse global, modelled national, Local, and Lake source metorological data compare. Is there a better data source in cool or warm periods? or in a storm event? or for a specific variable? or Is there a better data source for local models?
+
+By analysing the different datasets in a given location compared to a verifiable meteorological dataset we can start to see where datasets perform well and where they lack agreement. 
 
 
 The second largest lake (by surface area \~79.9km2) in New Zealand, Lake Rotorua is a relatively well studied lake with and round shape fitting it's distrinct culdera description.
 
 Although coined the second largest lake its mean depth of just 10meters results in a shallow lake clasification. Shallow lakes are particulary suseptible to climate driven shifts across short and long term scales. Shallow lakes heat up faster than deep lakes which results in larger seasonal and diurnal tempurature fluxtuations. **(Frassel. et.al 2018)** Shallow lakes also tend to be more suseptible to atmospheric forcing where wind, air temperature and precipitation patterms which influence water quality and consequental biology. Lake Rotorua experiance cyanobacteria blooms due to its location in the landscape (hydrothermal + Farm + Population density) recieving high nutirent content along with warmer temperatures. Additional to temperature fluxes influencing cyanobacterial fluxes, wind and rain play a role in the intensity and location of these blooms. Wind drives cyanobacterial location, often leading to cyano bloom intensification/ concentration in particular areas.
 
-Meterological data is utalised for many different lake assesments, from understanding lake regime shifts to modeling future lake dynamices. It is therfore vital to use the best avalable meterological data for the location and time of choice. Too often meterological data are incomplete and unreliable. ERA5 (ECMWF fifth gen) data is widely used due to its comprehensive and clean nature combining observations with model data , however it is coarse and some variables are known to misrepresent data at the land/lake surface (low atmosphere metorology). NIWAs virtual climate station takes captured observational station data and created a 5km grid conecting other weather stations to allow for intergrated data in a chosen location. The VCNS data is partly the product of the Airport data which is used as the Reference for the Rotorua Lake demo. Weather datations within higher population destinations or areas with large topographical gradients will experience micro metorological readings due to the physical nature these environments, In partucular wind, rain and even temperature in larger cities or stations placed in higher altitudes. Buoy data allows for more accurate readings due to its on water position, however precipitation data is often inaccurate as the buoy moves with the lake, especially large lakes that can develope waves. For this reason wind can also be scewed. Temperature for a given Lake from a Buoy is regarded the most likely accurate candidate as fulxtuations from a water body and fluxes from land follow different physical laws.
+for lake Rotorua the sites selected were; Limnotrack Buoy (lat:-380550S Lon:1761653E) on lake, NIWA virtual climate station network (VCSN) grid NO:27879 lat:-38.075 lon:176.275, ERA5 statlite data for Lat:-38.114908 and Lon:176.316662, Observational data "Airport" station 1770 (lat:-38.10592 lon:176.31481), Obresvational data "Town" station 41077 (lat:-38.14635 lon:176.2578).
 
-The question here is how does coarse global, mpdelled national, Local, and Lake source metorological data compare. Is there a better data source in cool or warm periods? or in a storm event? or for a specific variable? or Is there a better data source for local models?
+## Study area
+
+```{r}
+
+# Note: Chage Quarto title Lat and lon to render your location of choice
+library(leaflet)
+
+# Interactive overview map centred on the lake
+leaflet() |>
+  addTiles() |>
+  addCircles(
+    lng = params$lon,
+    lat = params$lat,
+    radius = params$buffer_km * 1000,
+    color = "dodgerblue",
+    fillOpacity = 0.25,
+    popup = params$lake_name
+  ) |>
+  addCircleMarkers(
+    lng = params$lon,
+    lat = params$lat,
+    radius = 6,
+    color = "navy",
+    fillOpacity = 0.9,
+    popup = params$lake_name
+  ) |>
+  setView(lng = params$lon, lat = params$lat, zoom = 11)
+```
+
+## Polygon and plot
+
+```{r}
+library(osmdata)
+library(sf)
+library(tmap)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(dplyr)
+library(tibble)  # for tribble()
+
+# Download nearby water polygons to outline the lake
+options(timeout = 10)
+bb <- c(
+  params$lon - 0.1,
+  params$lat - 0.1,
+  params$lon + 0.1,
+  params$lat + 0.1
+)
+
+osm_lake <- tryCatch(
+  opq(bbox = bb) |>
+    add_osm_feature(key = "natural", value = "water") |>
+    osmdata_sf(),
+  error = function(e) NULL
+)
+
+lake_poly <- NULL
+if (!is.null(osm_lake) &&
+    !is.null(osm_lake$osm_multipolygons) &&
+    nrow(osm_lake$osm_multipolygons) > 0) {
+  lake_poly <- st_make_valid(osm_lake$osm_multipolygons)
+}
+
+# Fallback: if no polygon returned (or OSM query failed), use the bounding box
+if (is.null(lake_poly) || nrow(lake_poly) == 0) {
+  lake_poly <- st_polygon(list(rbind(
+    c(bb[1], bb[2]),
+    c(bb[3], bb[2]),
+    c(bb[3], bb[4]),
+    c(bb[1], bb[4]),
+    c(bb[1], bb[2])
+  ))) |>
+    st_sfc(crs = 4326) |>
+    st_as_sf()
+}
+ 
+
+# Change lon and lat to render your location of choice 
+#change names to match locations
+# Station metadata (decimal degrees)
+stations <- tribble(
+  ~name,           ~lon,       ~lat,       
+  "Airport_1770",  176.31481, -38.10592,  
+  "ERA5",          176.316662,-38.114908,  
+  "Buoy",          176.2653,  -38.0740,    
+  "Town_40177",    176.2578,  -38.14635,   
+  "VCS_On",        176.275,   -38.075
+)
+stations <- stations |>
+  mutate(name = trimws(name))
+
+#Change names to match your Data set where nessesary
+station_palette <- c(
+  Airport_1770 = "black",
+  ERA5         = "#d95f02",
+  Buoy         = "#7570b3",
+  Town_40177   = "#f0c400",
+  VCS_On       = "#1b9e77"
+)
+
+stations <- stations |>
+  filter(!is.na(name), name %in% names(station_palette)) |>
+  mutate(name = factor(name, levels = names(station_palette)))
+
+stations_sf <- st_as_sf(stations, coords = c("lon", "lat"), crs = 4326)
+
+
+# Use combined extent of lake + stations, with a small buffer (degrees)
+map_extent <- st_union(lake_poly, st_geometry(stations_sf)) |>
+  st_bbox() |>
+  st_as_sfc() |>
+  st_buffer(dist = 0.005)   # shrink/expand to taste
+
+tmap_mode("plot")
+
+tm_shape(lake_poly, bbox = st_bbox(map_extent)) +
+  tm_fill(col = "blue", alpha = 0.6) +
+  tm_borders(col = "black") +
+  tm_shape(stations_sf) +
+  tm_symbols(
+    col = "name",
+    palette = station_palette,
+    shape = 21,
+    size = 1,
+    border.col = "black"
+  ) +
+  tm_compass(
+    type = "arrow",
+    position = c("left", "top"),
+    color.dark = "black",
+    color.light = "gray80"
+  ) +
+  tm_scale_bar(position = c("left", "bottom")) +
+  tm_layout(
+    title = params$lake_name,
+    frame = FALSE,
+    legend.outside = TRUE,
+    legend.title.size = 0.8,
+    legend.text.size = 0.7,
+    legend.format = list(digits = 2)
+  )
+
+```
 
 ## Additional infor afout data sources - to put in discussion?
 
@@ -173,14 +318,14 @@ reactable(
 
 ## Time series overlays
 
-
-## Time Series {.panel-tabset}
+::: {.panel-tabset}
+## Time Series 
 
 ### Temperature
 ```{r}
 plot_timeseries_line(ref_df, targets_list, "Temp_C")
 ```
-#### Wind
+### Wind
 ```{r}
 plot_timeseries_line(ref_df, targets_list, "Wind_Spd_ms")
 ```
@@ -188,7 +333,7 @@ plot_timeseries_line(ref_df, targets_list, "Wind_Spd_ms")
 ```{r}
 plot_timeseries_line(ref_df, targets_list, "Precip_mm")
 ```
-
+:::
 ```{r}
 if ("RadSWD_Wm2" %in% vars) plot_timeseries_line(ref_df, targets_list, "RadSWD_Wm2")
 ```

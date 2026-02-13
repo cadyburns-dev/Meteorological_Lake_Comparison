@@ -80,21 +80,29 @@ vars <- intersect(vars_requested, vars_available)
 
 ## Time-series overlays
 
-Each plot shows the reference (Airport) against targets for a single variable; use hover tooltips to inspect dates and values.
+Each plot shows the reference (Airport) against targets (Buoy, ERA5, Town, and Virtual Climate Station -VCS) for a single variable.
 
 ```{r}
+#| label: fig-timeseries-temp
+#| fig-cap: "Meteorological data fordaily average temperature (C) from different data sources (Airport, Buoy, ERA5, Town, VCS) around Lake Rotorua plotted against the reference data (Airport)."
 plot_timeseries_line(ref_df, targets_list, "Temp_C")
 ```
 
 ```{r}
+#| label: fig-timeseries-wind
+#| fig-cap: "Meteorological data for daily average wind (m s⁻¹) from different data sources (Airport, Buoy, ERA5, Town, VCS) around Lake Rotorua plotted against the reference data (Airport)."
 plot_timeseries_line(ref_df, targets_list, "Wind_Spd_ms")
 ```
 
 ```{r}
+#| label: fig-timeseries-precip
+#| fig-cap: "Meteorological data for daily total precipitation (mm) from different data sources (Airport, Buoy, ERA5, Town, VCS) around Lake Rotorua plotted against the reference data (Airport)."
 plot_timeseries_line(ref_df, targets_list, "Precip_mm")
 ```
 
 ```{r}
+#| label: fig-timeseries-rad
+#| fig-cap: "Meteorological data for radiation (Wm2) from different data sources (Airport, Buoy, ERA5, Town, VCS) around Lake Rotorua plotted against the reference data (Airport)."
 if ("RadSWD_Wm2" %in% vars) plot_timeseries_line(ref_df, targets_list, "RadSWD_Wm2")
 ```
 
@@ -103,6 +111,8 @@ if ("RadSWD_Wm2" %in% vars) plot_timeseries_line(ref_df, targets_list, "RadSWD_W
 Quick look at the most recent reported day from each dataset.
 
 ```{r}
+#| label: tbl-recent-data
+#| tbl-cap: "Most recent data from each data source (Airport, ERA5, Buoy, Town, VCS)"
 latest_table <- map_dfr(
   setNames(c(params$reference, params$targets), c("Reference", params$targets)),
   function(name) {

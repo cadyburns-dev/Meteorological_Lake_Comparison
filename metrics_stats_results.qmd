@@ -19,8 +19,6 @@ params:
 
 This tab gathers the quantitative diagnostics (coverage, MAE/RMSE/CCC/bias, distributions, scatter, rolling drift). Use it when you want numbers and concise plots for statistical agreement.
 
-
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   echo = FALSE,
@@ -114,8 +112,9 @@ reactable(
 Includes all days plus wet-day and windy-day subsets where relevant. Sort/filter to focus on a variable or subset.
 
 ```{r}
-#| fig-cap-location: top
-#| fig-cap: "This is the caption for the plot."
+#| label: tbl-metrics
+#| tbl-cap-location: top
+#| tbl-cap: "This is the caption for the plot."
 metrics_all <- purrr::imap_dfr(
   targets_list,
   ~ metrics_vs_ref(
@@ -165,15 +164,16 @@ On all days, Town_40177 has the highest correlation (R=0.885) but a negative bia
 Density distribution overlays show bias or spread differences
 
 ```{r}
+#| label: fig-Density-Temp
 #| fig-cap: "Density distribution overlays of daily temperature (°C) for each dataset on the overlapping period with the reference dataset. Shifts in the curves indicate systematic warm/cool bias; differences in tail thickness indicate changes in variability or extremes."
 plot_distribution(ref_df, targets_list, "Temp_C")
 ```
 
-
-
 The distributions are broadly similar, but ERA5 is shifted slightly cooler (left of the reference), while Buoy and VCS_On are shifted warmer (right of the reference). Town_40177 most closely overlaps the reference distribution. Differences in tail thickness suggest small changes in variability, but the overall temperature range is consistent.
 
 ```{r}
+#| label: fig-density-wind
+#| fig-cap: "Density distribution overlays of daily wind speed (m s⁻¹) for each dataset on the overlapping period with the reference. The reference distribution is shown for comparison."
 plot_distribution(ref_df, targets_list, "Wind_Spd_ms")
 ```
 
@@ -182,6 +182,8 @@ plot_distribution(ref_df, targets_list, "Wind_Spd_ms")
 ERA5 is shifted to lower wind speeds, indicating a systematic low‑wind bias. Buoy and VCS_On have heavier right tails than the reference, suggesting higher frequency of moderate–strong winds. Town_40177 is closest to the reference peak but slightly under‑represents higher winds.
 
 ```{r}
+#| label: fig-Histogram-Precip
+#| fig-cap: "Histogram of daily precipitation (mm) for all datasets, including dry days (zero‑inflated). This highlights differences in event frequency and the heavy‑tail behavior of rainfall extremes."
 plot_distribution(ref_df, targets_list, "Precip_mm")
 ```
 
@@ -194,6 +196,8 @@ All datasets are strongly zero‑inflated, but ERA5 shows a longer right tail an
 Check linear agreement and systematic bias; points should cluster along the 1:1 line.
 
 ```{r}
+#| label: fig-Scatter-temp
+#| fig-cap: "Scatter plots of daily temperature (°C) for each dataset against the Airport_1770 reference. The dashed line indicates 1:1 agreement and the solid line is the fitted regression. All datasets show strong linear relationships; Town_40177 has the tightest agreement and minimal bias, ERA5 shows a small cool bias, and Buoy/VCS_On show modest warm biases. Each panel reports n, R, RMSE, and bias."
 plot_scatter_faceted(ref_df, targets_list, "Temp_C", ncol = 2)
 ```
 
@@ -202,6 +206,8 @@ plot_scatter_faceted(ref_df, targets_list, "Temp_C", ncol = 2)
 Temperature agreement is strong across all datasets, with near‑linear relationships. Town_40177 has near‑perfect agreement (R≈0.99, very low RMSE and near‑zero bias). ERA5 shows high correlation and low RMSE with a small cool bias. Buoy and VCS_On remain strongly correlated but show warm biases relative to the airport.
 
 ```{r}
+#| label: fig-scatter-wind
+#| fig-cap: "Scatter plots of daily wind speed (m s⁻¹) for each dataset against the Airport_1770 reference. The dashed line indicates 1:1 agreement and the solid line is the fitted regression. Town_40177 and VCS_On show the highest correlations and lowest errors, while Buoy exhibits a modest positive bias and ERA5 shows a pronounced negative bias with the largest RMSE. Sample size (n), correlation (R), RMSE, and bias are reported in each panel"
 plot_scatter_faceted(ref_df, targets_list, "Wind_Spd_ms", ncol = 2)
 ```
 
@@ -210,6 +216,8 @@ plot_scatter_faceted(ref_df, targets_list, "Wind_Spd_ms", ncol = 2)
 All datasets show positive associations with the airport reference, but performance differs. Town_40177 and VCS_On show the strongest correlations and lowest errors, with regression lines closest to the 1:1 line. Buoy shows moderate correlation and a positive bias (overestimation), while ERA5 shows weaker correlation and a strong negative bias (underestimation) with the largest RMSE among the four.
 
 ```{r}
+#| label: fig-scatter-precip
+#| fig-cap: "Fig Scatter plots of daily precipitation (mm) for each dataset source (Town_40177, ERA5, VSCN and Buoy data) against the Airport_1770 reference. The dashed line is 1:1 agreement; the solid line is the fitted regression. VCS_On and Town_40177 show the highest correlations and lowest RMSE, ERA5 shows moderate agreement with a positive bias, and Buoy shows the weakest agreement and the largest error. Panel annotations report n, R, RMSE, and bias."
 plot_scatter_faceted(ref_df, targets_list, "Precip_mm", ncol = 2)
 ```
 
@@ -218,6 +226,8 @@ plot_scatter_faceted(ref_df, targets_list, "Precip_mm", ncol = 2)
 Rainfall agreement is highly variable across datasets. VCS_On and Town_40177 show the strongest linear agreement (high R, low RMSE), with regression lines close to 1:1. ERA5 shows moderate skill but a positive bias (overestimation). Buoy has the weakest agreement, largest RMSE, and a negative bias, reflecting poorer correspondence with the airport precipitation.
 
 ```{r}
+#| label: fig-scatter-rad
+#| fig-cap: "Fig. Scatter plots of daily Radiation Wm2 for each dataset source (Town_40177, ERA5, VSCN and Buoy data) against the Airport_1770 reference. The dashed line is 1:1 agreement; the solid line is the fitted regression.Panel annotations report n, R, RMSE, and bias."
 if ("RadSWD_Wm2" %in% vars) plot_scatter_faceted(ref_df, targets_list, "RadSWD_Wm2", ncol = 2)
 ```
 
@@ -226,42 +236,51 @@ if ("RadSWD_Wm2" %in% vars) plot_scatter_faceted(ref_df, targets_list, "RadSWD_W
 Rolling diagnostics reveal gradual offsets or drift through time (look for breaks away from 0 bias or a changing correlation). This answers "does it shift seasonally?"
 
 ```{r}
-#| label: fig-
-#| fig-cap: "Rolling 30-day diagnostics for daily temperature (deg C). Panels show bias, correlation, MAE and RMSE."
-#| fig-subcap: !expr paste0(names(targets_list), " vs ", params$reference)
-purrr::iwalk(
-  targets_list,
-  ~ print(plot_rolling_diagnostics(ref_df, .x, .y, "Temp_C", window_days = window_days))
-) #These track moving-window bias/CCC to surface gradual timing offsets or seasonal drifts.
+#| label: fig-rolling-temp
+#| fig-cap: "Rolling 30‑day diagnostics for daily temperature (°C) comparing data target sources (Town_40177, ERA5, VSCN and Buoy data) to the reference (Airport_1770). Panels show 30‑day moving bias (source/target − reference), Pearson correlation (cor), mean absolute error (MAE), and Root mean square error (RMSE)."
+#| fig-subcap:
+#|   - "ERA5 vs Airport reference"
+#|   - "Buoy vs Airport reference"
+#|   - "Town vs Airport reference"
+#|   - "VSCN vs Airport reference"
+#| layout-ncol: 2
+purrr::iwalk(targets_list, ~ print(plot_rolling_diagnostics(ref_df, .x, .y, "Temp_C", window_days = window_days)))
+#These track moving-window bias/CCC to surface gradual timing offsets or seasonal drifts.
 ```
 
-"Rolling 30‑day diagnostics for daily temperature (°C) comparing Virtual climate station network (VCSN) data source to the Airport_1770 reference. Panels show 30‑day moving bias (VCSN − Airport), Pearson correlation (cor), mean absolute error (MAE), and* Root mean square error *(RMSE)."
-
-## ERA5
+## ERA5 temperature
 
 The bias is consistently negative, indicating ERA5 is cooler than the airport on average. Correlation remains moderate to high with intermittent dips, while MAE/RMSE show modest oscillations without extreme spikes, suggesting stable but slightly biased performance.
 
 Persistent cool bias: ERA5 temperatures are systematically lower than Airport_1770 across the record. Stable agreement: Correlation is generally strong with short‑lived decreases, indicating good temporal tracking most of the time. Moderate error levels: MAE/RMSE remain relatively steady with small oscillations, indicating consistent performance rather than episodic failures. Implication: ERA5 is suitable for temperature variability but should be bias‑corrected for absolute values.
 
-## Buoy
+## Buoy temperature
 
 Bias is mostly positive, indicating the buoy is generally warmer than the airport, with two pronounced negative excursions that coincide with sharp drops in correlation and spikes in MAE/RMSE. Outside these events, correlation is high and errors are low, suggesting strong agreement.
 
 Warm bias overall: Buoy temperatures tend to exceed airport temperatures. Two distinct anomalies: Short periods show large negative bias and severe error spikes, consistent with data issues or local effects. High consistency otherwise: Correlation is typically high and errors small outside the anomalies. Implication: Buoy temperature is reliable for most of the record, but flagged anomaly windows should be excluded or corrected.
 
-## Town
+## Town temperature
 
 Bias is near zero for much of the record, indicating close agreement, but a pronounced late‑record negative bias coincides with a drop in correlation and sharp increases in MAE/RMSE. This indicates a localized period of degraded performance.
 
 Near‑zero bias for most years: Town station closely matches the airport on average. Late‑record deterioration: A marked negative shift appears near the end of the series, with a concurrent increase in error and reduced correlation. Strong correlation overall: Temporal coherence is high except during the late anomaly. Implication: Town_40177 is generally consistent with the airport, but recent data should be checked for change or quality issues.
 
-## VCSN
+## VCSN temperature
 
 Bias is consistently positive, indicating VCS_On is warmer on average. Correlation is moderate and variable with frequent dips, while MAE/RMSE display recurring oscillations without extreme spikes, suggesting stable but less tightly aligned agreement than station‑station comparisons.
 
 Consistent warm bias: VCS_On temperatures exceed airport values across the record. Moderate correlation: Agreement in day‑to‑day variability is weaker and more variable than the station comparisons. Stable error magnitudes: Errors fluctuate cyclically but lack large outliers. Implication: VCS_On can represent temperature trends but benefits from bias correction and cautious use for daily‑scale accuracy.
 
 ```{r}
+#| label: fig-rolling-wind
+#| fig-cap: "Rolling 30‑day diagnostics for daily wind speed (m s⁻¹) comparing data target sources (Town_40177, ERA5, VSCN and Buoy data) to the reference (Airport_1770). Panels show 30‑day moving bias (source/target − reference), Pearson correlation (cor), mean absolute error (MAE), and Root mean square error (RMSE)."
+#| fig-subcap:
+#|   - "ERA5 vs Airport reference"
+#|   - "Buoy vs Airport reference"
+#|   - "Town vs Airport reference"
+#|   - "VCSN vs Airport reference"
+#| layout-ncol: 2
 purrr::iwalk(targets_list, ~ print(plot_rolling_diagnostics(ref_df, .x, .y, "Wind_Spd_ms", window_days = window_days)))
 ```
 
@@ -271,22 +290,34 @@ purrr::iwalk(targets_list, ~ print(plot_rolling_diagnostics(ref_df, .x, .y, "Win
 
 For the Town source the bias series is persistently negative, indicating a systematic low bias in Town_40177 relative to Airport_1770. Correlation remains high for most of the record but exhibits intermittent drops, coinciding with short periods of increased MAE/RMSE. Error magnitudes are generally modest but show episodic spikes, suggesting periods of reduced agreement that are transient rather than sustained. Key points for a Results section (based on the plot)
 
-Consistent negative bias: The rolling bias remains below zero throughout the record, indicating Town_40177 systematically underestimates wind speed relative to Airport_1770. Generally strong temporal agreement: Correlation is typically high (near the upper range of the axis), implying that day‑to‑day variability is captured well most of the time. Intermittent degradation: Several short intervals show sharp drops in correlation accompanied by peaks in MAE and RMSE, indicating brief periods of poorer agreement. Errors are episodic, not persistent: MAE/RMSE spikes appear as isolated events rather than long‑term shifts, suggesting the overall relationship is stable but occasionally disrupted (e.g., by local site effects or data issues). Practical implication: Town_40177 is suitable for capturing wind variability trends, but absolute values should be bias‑corrected if used for magnitude‑sensitive applications. \## ERA5 Wind For the ERA5 source the bias is consistently negative across the record, indicating systematic underestimation of wind speed by ERA5. Correlation fluctuates around moderate values with frequent short‑lived drops, while MAE and RMSE exhibit pronounced seasonal‑scale oscillations and episodic peaks, indicating time‑varying agreement rather than a stable error structure.
+Consistent negative bias: The rolling bias remains below zero throughout the record, indicating Town_40177 systematically underestimates wind speed relative to Airport_1770. Generally strong temporal agreement: Correlation is typically high (near the upper range of the axis), implying that day‑to‑day variability is captured well most of the time. Intermittent degradation: Several short intervals show sharp drops in correlation accompanied by peaks in MAE and RMSE, indicating brief periods of poorer agreement. Errors are episodic, not persistent: MAE/RMSE spikes appear as isolated events rather than long‑term shifts, suggesting the overall relationship is stable but occasionally disrupted (e.g., by local site effects or data issues). Practical implication: Town_40177 is suitable for capturing wind variability trends, but absolute values should be bias‑corrected if used for magnitude‑sensitive applications.
+
+## ERA5 wind
+
+For the ERA5 source the bias is consistently negative across the record, indicating systematic underestimation of wind speed by ERA5. Correlation fluctuates around moderate values with frequent short‑lived drops, while MAE and RMSE exhibit pronounced seasonal‑scale oscillations and episodic peaks, indicating time‑varying agreement rather than a stable error structure.
 
 Persistent low bias: ERA5 wind speeds are consistently below the airport reference (negative bias throughout), suggesting a systematic underestimation. Moderate, variable correlation: Agreement in day‑to‑day variability is weaker and more volatile than the station‑to‑station comparison, with frequent dips in correlation. Pronounced temporal structure in errors: MAE/RMSE show clear oscillatory behavior and repeated peaks, indicating seasonally varying performance. Episodic degradation: Several short windows show sharp drops in correlation and elevated errors, implying transient mismatches or regime‑dependent performance. Implication: ERA5 is useful for capturing broader temporal patterns in wind but should be bias‑corrected and evaluated seasonally before use in applications sensitive to wind magnitude.
 
-## VCSN
+## VCSN wind
 
 Bias shifts over time from slightly positive in the early record toward near‑zero and then slightly negative values, indicating a gradual drift in mean offset. Correlation remains moderate to high with intermittent dips, while MAE/RMSE display recurring oscillations without large spikes.
 
 Slow bias drift: Mean bias trends from positive to slightly negative across the record, indicating gradual change in relative wind magnitude. Consistent but variable correlation: Correlation is generally moderate–high with periodic drops, reflecting time‑varying agreement. Stable error magnitudes: MAE/RMSE show cyclical variability but no extreme excursions, suggesting steady performance without major anomalies. Implication: VCS_On captures wind variability reasonably well, but bias may need time‑dependent adjustment.
 
-## Buoy
+## Buoy wind
 
 A pronounced early‑record anomaly is evident as a sharp negative bias, collapse in correlation, and a simultaneous spike in MAE/RMSE. Outside this episode, bias remains small and positive, correlation is generally high, and errors are comparatively low with occasional minor excursions.
 
 Early anomaly dominates: A short early interval shows extreme disagreement (large negative bias, correlation collapse, large MAE/RMSE), indicating a likely data issue or calibration mismatch in that period. Otherwise strong agreement: After the anomaly, correlation stays high and error levels are low, implying good temporal coherence between buoy and airport winds. Small systematic bias: The buoy shows a slight positive bias relative to the airport in the stable period. Transient deviations only: Later deviations are modest and short‑lived, suggesting the relationship is stable after initial issues.
 
 ```{r}
+#| label: fig-rolling-precip
+#| fig-cap: "Rolling 30‑day diagnostics for daily total precipitation (mm) comparing data target sources (Town_40177, ERA5, VSCN and Buoy data) to the reference (Airport_1770). Panels show 30‑day moving bias (source/target − reference), Pearson correlation (cor), mean absolute error (MAE), and Root mean square error (RMSE)."
+#| fig-subcap:
+#|   - "ERA5 vs Airport reference"
+#|   - "Buoy vs Airport reference"
+#|   - "Town vs Airport reference"
+#|   - "VCS vs Airport reference"
+#| layout-ncol: 2
 purrr::iwalk(targets_list, ~ print(plot_rolling_diagnostics(ref_df, .x, .y, "Precip_mm", window_days = window_days)))
 ```
