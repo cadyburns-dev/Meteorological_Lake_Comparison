@@ -15,17 +15,15 @@ params:
 
 ![](images/update.png){fig-align="center"}
 
-Precipitation, wind, and temperature are unavoidable physical forms when it comes to Lymnological science.
-Choosing the right meteorological dataset/source can play a critical role in both physical and biological results. 
-However, it is often difficult to know which dataset/source is best to apply. Therefore, by critically comparing and analysing different datasources for a given location we can gather more confidence in what data set, which variable and when sed sataset is best to use.
+Precipitation, wind, and temperature are unavoidable physical forms when it comes to Lymnological science. Choosing the right meteorological dataset/source can play a critical role in both physical and biological results. However, it is often difficult to know which dataset/source is best to apply. Therefore, by critically comparing and analysing different data sources for a given location, we can gather more confidence in whict data set, which variable and when the dataset is best to use.
 
 ## Project description
 
-This project aims to take meteorological data in close proximity from different sources/forcing choices (stations, grided, reanalysis) and evaluate their validity across variables and time.
+This project aims to take meteorological data in close proximity from different sources (stations, grided, reanalysis) and evaluate their validity across variables and time.
 
-It assesses four main meterological parameters (precipitation, wind, radiation, temperature) for accuracy, stability and usability. This was developed for the use of lymnologists with the purpose of selecting data sources for differing projects and attempts to answer the question "what data to use and when?". The data sources used are Limnotrack Buoy in-situ, NIWA virtual climate station network (VCSN), ERA5 statlite data and NIWAs Observational climate data.
+It assesses four main meteorological parameters (precipitation, wind, radiation, temperature) for accuracy, stability and usability. This was developed for the use of limnologists with the purpose of selecting data sources for differing projects and attempts to answer the question "what data to use and when?". The data sources used are [Limnotrack](https://limnotrack.com/) Buoy in-situ, NIWA virtual climate station network ([VCSN](https://data.niwa.co.nz/products/vcsn-timeseries)), ERA5 ([European Centre for Medium-Range Weather Forecasts (ECMWF) reanalysis v5](https://www.ecmwf.int/en/forecasts)) statlite data and NIWAs ([Earth Sciences New Zealand](https://www.earthsciences.nz/)) observational climate data .
 
-Lake Rotorua, North Island, New Zealand is used as a worked example thoughout.
+Lake Rotorua, North Island, New Zealand is used as a worked example throughout.
 
 ## Guide
 

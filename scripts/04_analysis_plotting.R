@@ -189,7 +189,7 @@ plot_distribution <- function(ref_df, targets_list, var, ref_name = "Airport_177
     ggplot(df, aes(value, fill = source)) +
       geom_histogram(bins = 40, alpha = 0.5, position = "identity") +
       scale_fill_manual(values = target_colors) +
-      facet_wrap(~ targets, ncol = 1, scales = "fixed") +
+      facet_wrap(~ source, ncol = 1, scales = "fixed") +
       labs(
         title = "Precip distribution (all days; zero-inflated)",
         x = "Precip (mm/day)", y = "Count"
@@ -249,8 +249,7 @@ plot_precip_cdf <- function(ref_df, targets_list, ref_name = "Airport_1770") {
 # -----------------------------
 # Scatter vs reference: faceted (one figure, ncol configurable)
 # Why: shows point-by-point agreement; regression highlights slope/intercept bias.
-# Fix 1: coord_equal() ensures 1:1 line is visually meaningful.
-# Fix 2: annotate summary stats so the figure is self-contained.
+
 
 
  # not nessesary - single simple regression plots
@@ -363,21 +362,10 @@ plot_rolling_diagnostics <- function(ref_df, target_df, target_name, var, window
 
   df <- rolling_diagnostics(ref_df, target_df, var, window_days) |>
     pivot_longer(c(mae, rmse, bias, cor), names_to = "metric", values_to = "value")
-  limits <- tibble::tribble(   #To control the y numbers in plotting change up or down to your values 
-  ~metric, ~ymin, ~ymax,
-  "bias",  -4,     2,
-  "cor",   -1,     1,
-  "mae",    0,    15,
-  "rmse",   0,    15
-)
 
-# add x so geom_blank can affect scales
-limits_x <- tidyr::crossing(limits, Date = range(df$Date))  
-  
+
   ggplot(df, aes(Date, value)) +
     geom_line() +
-    geom_blank(data = limits, aes(y = ymin)) +
-    geom_blank(data = limits, aes(y = ymax)) +
     facet_wrap(~ metric, scales = "free_y", ncol = 1) +
     labs(
       title = paste0("Rolling ", window_days, "-day diagnostics: ", target_name, " vs Airport_1770 (", var, ")"),
@@ -549,7 +537,7 @@ plot_false_alarm_magnitude <- function(ref_df, targets_list,
     geom_histogram(bins = 40, alpha = 0.6, position = "identity") +
     scale_x_continuous(trans = "log1p") +
     scale_fill_manual(values = target_colors) +
-    facet_wrap(~ targets, ncol = 1, scales = "fixed") +
+    facet_wrap(~ target, ncol = 1, scales = "fixed") +
     labs(
       title = paste0("False alarms magnitude: ref ≤ ", threshold_mm, " mm but target > ", threshold_mm, " mm"),
       x = "Target precip (mm/day) [log1p]", y = "Count", fill = "Dataset"
@@ -641,8 +629,8 @@ plot_monthly_climatology <- function(ref_df, targets_list, var,
 #   Winter = JJA
 #   Spring = SON
 #
-# For your "NZ warm vs cool season" style, you can set:
-#   warm = Oct-Mar, cool = Apr-Sep
+# For "NZ warm vs cool season" style, can set:
+#   e.g warm = Nov-April, cool = May-Oct
 #
 # You can change these month vectors without touching anything else.
 
@@ -671,7 +659,7 @@ assign_season <- function(date, season_defs = season_defs_default) {
 # -----------------------------
 # 4) SEASONAL METRICS (calc_metrics_* within each season)
 # -----------------------------
-# Why: lets you claim "dataset X performs best in winter for wind" (defensible).
+# Why: claims "dataset X performs best in winter for wind" (defensible).
 
 seasonal_metrics_vs_ref <- function(ref_df, target_df, target_name, var,
                                     season_defs = season_defs_default,

@@ -65,12 +65,10 @@ Relative bias: Expressed as percent (%) of mean observed, `100xbias/mean(obs)`.
 
 ## Event‑based performance evaluated using reference‑defined subsets
 
-Wet‑day precipitation metrics use `Precip_mm > 1 mm` in the reference (set via `wet_threshold_mm = 1`), to assess performance on meaningful rain days.
+Wet‑day precipitation metrics use `Precip_mm > 1 mm` in the reference (set via `wet_threshold_mm = 1`), to assess performance on meaningful rain days. et‑day metrics were computed only when the reference precipitation exceeded 1 mm (Airport_1770), to focus on "meaningful" rain events.
 
-Windy‑day metrics use the top 10% of reference wind speeds (`windy_top_pct = 0.10`), i.e., the 90th percentile of the reference wind during the overlap period. (A fixed threshold of 10 m/s is coded as an alternative but not used in th
+Windy‑day metrics used the top 10% of the reference dataset wind speeds (`windy_top_pct = 0.10`), defined by the the 90th percentile of the reference (e.g Airport) wind during the overlap period, metrics were computed only on those high‑wind days for the windy_day componend. (A fixed threshold of 10 m/s is coded for as an alternative but not used)
 
-Wet‑day and windy‑day subsets\
-Wet‑day metrics were computed only when the reference precipitation exceeded 1 mm (Airport_1770), to focus on meaningful rain events. Windy‑day metrics used the top 10% of reference wind speeds, defined by the 90th percentile of Airport_1770 during the overlap period; metrics were computed only on those high‑wind days.
 
 For example: ERA5 vs Airport for precipitation where airport precipitation= reference "obs" series ERA5 precipitation = dataset/source we are evaluating "sim". mertrics_all uses every day where both datasets have values (after NA removal) (baseline overall preformance) metrics_wet uses only days where the reference has “meaningful rain”:if threshold_mm = 1, it keeps days where airport precipitation mm \> 1. This answers: “How well does ERA5 match rainy days?”(which usually matters more for modelling than dry days). metrics_windy uses only days where the reference indictes high wind :if threshold_ms = 10, it keeps days where airport wind speed m/s \>=10. This answers: “How well does ERA5 match wind-storm days?” which matters because correlation may look high but preform poorly in seasonal extremes, wind and rain heavy events.
 

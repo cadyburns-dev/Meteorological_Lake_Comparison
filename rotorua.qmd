@@ -12,18 +12,17 @@ params:
   targets: ["ERA5", "Buoy", "Town_40177", "VCS_On"]
   vars: ["Temp_C", "Precip_mm", "Wind_Spd_ms", "RadSWD_Wm2"]
   wet_threshold_mm: 1
-  precip_event_threshold: 0.1
+  precip_event_threshold: 1
   windy_top_pct: 0.10
   windy_threshold_ms: 10
   window_days: 30
 ---
 
-Meterological data is utalised for many different lake assesments, from understanding lake regime shifts to modeling future lake dynamices. It is therfore vital to use the best avalable meterological data for the location and time of choice. Too often meterological data are incomplete and unreliable. ERA5 (ECMWF fifth gen) data gridded at 31km is widely used due to its comprehensive and clean nature combining observations with model data, however it is coarse and some variables are known to misrepresent data at the land/lake surface (low atmosphere metorology). NIWAs virtual climate station network takes captured observational station data and created a 5km grid conecting other weather stations to allow for intergrated data in a chosen location. The VCSN data is somewhat intertwined with the Airport data which is used as the Reference for the Rotorua Lake demo. Meterological datasets in more densely populated areas or with large topographical gradients will typically result in micro-climatic datasets due to the physical nature of these environments. In partucular wind, rain and even temperature in larger cities. Additionally, stations placed in higher altitudes can often misrepresent lower altitudes. When wanting to use datasets for lake specific projects Buoy data has the opportunity to allow for more accurate readings due to its on water position. However precipitation data is often inaccurate, especially in higher wind events, causing movement of monitoring equipment. This is especially true in large lakes that can develope substantial waves. For this reason wind can also be skewed in events. Temperature for a given Lake from a Buoy is regarded the most likely accurate candidate as fulxtuations from a water body and fluxes from land follow different physical laws. 
+Meterological data is utalised for many different lake assesments, from understanding lake regime shifts to modeling future lake dynamices. It is therfore vital to use the best avalable meterological data for the location and time of choice. Too often meterological data are incomplete and unreliable. ERA5 (ECMWF fifth gen) data gridded at 31km is widely used due to its comprehensive and clean nature combining observations with model data, however it is coarse and some variables are known to misrepresent data at the land/lake surface (low atmosphere metorology). NIWAs virtual climate station network takes captured observational station data and created a 5km grid conecting other weather stations to allow for intergrated data in a chosen location. The VCSN data is somewhat intertwined with the Airport data which is used as the Reference for the Rotorua Lake demo. Meterological datasets in more densely populated areas or with large topographical gradients will typically result in micro-climatic datasets due to the physical nature of these environments. In partucular wind, rain and even temperature in larger cities. Additionally, stations placed in higher altitudes can often misrepresent lower altitudes. When wanting to use datasets for lake specific projects Buoy data has the opportunity to allow for more accurate readings due to its on water position. However precipitation data is often inaccurate, especially in higher wind events, causing movement of monitoring equipment. This is especially true in large lakes that can develope substantial waves. For this reason wind can also be skewed in events. Temperature for a given Lake from a Buoy is regarded the most likely accurate candidate as fulxtuations from a water body and fluxes from land follow different physical laws.
 
 The question here is how does coarse global, modelled national, Local, and Lake source metorological data compare. Is there a better data source in cool or warm periods? or in a storm event? or for a specific variable? or Is there a better data source for local models?
 
-By analysing the different datasets in a given location compared to a verifiable meteorological dataset we can start to see where datasets perform well and where they lack agreement. 
-
+By analysing the different datasets in a given location compared to a verifiable meteorological dataset we can start to see where datasets perform well and where they lack agreement.
 
 The second largest lake (by surface area \~79.9km2) in New Zealand, Lake Rotorua is a relatively well studied lake with and round shape fitting it's distrinct culdera description.
 
@@ -175,14 +174,6 @@ tm_shape(lake_poly, bbox = st_bbox(map_extent)) +
 
 ```
 
-## Additional infor afout data sources - to put in discussion?
-
-ERA5 uncertancy - presious ERA-interim showed improved fit fro temp, wind and huidily in the troposphere but not in the stratosphere" (direct cite - rmets.oninelibrary.wiley.com/doi/10.1002/qj.3803)
-
-## Site data sources
-
-Limnotrack Buoy (lat:-380550S Lon:1761653E) on lake, NIWA virtual climate station network (VCSN) grid NO:27879 lat:-38.075 lon:176.275, ERA5 statlite data for Lat:-38.114908 and Lon:176.316662, Observational data "Airport" station 1770 (lat:-38.10592 lon:176.31481), Obresvational data "Town" station 41077 (lat:-38.14635 lon:176.2578).
-
 Methods
 
 All work was completed in R code [@r:alan2024] following the script order stated on README in git reposotory (00, 01, 02, 03, 04, 05).
@@ -191,7 +182,7 @@ Please refer to methods tab for further detail
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-  echo = FALSE,        # show code on website (you can set FALSE later)
+  echo = FALSE,        # show code on website (you can set FALSE later to hide)
   message = FALSE,
   warning = FALSE,
   fig.width = 10,
@@ -265,7 +256,10 @@ vars_available <- Reduce(
 vars <- intersect(vars_requested, vars_available)
 ```
 
-## Data coverage
+For Rotorua there seems to be no single “best” dataset, rather, there are better choices to make depending on what variable you wish to use and for what purpose. All quantitative performance statements below are relative to the Airport_1770 reference and overlap period (Table: [Metrics](metrics_stats_results.qmd#tbl-metrics); Table: [Coverages](metrics_stats_results.qmd#tbl-coverage)).
+
+::: {.callout-note collapse="true"}
+## Click to see data coverage table
 
 ```{r}
 #| echo: false
@@ -289,8 +283,10 @@ reactable(
   pagination = FALSE
 )
 ```
+:::
 
-## Metrics table (reference vs targets)
+::: {.callout-note collapse="true"}
+## Click to see metrics table
 
 ```{r}
 #| echo: false
@@ -315,32 +311,10 @@ reactable(
   defaultPageSize = 12
 )
 ```
-
-## Time series overlays
-
-::: {.panel-tabset}
-## Time Series 
-
-### Temperature
-```{r}
-plot_timeseries_line(ref_df, targets_list, "Temp_C")
-```
-### Wind
-```{r}
-plot_timeseries_line(ref_df, targets_list, "Wind_Spd_ms")
-```
-### Precipitation
-```{r}
-plot_timeseries_line(ref_df, targets_list, "Precip_mm")
-```
 :::
-```{r}
-if ("RadSWD_Wm2" %in% vars) plot_timeseries_line(ref_df, targets_list, "RadSWD_Wm2")
-```
 
-## Precipitation event structure
-
-Precipitation data collection can be achieved in many ways. Here Airport, Town
+::: {.callout-note collapse="true"}
+## Click for precipitation event structure
 
 ```{r}
 plot_precip_hydrograph(ref_df, targets_list, show_7day_sum = TRUE)
@@ -353,6 +327,7 @@ plot_precip_cdf(ref_df, targets_list)
 ```{r}
 plot_precip_wetday_distribution(ref_df, targets_list, threshold_mm = wet_threshold_mm)
 ```
+:::
 
 ## Distribution (variability / bias)
 
@@ -370,6 +345,9 @@ plot_distribution(ref_df, targets_list, "Precip_mm")
 
 ## Scatter vs reference
 
+::: {.callout-note collapse="true"}
+## Click to see Scatter plot
+
 ```{r}
 plot_scatter_faceted(ref_df, targets_list, "Temp_C", ncol = 2)
 ```
@@ -381,31 +359,48 @@ plot_scatter_faceted(ref_df, targets_list, "Wind_Spd_ms", ncol = 2)
 ```{r}
 plot_scatter_faceted(ref_df, targets_list, "Precip_mm", ncol = 2)
 ```
-
-```{r}
-if ("RadSWD_Wm2" %in% vars) plot_scatter_faceted(ref_df, targets_list, "RadSWD_Wm2", ncol = 2)
-```
-
 :::
 
-The general strong correlation for ERA5 temperature indicates good temporal tracking most of the time (Figure: [Rolling 30-day temperature diagnostics](metrics_stats_results.qmd#fig-rolling-temp)). with consistent performance rather than episodic failures shown in steady MAE/RMSE. Although ERA5 wind looks suitable in the case of temperature variability it should be bias‑corrected for absolute values with the understanding it shows a cool overall bias. Buoy temperatures tend to exceed airport temperatures with an overall warm bias. Two distinct short periods show large negative bias and severe error spikes, consistent with data issues or equipment errors. In fact, the historical data for this project was not quality assured and does have errors. For example, a times temperature sits at 10.5 degrees for a week. Additionally in late 2019 equipment errors occur showing a consistent 90 degrees for around two months. This temporally long 90 degree reading was redacted for better comparison in this project. This shows the unstable nature of the historical data used, which is evident in the time series data where at times the variables were not consistently recorded accurately. Outside these events, correlation is high, and errors are low, suggesting strong agreement. Overall the Buoy temperature is reliable for most of the record, but errors should be excluded or corrected. Town station closely matches the airport on average with a near-zero bias for most of the year. Sharp shifts near the end of the series, with increase in error and reduced correlation mirroring the shifts indicate recording errors. Temporal coherence is high except during the 2025 anomaly showing high correlation. Although the Town_40177 temperature is generally consistent with the airport, recent data should be checked for change or quality issues before use suggesting stable but less tightly aligned agreement than station‑station comparisons. VCS_On temperatures have a consistent warm bias compared to the airport values across the record. The lack of outliers show more a more stable nature. VCS_On can represent temperature trends rather accurately. Advise would be to bias correct and have caution around the daily‑scale accuracy. It is key to note the VCSN it the closest data point to the Buoy, so temperature fluctuations may be more representative of a water based temperature dynamics rather than land based. Town wind shows a consistent negative bias. The rolling bias below zero throughout the record, indicates that the Town_40177 data underestimates wind speed relative to Airport_1770. There is generally strong temporal agreement but the short sharp drops in correlation and sharp peaks in MAE and RMSE, indicate times of poorer agreement. The overall relationship is stable but occasionally disrupted (e.g., by local site effects or data issues). Town_40177 wind is suitable for capturing wind variability trends, but absolute values should be bias‑corrected if used for magnitude‑sensitive applications. ERA5 wind-speed performance is regime dependent. it reproduces the broad seasonal cycle and event timing, but underestimates magnitude most strongly during high wind peak events, while showing smaller bias under lower winds. The seasonal oscillation in bias indicates this damping effect varies through the year, consistent with stronger mismatch during storm periods. More caution is needed if using ERA5 wind data depending on what season you look at. The ocilation bias shows a greater underesimation in some seasons (stronger =cooler, weaker = warmer). ERA5 is useful for capturing wider scale temporal patterns in wind but should be bias‑corrected and evaluated seasonally before use in applications sensitive to wind magnitude. ERA5 tends to smooth out local extreme weather events
+The general strong correlation for ERA5 temperature indicates good temporal tracking most of the time (Figure: [Rolling 30-day temperature diagnostics](metrics_stats_results.qmd#fig-rolling-temp)). with consistent performance rather than episodic failures shown in steady MAE/RMSE. Although ERA5 looks suitable in the case of temperature variability it should be bias corrected for absolute values with the understanding it shows a cool overall bias (Figure: [Temperature Scatter](metrics_stats_results.qmd#fig-Scatter-temp)) (Figure: [Climatology temperature](behaviour_results.qmd#fig-climatology-temp)) (CITERRTN NIWA DATAHUB 6). Buoy temperatures tend to exceed airport temperatures with an overall warm bias. Two distinct short periods show large negative bias and severe error spikes, consistent with data issues or equipment errors. In fact, the historical data for this project was not quality assured and does have errors. For example, a times temperature sits at 10.5 degrees for a week. Additionally in late 2019 equipment errors occur showing a consistent 90 degrees for around two months. This temporally long 90 degree reading was redacted for better comparison in this project. This shows the unstable nature of the historical data used, which is evident in the time series data where at times the variables were not consistently recorded accurately. Outside these events, correlation is high, and errors are low, suggesting strong agreement. Overall, the Buoy temperature is reliable for most of the record, but errors should be excluded or corrected. Town station closely matches the airport on average with a near-zero bias for most of the year. Sharp shifts near the end of the series, with increase in error and reduced correlation mirroring the shifts indicate recording errors. Temporal coherence is high except during the 2025 anomaly showing high correlation. Although the Town_40177 temperature is generally consistent with the airport, recent data should be checked for change or quality issues before use suggesting stable but less tightly aligned agreement than station station comparisons. VCS_On temperatures have a consistent warm bias compared to the airport values across the record. The lack of outliers shows more a more stable nature. VCS_On can represent temperature trends rather accurately. Advise would be to bias correct and have caution around the daily scale accuracy. It is key to note the VCSN it the closest data point to the Buoy, so temperature fluctuations may be more representative of a water based temperature dynamics due to thermal buffering rather than land based. For limnological applications this is key to consider due to potential better and more accurate on lake representation.
+
+Town wind shows a consistent negative bias. The rolling bias below zero throughout the record, indicates that the Town_40177 data underestimates wind speed relative to Airport_1770. There is generally strong temporal agreement but the short sharp drops in correlation and sharp peaks in MAE and RMSE, indicate times of poorer agreement. The overall relationship is stable but occasionally disrupted (e.g., by local site effects or data issues). Town_40177 wind is suitable for capturing wind variability trends, but absolute values should be bias corrected if used for magnitude sensitive applications. ERA5 wind-speed performance is regime dependent. It reproduces the broad seasonal cycle and event timing, but underestimates magnitude most strongly during high wind peak events, while showing smaller bias under lower winds. The seasonal oscillation in bias indicates this damping effect varies through the year, consistent with stronger mismatch during storm periods. More caution is needed if using ERA5 wind data depending on what season you look at. The oscillation bias shows a greater underestimation in some seasons (stronger =cooler, weaker = warmer). ERA5 is useful for capturing wider scale temporal patterns in wind but should be bias corrected and evaluated seasonally before use in applications sensitive to wind magnitude. ERA5 tends to smooth out local extreme weather events. VCSN wind generally shows the lowest overall wind error, resulting in more confidence performance. More specifically when using wind data for magnitude sensitive work. ERA5 is the least suitable for local day magnitude, unless corrected for ((Figure: Wind scatter; Figure Rolling wind plots; Figure Wind climatology}}}} TABSET?? For precipitation, VCS and Town are the most reliable overall, while ERA5 tends towards higher wet-day values and more false alarms. Buoy precipitation is weakest for event detection (((FIGURE: Precip scatter, precip rolling, figure event outcome, figute event skill, figure false alarm mag, figure precip climatology))}} ERA5 has the potential to be useful for wider scale projects and when needing longer records which are consistent. But for a project which require high accuracy and precision for local rain events (e.g. threshold modelling, runoff timing, loading pulses), ERA5 should be a secondary choice unless bias corrected. Project type recommendations – what do use when. When regarding seasonality or regime VCSN performs well in higher event situations (wet and windy). ERA5 temperature could be useful to use due to its clear, consistent temporal variability if needing to extend data or data gap fill, however adjustments will need to take place on an absolute level due to its cool bias. This is key to consider in lake level dynamic projects (e.g. water balance building). When it comes to Buoy and VCSN temperature recognising the spatial difference is necessary due to water/land differences. For this reason, both Buoy and VCSN temperature data are potentially better matches when it comes to lake process projects (e.g. ecological dynamics or evaporation calculations). For Climate change related projects, the ERA5 datasets completeness allows for more seamless and overarching comprehensive outcomes (CITE HERSBACH\< MUNOZ\< ECMWF). However, if possible, boas adjust against a local reference (e.g. Airport) data where possible.
 
 ::: {.callout-note collapse="true"}
 ## Rolling diagnostics plots (Temp)
 
 ```{r}
+#| label: fig-rolling-tempr
+#| fig-cap: "Rolling 30‑day diagnostics for daily temp (°C) comparing data target sources (Town_40177, ERA5, VSCN and Buoy data) to the reference (Airport_1770). Panels show 30‑day moving bias (source/target − reference), Pearson correlation (cor), mean absolute error (MAE), and Root mean square error (RMSE)."
+#| fig-subcap:
+#|   - "ERA5 vs Airport"
+#|   - "Buoy vs Airport"
+#|   - "Town vs Airport"
+#|   - "VSCN vs Airport"
+#| layout-ncol: 2
 purrr::iwalk(targets_list, ~ print(plot_rolling_diagnostics(ref_df, .x, .y, "Temp_C", window_days = window_days)))
 ```
+:::
+
+::: {.callout-note collapse="true"}
+## Rolling diagnostics plots (Wind)
 
 ```{r}
 purrr::iwalk(targets_list, ~ print(plot_rolling_diagnostics(ref_df, .x, .y, "Wind_Spd_ms", window_days = window_days)))
 ```
+:::
+
+::: {.callout-note collapse="true"}
+## Rolling diagnostics plots (rain)
 
 ```{r}
 purrr::iwalk(targets_list, ~ print(plot_rolling_diagnostics(ref_df, .x, .y, "Precip_mm", window_days = window_days)))
 ```
+:::
 
 ## Precipitation event agreement
+
+::: {.callout-note collapse="true"}
+## Event agreement plot
 
 ```{r}
 #| echo: false
@@ -418,6 +413,10 @@ skill_precip <- event_skill_all_targets(
 
 reactable(skill_precip, sortable = TRUE, striped = TRUE)
 ```
+:::
+
+::: {.callout-note collapse="true"}
+## Event outcomes plot
 
 ```{r}
 plot_event_outcomes(
@@ -425,6 +424,10 @@ plot_event_outcomes(
   title = paste0("Precip events (≥= ", precip_event_threshold, " mm/day): outcomes vs reference")
 )
 ```
+:::
+
+::: {.callout-note collapse="true"}
+## Event scores plot
 
 ```{r}
 plot_event_skill_scores(
@@ -432,12 +435,20 @@ plot_event_skill_scores(
   title = paste0("Precip events (≥= ", precip_event_threshold, " mm/day): skill vs reference")
 )
 ```
+:::
+
+::: {.callout-note collapse="true"}
+## false alarm magnitude plot
 
 ```{r}
 plot_false_alarm_magnitude(ref_df, targets_list, threshold_mm = precip_event_threshold)
 ```
+:::
 
 ## Monthly climatology (seasonal structure)
+
+::: {.callout-note collapse="true"}
+## Climatology plots
 
 ```{r}
 plot_monthly_climatology(ref_df, targets_list, "Temp_C")
@@ -450,6 +461,12 @@ plot_monthly_climatology(ref_df, targets_list, "Wind_Spd_ms")
 ```{r}
 plot_monthly_climatology(ref_df, targets_list, "Precip_mm")
 ```
+:::
+
+## Seasonal performance (NZ/Southern Hemisphere)
+
+::: {.callout-note collapse="true"}
+## Seasonal performance plots
 
 ## Seasonal performance (NZ/Southern Hemisphere)
 
@@ -465,6 +482,7 @@ plot_seasonal_scatter(ref_df, targets_list, "Wind_Spd_ms", season_defs = season_
 ```{r}
 plot_seasonal_scatter(ref_df, targets_list, "Precip_mm", season_defs = season_defs)
 ```
+:::
 
 ## Interactive table
 
@@ -495,3 +513,41 @@ reactable(
   defaultPageSize = 5
 )
 ```
+
+::: panel-tabset
+### Precipitation Scatter
+
+```{r}
+plot_scatter_faceted(ref_df, targets_list, "Precip_mm", ncol = 2)
+```
+
+### Precip Seasonal scatter
+
+```{r}
+plot_seasonal_scatter(ref_df, targets_list, "Precip_mm", season_defs = season_defs)
+```
+
+### Hydrograph
+
+```{r}
+plot_precip_hydrograph(ref_df, targets_list, show_7day_sum = TRUE)
+```
+
+### CDF
+
+```{r}
+plot_precip_cdf(ref_df, targets_list)
+```
+
+### Wet day dist
+
+```{r}
+plot_precip_wetday_distribution(ref_df, targets_list, threshold_mm = wet_threshold_mm)
+```
+
+### Distribution
+
+```{r}
+plot_distribution(ref_df, targets_list, "Precip_mm")
+```
+:::

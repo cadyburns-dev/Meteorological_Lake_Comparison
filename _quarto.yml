@@ -23,12 +23,12 @@ website:
         href: Overview.qmd
       - text: "Methods"
         href: methods.qmd
-      - text: "Seasonal and event behaviour"
-        href: behaviour_results.qmd
       - text: "Time Series"
         href: timeseries_results.qmd
       - text: "Metrics & stats"
         href: metrics_stats_results.qmd
+      - text: "Seasonal and event behaviour"
+        href: behaviour_results.qmd
       - text: "Rotorua demo"
         href: rotorua.qmd
       - text: "Reproducibility"
@@ -51,6 +51,8 @@ format:
     page-layout: full
     code-fold: true
     df-print: paged
+    search: true
+    code-copy: true
 
 execute:
   echo: true
