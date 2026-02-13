@@ -81,7 +81,7 @@ vcs_on   <- datasets[[5]]
 # matters because correlation may look high but preform poorly in seasonal extremes, wind and rain heavy events === (findinf out what the best met source is and when)
 # example below
 #   metrics_all   <- calc_metrics_all_days(ap1770$Precip_mm, era5$Precip_mm)   
- # metrics_wet   <- calc_metrics_wet_days(ap1770$Precip_mm, era5$Precip_mm, threshold_mm = 1) # threshold changes = test 0.1,1 and 5)
+# metrics_wet   <- calc_metrics_wet_days(ap1770$Precip_mm, era5$Precip_mm, threshold_mm = 1) # threshold changes = test 1 and 5)
 #   metrics_windy <- calc_metrics_windy_days(ap1770$Wind_Spd_ms, era5$Wind_Spd_ms, threshold_ms = 10) #used percentage (top 10% observed winds) to be lake transferable
 
 
@@ -90,7 +90,7 @@ vcs_on   <- datasets[[5]]
 #1. Metrics table
 #----------------------------------------
 # note to add to corr plot locatrion# “Correlation for precipitation can be influenced by many zero-rain days; we also evaluate performance on wet days (e.g., Precip > 0 or > 1 mm).”
-# # note to do after 1. 1.1?? Compute metrics twice - all days and then wet days only (e.g. obs > 0.1mm)
+# # note to do after 1. 1.1?? Compute metrics twice - all days and then wet days only (e.g. obs > 1mm)
 
 # tidy-table metrics_vs_ref that compares each target dataset to a reference dataset
 # returns one table with columns:target, var, subset, n, cor, slope, intercept, mae, rmse, ccc, bias, rel_bias

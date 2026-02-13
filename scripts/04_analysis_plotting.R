@@ -64,6 +64,8 @@ vars <- c("Temp_C", "Precip_mm", "Wind_Spd_ms", "RadSWD_Wm2")
 
 # -----------------------------
 # Metrics table (ready for Quarto)
+# where ref_df refers to the reference site we choose e.g Airport - 01.metrics_helpers sets this up
+# Where target_dr refers to the other datasets we are comparing e.g ERA5, Buoy, VCSN, Town
 # -----------------------------
 metrics_all <- purrr::imap_dfr(
   targets_list,
@@ -187,6 +189,7 @@ plot_distribution <- function(ref_df, targets_list, var, ref_name = "Airport_177
     ggplot(df, aes(value, fill = source)) +
       geom_histogram(bins = 40, alpha = 0.5, position = "identity") +
       scale_fill_manual(values = target_colors) +
+      facet_wrap(~ targets, ncol = 1, scales = "fixed") +
       labs(
         title = "Precip distribution (all days; zero-inflated)",
         x = "Precip (mm/day)", y = "Count"
@@ -360,9 +363,21 @@ plot_rolling_diagnostics <- function(ref_df, target_df, target_name, var, window
 
   df <- rolling_diagnostics(ref_df, target_df, var, window_days) |>
     pivot_longer(c(mae, rmse, bias, cor), names_to = "metric", values_to = "value")
+  limits <- tibble::tribble(   #To control the y numbers in plotting change up or down to your values 
+  ~metric, ~ymin, ~ymax,
+  "bias",  -4,     2,
+  "cor",   -1,     1,
+  "mae",    0,    15,
+  "rmse",   0,    15
+)
 
+# add x so geom_blank can affect scales
+limits_x <- tidyr::crossing(limits, Date = range(df$Date))  
+  
   ggplot(df, aes(Date, value)) +
     geom_line() +
+    geom_blank(data = limits, aes(y = ymin)) +
+    geom_blank(data = limits, aes(y = ymax)) +
     facet_wrap(~ metric, scales = "free_y", ncol = 1) +
     labs(
       title = paste0("Rolling ", window_days, "-day diagnostics: ", target_name, " vs Airport_1770 (", var, ")"),
@@ -370,6 +385,7 @@ plot_rolling_diagnostics <- function(ref_df, target_df, target_name, var, window
     ) +
     theme_bw()
 }
+
 
 # ============================================================
 # Example calls (keep these minimal for script testing)
@@ -418,6 +434,8 @@ library(ggplot2)
 # Plus skill scores:
 #   POD (prob detection), FAR (false alarm ratio), CSI (critical success index), Bias score.
 
+#To understand more the free and open access book (Camper 3 "Binary events by Ian B. Mason Outlines the working) -> Forecast verification: a practitioner's guide in atmospheric science editors = Ian T Jolliffe and David B. Stephenson
+
 event_skill <- function(ref_df, target_df, var, threshold,
                         direction = c(">", ">=", "<", "<=")) {
   direction <- match.arg(direction)
@@ -454,6 +472,8 @@ event_skill <- function(ref_df, target_df, var, threshold,
   far <- if ((hits + fa)   > 0) fa   / (hits + fa)   else NA_real_
   csi <- if ((hits + miss + fa) > 0) hits / (hits + miss + fa) else NA_real_
   bias_score <- if ((hits + miss) > 0) (hits + fa) / (hits + miss) else NA_real_
+
+
 
   tibble(
     n = nrow(joined),
@@ -507,7 +527,7 @@ plot_event_skill_scores <- function(skill_tbl, title = NULL) {
 # --- Magnitude when disagreement occurs (precip example) ---
 # "Ref dry but target wet": how much rain do they report?
 plot_false_alarm_magnitude <- function(ref_df, targets_list,
-                                      threshold_mm = 0.1,
+                                      threshold_mm = 1,
                                       ref_name = "Airport_1770") {
 
   # Build paired dataset
@@ -529,6 +549,7 @@ plot_false_alarm_magnitude <- function(ref_df, targets_list,
     geom_histogram(bins = 40, alpha = 0.6, position = "identity") +
     scale_x_continuous(trans = "log1p") +
     scale_fill_manual(values = target_colors) +
+    facet_wrap(~ targets, ncol = 1, scales = "fixed") +
     labs(
       title = paste0("False alarms magnitude: ref ≤ ", threshold_mm, " mm but target > ", threshold_mm, " mm"),
       x = "Target precip (mm/day) [log1p]", y = "Count", fill = "Dataset"
@@ -536,8 +557,8 @@ plot_false_alarm_magnitude <- function(ref_df, targets_list,
     theme_bw()
 }
 
-# --- Example calls (precip threshold default = 0.1 mm; easy to change) ---
-precip_event_threshold <- 0.1  # change to 1 or 5 if you want sensitivity tests later
+# --- Example calls (precip threshold default = 1 mm; easy to change) ---
+precip_event_threshold <- 1  # change to 1 or 5 if you want sensitivity tests later
 
 skill_precip <- event_skill_all_targets(
   ref_df, targets_list,
@@ -654,7 +675,7 @@ assign_season <- function(date, season_defs = season_defs_default) {
 
 seasonal_metrics_vs_ref <- function(ref_df, target_df, target_name, var,
                                     season_defs = season_defs_default,
-                                    wet_threshold_mm = 0.1,
+                                    wet_threshold_mm = 1,
                                     ref_name = "Airport_1770") {
 
   joined <- inner_join(
@@ -700,7 +721,7 @@ seasonal_metrics_vs_ref <- function(ref_df, target_df, target_name, var,
 
 seasonal_metrics_all_targets <- function(ref_df, targets_list, var,
                                         season_defs = season_defs_default,
-                                        wet_threshold_mm = 0.1) {
+                                        wet_threshold_mm = 1) {
   imap_dfr(targets_list, ~ seasonal_metrics_vs_ref(
     ref_df = ref_df,
     target_df = .x,

@@ -328,7 +328,7 @@ Historic_buoy_Temp <- read.csv(
   check.names = FALSE
 ) |>
   rename(
-    Datetime_txt = `Timestamp (UTC+12:00)`,
+    Datetime_txt = `Timestamp (ISO 8601 UTC)`,
     Temp_C       = `Value`
   ) |>
   mutate(

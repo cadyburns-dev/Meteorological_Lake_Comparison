@@ -140,9 +140,9 @@ calc_metrics_all_days <- function(obs, sim) {
 }
 
 # --- Wet days
-# Metrics for precipitation computed for wet days only (obs > 0.1 mm) to reduce the influence of zero-inflated dry periods.
+# Metrics for precipitation computed for wet days only (obs > 1 mm) to reduce the influence of zero-inflated dry periods.
 # The wet day thresholds can be changed common = >0mm or >1mm
-calc_metrics_wet_days <- function(obs, sim, threshold_mm = 0.1) {
+calc_metrics_wet_days <- function(obs, sim, threshold_mm = 1) {
   wet <- obs > threshold_mm
   calc_metrics_filtered(obs, sim, wet)
 }
