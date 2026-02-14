@@ -284,13 +284,13 @@ For the ERA5 source the bias is consistently negative across the timeline, showi
 
 Bias shifts over time from slightly positive in the early record toward near‑zero and then slightly negative values, indicating a gradual drift in mean offset. Correlation remains moderate to high with intermittent dips, while MAE/RMSE display recurring oscillations without large spikes.
 
-Slow bias drift: Mean bias trends from positive to slightly negative across the record, indicating gradual change in relative wind magnitude. Consistent but variable correlation: Correlation is generally moderate–high with periodic drops, reflecting time‑varying agreement. Stable error magnitudes: MAE/RMSE show cyclical variability but no extreme excursions, suggesting steady performance without major anomalies. Implication: VCS_On captures wind variability reasonably well, but bias may need time‑dependent adjustment.
+Slow bias drift are seen. Mean bias trends from positive to slightly negative across the record, showing gradual change in relative wind magnitude. Correlation is generally moderate–high with periodic drops, reflecting time‑varying agreement. MAE/RMSE show cyclical variability but no extreme excursions, suggesting steady performance without major anomalies. VCS_On captures wind variability reasonably well, but bias may need adjustment.
 
 ## Buoy wind
 
-A pronounced early‑record anomaly is evident as a sharp negative bias, collapse in correlation, and a simultaneous spike in MAE/RMSE. Outside this episode, bias remains small and positive, correlation is generally high, and errors are comparatively low with occasional minor excursions.
+A pronounced early  anomaly is evident as a sharp negative bias, collapse in correlation, and a simultaneous spike in MAE/RMSE. Outside this episode, bias remains small and positive, correlation is generally high, and errors are comparatively low with occasional minor excursions.
 
-Early anomaly dominates: A short early interval shows extreme disagreement (large negative bias, correlation collapse, large MAE/RMSE), indicating a likely data issue or calibration mismatch in that period. Otherwise strong agreement: After the anomaly, correlation stays high and error levels are low, implying good temporal coherence between buoy and airport winds. Small systematic bias: The buoy shows a slight positive bias relative to the airport in the stable period. Transient deviations only: Later deviations are modest and short‑lived, suggesting the relationship is stable after initial issues.
+Early anomaly dominates with a short early interval shows extreme disagreement (large negative bias, correlation collapse, large MAE/RMSE), indicating a likely data issue or calibration mismatch in that period. Otherwise strong agreement. After the anomaly, correlation stays high and error levels are low, implying good temporal coherence between buoy and airport winds. The buoy shows a slight positive bias relative to the airport in the stable period. Later deviations are modest and short‑lived, suggesting the relationship is stable after initial issues.
 
 ### Precipitation
 
