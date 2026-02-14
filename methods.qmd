@@ -802,6 +802,6 @@ Although ground based meterological datasets are often considered the best refer
 
 Future users should adapt thresholds, reference choice, and aggregation rules to their lake, documenting any deviations.
 
-# References (methods background)
+# 
 
 ##
