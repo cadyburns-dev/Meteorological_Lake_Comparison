@@ -224,6 +224,11 @@ Figure&nbsp;2: Meteorological data for daily average wind (m s⁻¹) from diff
 </div>
 </div>
 </div>
+<p>Toggle between timeseries and hydrograph</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Timeseries line plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Hydrograph daily totals</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-timeseries-precip" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -235,6 +240,25 @@ Figure&nbsp;2: Meteorological data for daily average wind (m s⁻¹) from diff
 Figure&nbsp;3: Meteorological data for daily total precipitation (mm) from different data sources (Airport, Buoy, ERA5, Town, VCS) around Lake Rotorua plotted against the reference data (Airport).
 </figcaption>
 </figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-Daily-Hydrograph" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-Daily-Hydrograph-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="timeseries_results_files/figure-html/fig-Daily-Hydrograph-1.png" class="img-fluid figure-img" width="960">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-Daily-Hydrograph-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Hydrograph for daily total precipitation (mm) from different data sources (Airport, Buoy, ERA5, Town, VCS) around Lake Rotorua plotted against the reference data (Airport).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -250,8 +274,8 @@ Table&nbsp;1: Most recent data from each data source (Airport, ERA5, Buoy, Town,
 </figcaption>
 <div aria-describedby="tbl-recent-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div class="reactable html-widget html-fill-item" id="htmlwidget-5805a8b53e5a951ea41b" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-5805a8b53e5a951ea41b">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Dataset":["Airport_1770","ERA5","Buoy","Town_40177","VCS_On"],"Date":["2025-07-27","2025-08-31","2025-09-01","2025-11-28","2025-06-30"],"Temp_C":[11.5857142857143,8.231,9.80763859722222,22.1,10.5],"Precip_mm":[0.2,24.029,0,"NA",0],"Wind_Spd_ms":[2.54,5.689,9.64310825442118,"NA",4.4],"RadSWD_Wm2":["NA",57.449,"NA","NA",63.6574074074074]},"columns":[{"id":"Dataset","name":"Dataset","type":"character"},{"id":"Date","name":"Date","type":"Date"},{"id":"Temp_C","name":"Temp_C","type":"numeric"},{"id":"Precip_mm","name":"Precip_mm","type":"numeric"},{"id":"Wind_Spd_ms","name":"Wind_Spd_ms","type":"numeric"},{"id":"RadSWD_Wm2","name":"RadSWD_Wm2","type":"numeric"}],"searchable":true,"defaultPageSize":5,"highlight":true,"striped":true,"dataKey":"c2468207ccdf881bdeec8aacf6463547"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+<div class="reactable html-widget html-fill-item" id="htmlwidget-0189cd248475bb5de4ea" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-0189cd248475bb5de4ea">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Dataset":["Airport_1770","ERA5","Buoy","Town_40177","VCS_On"],"Date":["2025-07-27","2025-08-31","2025-09-01","2025-11-28","2025-06-30"],"Temp_C":[11.5857142857143,8.231,9.80763859722222,22.1,10.5],"Precip_mm":[0.2,24.029,0,"NA",0],"Wind_Spd_ms":[2.54,5.689,9.64310825442118,"NA",4.4],"RadSWD_Wm2":["NA",57.449,"NA","NA",63.6574074074074]},"columns":[{"id":"Dataset","name":"Dataset","type":"character"},{"id":"Date","name":"Date","type":"Date"},{"id":"Temp_C","name":"Temp_C","type":"numeric"},{"id":"Precip_mm","name":"Precip_mm","type":"numeric"},{"id":"Wind_Spd_ms","name":"Wind_Spd_ms","type":"numeric"},{"id":"RadSWD_Wm2","name":"RadSWD_Wm2","type":"numeric"}],"searchable":true,"defaultPageSize":5,"highlight":true,"striped":true,"dataKey":"c2468207ccdf881bdeec8aacf6463547"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </figure>

@@ -6,8 +6,11 @@ format: html
 Use this guide to rerun the Rotorua workflow or adapt it to a new lake. The project flow is:
 
 1. Prepare raw data into daily, standardized CSVs (`scripts/02_prepare_raw_data.R`).
-2. Load those daily files in the QMDs, compute metrics, and render plots.
+2. Load files into (`scripts/03_analysis_helpers.R`, and `scripts/04)analysis_plotting.R`).
+2. Load source scripts to QMDs, compute metrics, and render plots.
 3. Render the site with Quarto.
+
+Additionally, just use `scripts/05_analysis_rotorua_plots.R` to print plots without needing to render qmds.
 
 This page separates required changes to scripts (data prep and helper code) from changes to QMDs/YAML (report configuration).
 
@@ -45,7 +48,7 @@ Make these edits in scripts if you want to re-use the pipeline for another lake.
 
 **scripts/05_analysis_rotorua_plots.R**
 
-- Rotorua-specific example driver. Update only if you want to run a stand-alone script for a new lake. The QMDs do not depend on this file.
+- Rotorua specific example. Update only if you want to run a stand alone script for a new lake. The QMDs do not depend on this file.
 
 ## Changes for a new lake: QMD + YAML
 
@@ -56,7 +59,7 @@ These edits control the rendered report and are required even if you only update
 - This file contains `params:` used by QMDs if you remove local params blocks.
 - If you keep local params inside each QMD (current setup), update them in each QMD instead.
 
-**QMD front matter**
+**QMD front**
 
 Update these in each of: `index.qmd`, `Overview.qmd`, `Results.qmd`, `metrics_stats.qmd`, `Behaviour.qmd`, `rotorua.qmd`:
 
@@ -94,15 +97,15 @@ Use this as a starting point for naming and params:
 
 ```yaml
 lake_name: "Lake Tutera"
-lat: -39.223588
-lon: 176.892553
+lat: -39.134088
+lon: 176.552553
 buffer_km: 10
 lake_id: "tutera"
 reference: "Airport_XXXX"
 targets: ["ERA5", "VCS_On"]
 vars: ["Temp_C", "Precip_mm", "Wind_Spd_ms", "RadSWD_Wm2"]
 wet_threshold_mm: 1
-precip_event_threshold: 0.1
+precip_event_threshold: 1
 windy_top_pct: 0.10
 windy_threshold_ms: 10
 window_days: 30
@@ -114,7 +117,7 @@ Example processed filenames:
 - `data/processed/tutera_vcs_on_daily.csv`
 - `data/processed/tutera_airport_XXXX_daily.csv`
 
-## Minimal run: two datasets only (ERA5 + VCS_On)
+## Smaller analysis: two datasets only (ERA5 + VCS_On)
 
 1. Set `reference` to the dataset you want as the benchmark (e.g., `VCS_On`).
 2. Set `targets: ["ERA5"]`.
@@ -123,7 +126,7 @@ Example processed filenames:
 
 This will produce the same metrics, plots, and diagnostics, but only for the chosen pair.
 
-## Minimal run: one variable only
+## Smaller analysis: one variable only
 
 1. Set `vars` to a single variable (e.g., `["Wind_Spd_ms"]`).
 2. Ensure that variable exists in every processed dataset.

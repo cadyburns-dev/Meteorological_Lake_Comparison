@@ -27,5 +27,5 @@ renv::snapshot(prompt = FALSE, prune = TRUE)
 if (interactive()) renv::status()
 
 
-
+# once all is restored the renv:lock should automatically restore = no need for this script again
 

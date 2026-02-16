@@ -5,7 +5,7 @@
 # Gives clean function that returns all metrics in a tidy order
 # 00_metrics_helpers.R
 # Helper functions to compute performance metrics between two met data series
- 
+# No changes need to be made here if only changing station data 
 
 
 # 1. Summary metrics - statistical functions only
@@ -17,7 +17,7 @@
 #' Compute summary metrics between two numeric vectors
 
 #' @param obs Numeric vector of "observed" or reference values (e.g. Airport)
-#' @param sim Numeric vector of "simulated" or alternative source (e.g. ERA5)
+#' @param sim Numeric vector of "simulated" or alternative source (e.g. ERA5, VCS, Buoy etc)
 #' @return A tibble with correlation, slope, intercept, MAE, RMSE, and concordance
 calc_metrics <- function(obs, sim) {
   stopifnot(length(obs) == length(sim))
@@ -140,8 +140,8 @@ calc_metrics_all_days <- function(obs, sim) {
 }
 
 # --- Wet days
-# Metrics for precipitation computed for wet days only (obs > 1 mm) to reduce the influence of zero-inflated dry periods.
-# The wet day thresholds can be changed common = >0mm or >1mm
+# Metrics for precipitation computed for wet days only (obs > 1 mm) to reduce the influence of zero inflated dry periods.
+# The wet day thresholds can be changed common = >0mm or >1mm 
 calc_metrics_wet_days <- function(obs, sim, threshold_mm = 1) {
   wet <- obs > threshold_mm
   calc_metrics_filtered(obs, sim, wet)

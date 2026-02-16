@@ -6,8 +6,6 @@
 
 # Script that follows  "00_project_setup" and  "01_metrics_helpers" and precedes "03_analysis_helpers" and "04_analysis_plotting"
 
-# If you have not gone through  00_project_setup or 01_metrics_helpers do so before this script
-
 
 
 # Aligns to common date time
@@ -16,13 +14,13 @@
  
 
 
-#---------------------------------------------- Install packages or retrieve them if not installed -----------------------------------------------
+#---------------------------------------------- Install packages or retrieve them if not installed (see 00_project_setup) -----------------------------------------------
 
   # AIM : Clean/process data, align date and units; Rotorua met sources: ERA5, Buoy, Airport, VCS.
 
 #-------------------------------------------------------------------------------
   # load library
-#1.-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 
 library(aemetools)
 library(dplyr)
@@ -37,7 +35,7 @@ library(purrr)
 
 #-------------------------------------------------------------------------------
   # Make functions - files all from inside data/raw
-#2. ------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 path_raw <- function(...) file.path("data", "raw", ...)
 
 # Date function to handle any NA in data
@@ -59,13 +57,13 @@ summarise_hourly_mean <- function(df, date_col, value_col) {
     )
 }
 
-# makeing wind function as buoy units changed mid dataset (note = visualize this and get unit changes dates for diff lakes)
+# makeing wind function as buoy units changed mid dataset (note = visualise this and get unit changes dates for diff lakes)
 wind_knots_conv <- function(df, Wind_Speed_ms, value_col) 
 wind_ms_conv <- function(df, Wind_Speed_ms, value_col)
 
 #-------------------------------------------------------------------------------  
   # ERA5 data (daily)
-#3.-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 
 # Lat and long of lake (This is Rotorua)
 lat <- -38.114908
@@ -145,7 +143,7 @@ Era5 <- read_csv(path_raw("Rotorua_ERA5_1990_2025.csv"), show_col_types = FALSE)
 glimpse(Era5)
 # ------------------------------------------------------------------------------
   # Buoy data (5-min → hourly → daily)
-#4.------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 
 #Get Buoy data from Limnotrack database - This is from the new Buoy so starts Feb 2022
 Rotorua_Buoy_raw <- read.csv(file = "https://www.dropbox.com/scl/fi/s37tbex1uej3r1xfzxkrd/Rotorua_202202-202508_meteorology.csv?rlkey=9oee6fzwx3q9yc7ubiobn9flc&st=obtfridy&dl=1", header = TRUE)
@@ -316,7 +314,7 @@ head(buoy_daily)
 summary(buoy_daily)
 
 ###################################
-# Rotorua Buoy has some historical data we ill patch together, for other lakes this might not be nessesary
+# Rotorua Buoy has some historical data we will patch together, for other lakes this might not be nessesary
 ########### SKIP THIS LAST BUOY STEP IF YOU ONLY HAVE ONE BUOY DATASET ##############
 ################################
 
@@ -406,11 +404,11 @@ buoy_daily <- dplyr::bind_rows(buoy_daily, Buoy_historic_daily) |>
   ) |>
   arrange(Date)
 
-
+########### END OF HISTORIC BUOY ADDING DATA ### Not needed if you have one Buoy dataset
 
 # -------------------------------------------------------------------
 # Rotorua town 40177 (near Rotorua Airport)  2015-2025
-#5.-------------------------------------------------------------------
+#-------------------------------------------------------------------
 
 
 # Download data from NIWA Cliflo manually and save as CSV in "data/raw" folder
@@ -419,7 +417,8 @@ buoy_daily <- dplyr::bind_rows(buoy_daily, Buoy_historic_daily) |>
 # Seperate files need to be joined together - radiation, temperature, rainfall, wind speed - 
 
 
-# ----------- Daily Radiation 
+# ----------- Daily Radiation -- if you only have daily instead of hourly - hourly is best
+
 #Rua_41077_RAD_daily <- read_csv(
 #  path_raw("Rotorua_town_41077", "41077__Radiation__Global__daily.csv"),
 #  show_col_types = FALSE
@@ -444,8 +443,8 @@ buoy_daily <- dplyr::bind_rows(buoy_daily, Buoy_historic_daily) |>
 
 #tail(Rua_41077_RAD_daily)
 
-
-# ---- Hourly radiation
+# ----
+# ---- Hourly radiation -------- instead of daily
 
 
 twn_41077_rad_hourly <- read_csv(
@@ -477,7 +476,7 @@ tail(TWN_41077_RAD_daily)
 
 
 
-# ---------- daily temperature/humidity - if you cant get hourly use th code below
+# ---------- daily temperature/humidity - if you cant get hourly use the code below
 
 #Rua_41077_TEMP_daily <- read_csv(
  # path_raw("Rotorua_town_41077", "41077__Temperature__daily.csv"),
@@ -600,7 +599,7 @@ glimpse(Rua_41077_daily)
 
 # -------------------------------------------------------------------
 # Airport 1770 (near airport Rotorua)
-#6.-------------------------------------------------------------------
+#-------------------------------------------------------------------
 
 
 
@@ -726,7 +725,7 @@ glimpse(ap_1770_daily)
 
 # -------------------------------------------------------------------
 # Virtual Climate Station – On Rotorua (daily)
-#7.-------------------------------------------------------------------
+#-------------------------------------------------------------------
 
 # To download data from NIWA VCSN manually and save as CSV in data/raw folder (note this is not free access)
 # https://data.niwa.co.nz/products/vcsn-timeseries/map?bounds=176.20439529418948%2C-38.12645478095495%2C176.38017654418948%2C-38.04863179448705 

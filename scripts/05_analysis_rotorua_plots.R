@@ -7,7 +7,7 @@ source("scripts/04_analysis_plotting.R")
 print(metrics_all)
 
 # ============================================================
-# Example calls (keep these minimal for script testing)
+#
 # ============================================================
 
 print(plot_timeseries_line(ref_df, targets_list, "Temp_C"))
@@ -17,9 +17,11 @@ print(plot_timeseries_line(ref_df, targets_list, "Precip_mm"))
 # only plot timeseries is enough data avalable
 # p_ts_rad  <- plot_timeseries_line(ref_df, targets_list, "RadSWD_Wm2")
 
-print(plot_precip_hydrograph(ref_df, targets_list, show_7day_sum = TRUE))
-#p_hydro can be shown either with a running weekly total (show_7day_sum = TRUE or not (=FALSE)
-#be sure to know the difference because the output plot is very different
+
+plot_precip_hydrograph(ref_df, targets_list, display = "bars")
+plot_precip_hydrograph(ref_df, targets_list, display = "rolling", window_days = 7)  #7day totals for rain
+
+
 print(plot_precip_cdf(ref_df, targets_list))
 print(plot_precip_wetday_distribution(ref_df, targets_list, threshold_mm = 1))
 print(plot_distribution(ref_df, targets_list))
@@ -64,7 +66,7 @@ print(plot_monthly_climatology(ref_df, targets_list, "Precip_mm"))
 # Radiation only if you have decent overlap:
 # print(plot_monthly_climatology(ref_df, targets_list, "RadSWD_Wm2"))
 
-# --- Example calls: pick one season definition ---
+# --- pick one season definition ---
 season_defs <- season_defs_default
 # season_defs <- season_defs_warmcool  # <- switch to warm/cool quickly
 

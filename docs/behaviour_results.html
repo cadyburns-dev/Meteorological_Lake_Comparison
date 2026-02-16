@@ -161,7 +161,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of Content</h2>
    
   <ul>
-  <li><a href="#precipitation-event-structure" id="toc-precipitation-event-structure" class="nav-link active" data-scroll-target="#precipitation-event-structure">Precipitation event structure</a></li>
+  <li><a href="#precipitation-event-structure-the-following-plots-show-how-precipitation-volumes-and-timing-align-across-datasets." id="toc-precipitation-event-structure-the-following-plots-show-how-precipitation-volumes-and-timing-align-across-datasets." class="nav-link active" data-scroll-target="#precipitation-event-structure-the-following-plots-show-how-precipitation-volumes-and-timing-align-across-datasets.">Precipitation event structure: The following plots show how precipitation volumes and timing align across datasets.</a></li>
   <li><a href="#event-detection-and-mismatches" id="toc-event-detection-and-mismatches" class="nav-link" data-scroll-target="#event-detection-and-mismatches">Event detection and mismatches</a></li>
   <li><a href="#seasonal-behaviour" id="toc-seasonal-behaviour" class="nav-link" data-scroll-target="#seasonal-behaviour">Seasonal behaviour</a></li>
   </ul>
@@ -193,21 +193,43 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This page focuses on behaviour: when datasets agree on events, where they miss each other (zeros vs non-zeros, timing offsets, extremes), and how seasonality shows up.</p>
-<section id="precipitation-event-structure" class="level2">
-<h2 class="anchored" data-anchor-id="precipitation-event-structure">Precipitation event structure</h2>
-<p>The following plots show how precipitation volumes and timing align across datasets.</p>
+<p>This page focuses on behaviour: when datasets agree on events, where they miss each other (zeros vs non-zeros, timing offsets, extremes), and how datasets change over different seasons.</p>
+<section id="precipitation-event-structure-the-following-plots-show-how-precipitation-volumes-and-timing-align-across-datasets." class="level2">
+<h2 class="anchored" data-anchor-id="precipitation-event-structure-the-following-plots-show-how-precipitation-volumes-and-timing-align-across-datasets.">Precipitation event structure: The following plots show how precipitation volumes and timing align across datasets.</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">7-day total</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Daily Hydrograph</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div class="cell">
 <div class="cell-output-display">
-<div id="fig-timeseries-hydro" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-Rolling-7-hydro" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-timeseries-hydro-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="behaviour_results_files/figure-html/fig-timeseries-hydro-1.png" class="img-fluid figure-img" width="960">
+<div aria-describedby="fig-Rolling-7-hydro-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="behaviour_results_files/figure-html/fig-Rolling-7-hydro-1.png" class="img-fluid figure-img" width="960">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-timeseries-hydro-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Hydrograph of daily precipitation (mm) for all datasets (Airport, Buoy, Town, ERA5, VCS) for Lake Rotorua.
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-Rolling-7-hydro-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: 7-day rolling hydrograph showing total precipitation (mm/7day) for all datasets (Airport, Buoy, Town, ERA5, VCS) at Lake Rotorua.
 </figcaption>
 </figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-hydrograph" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-hydrograph-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="behaviour_results_files/figure-html/fig-hydrograph-1.png" class="img-fluid figure-img" width="960">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hydrograph-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Hydrograph of daily precipitation (mm) for all datasets (Airport, Buoy, Town, ERA5, VCS) for Lake Rotorua.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -219,14 +241,13 @@ Figure&nbsp;1: Hydrograph of daily precipitation (mm) for all datasets (Airport,
 <img src="behaviour_results_files/figure-html/fig-cumulative-freq-1.png" class="img-fluid figure-img" width="960">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cumulative-freq-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2: Cumulative distribution functions (CDFs) of daily precipitation for each dataset (Airport, Buoy, Town, ERA5, VCS) for Lake Rotorua. Curves further to the right indicate heavier tails (more high‑rain days), while curves higher at low precipitation indicate more light‑rain or dry days.
+Figure&nbsp;3: Cumulative distribution functions (CDFs) of daily precipitation for each dataset (Airport, Buoy, Town, ERA5, VCS) for Lake Rotorua. Curves further to the right indicate heavier tails (more high‑rain days), while curves higher at low precipitation indicate more light‑rain or dry days.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p><em>Cumulative distribution functions (CDFs) of daily precipitation for each dataset relative to the reference. Curves further to the right indicate heavier tails (more high‑rain days), while curves higher at low precipitation indicate more light‑rain or dry days.</em></p>
-<p>ERA5’s curve is shifted rightward, indicating more frequent moderate–high rainfall (wet bias). The buoy curve rises faster at low precipitation, indicating fewer heavy‑rain days and a tendency toward under‑reporting. Town_40177 and VCS_On track the reference most closely across the distribution, suggesting better alignment in both light and heavy rain frequencies.</p>
+<p>ERA5’s curve is shifted rightward, indicating more frequent moderate to high rainfall (wet bias). The buoy curve rises faster at low precipitation, indicating fewer heavy‑rain days and a tendency toward under tracking. Town_40177 and VCS_On track the reference most closely across the distribution, showing potential better fit in both light and heavy rain.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-histogram-ncol2-rain" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -235,22 +256,21 @@ Figure&nbsp;2: Cumulative distribution functions (CDFs) of daily precipitation f
 <img src="behaviour_results_files/figure-html/fig-histogram-ncol2-rain-1.png" class="img-fluid figure-img" width="960">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-histogram-ncol2-rain-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3: Histograms of daily precipitation on wet days only (reference &gt; 1 mm), shown separately for each dataset (Airport, Buoy, Town, ERA5, VCS) for Lake Rotorua. This removes zero‑inflation and highlights agreement in the distribution of event magnitudes
+Figure&nbsp;4: Histograms of daily precipitation on wet days only (reference &gt; 1 mm), shown separately for each dataset (Airport, Buoy, Town, ERA5, VCS) for Lake Rotorua. This removes zero‑inflation and highlights agreement in the distribution of event magnitudes
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p><em>Histograms of daily precipitation on wet days only (reference&gt; 1 mm), shown separately for each dataset. This removes zero‑inflation and highlights agreement in the distribution of event magnitudes.</em></p>
-<p>ERA5 shows the broadest distribution and the longest upper tail, consistent with overestimation of heavier events. Town_40177 and VCS_On align more closely with the reference shape, indicating better magnitude agreement on wet days. The buoy distribution is compressed toward lower totals, indicating underestimation of event magnitudes.</p>
+<p>ERA5 shows the broadest distribution and the longest upper tail, which aligns with overestimation of heavier events. Town_40177 and VCS_On align more closely with the reference shape, indicating better magnitude agreement on wet days. The buoy distribution is pressed toward lower totals, indicating underestimation of event magnitudes.</p>
 </section>
 <section id="event-detection-and-mismatches" class="level2">
 <h2 class="anchored" data-anchor-id="event-detection-and-mismatches">Event detection and mismatches</h2>
-<p>Use these to spot zero vs non‑zero disagreements, misses/false alarms, and timing offsets during wet events. POD: Probability detection FAR: False alarm ratio CSI: Critical success inder Bias score:</p>
+<p>Use these to spot zero vs non zero disagreements, misses/false alarms, and timing offsets during wet events. POD: Probability detection FAR: False alarm ratio CSI: Critical success inder Bias score:</p>
 <div class="cell">
 <div class="cell-output-display">
-<div class="reactable html-widget html-fill-item" id="htmlwidget-97d9e5b5e45505ba1826" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-97d9e5b5e45505ba1826">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"target":["ERA5","Buoy","Town_40177","VCS_On"],"var":["Precip_mm","Precip_mm","Precip_mm","Precip_mm"],"threshold":[1,1,1,1],"ref":["Airport_1770","Airport_1770","Airport_1770","Airport_1770"],"n":[5829,1246,3462,5802],"hits":[1776,186,1035,1764],"misses":[97,235,109,99],"false_alarms":[1331,34,112,270],"correct_neg":[2625,791,2206,3669],"POD":[0.948211425520555,0.441805225653207,0.90472027972028,0.946859903381642],"FAR":[0.42838751206952,0.154545454545455,0.0976460331299041,0.132743362831858],"CSI":[0.554307116104869,0.408791208791209,0.824044585987261,0.827004219409283],"bias_score":[1.65883609183129,0.522565320665083,1.00262237762238,1.09178743961353]},"columns":[{"id":"target","name":"target","type":"character"},{"id":"var","name":"var","type":"character"},{"id":"threshold","name":"threshold","type":"numeric"},{"id":"ref","name":"ref","type":"character"},{"id":"n","name":"n","type":"numeric"},{"id":"hits","name":"hits","type":"numeric"},{"id":"misses","name":"misses","type":"numeric"},{"id":"false_alarms","name":"false_alarms","type":"numeric"},{"id":"correct_neg","name":"correct_neg","type":"numeric"},{"id":"POD","name":"POD","type":"numeric"},{"id":"FAR","name":"FAR","type":"numeric"},{"id":"CSI","name":"CSI","type":"numeric"},{"id":"bias_score","name":"bias_score","type":"numeric"}],"pagination":false,"defaultPageSize":10,"highlight":true,"striped":true,"dataKey":"392c4192a908b11f5126aff48cfae77b"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+<div class="reactable html-widget html-fill-item" id="htmlwidget-04f9cb71d84933293cda" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-04f9cb71d84933293cda">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"target":["ERA5","Buoy","Town_40177","VCS_On"],"var":["Precip_mm","Precip_mm","Precip_mm","Precip_mm"],"threshold":[1,1,1,1],"ref":["Airport_1770","Airport_1770","Airport_1770","Airport_1770"],"n":[5829,1246,3462,5802],"hits":[1776,186,1035,1764],"misses":[97,235,109,99],"false_alarms":[1331,34,112,270],"correct_neg":[2625,791,2206,3669],"POD":[0.948211425520555,0.441805225653207,0.90472027972028,0.946859903381642],"FAR":[0.42838751206952,0.154545454545455,0.0976460331299041,0.132743362831858],"CSI":[0.554307116104869,0.408791208791209,0.824044585987261,0.827004219409283],"bias_score":[1.65883609183129,0.522565320665083,1.00262237762238,1.09178743961353]},"columns":[{"id":"target","name":"target","type":"character"},{"id":"var","name":"var","type":"character"},{"id":"threshold","name":"threshold","type":"numeric"},{"id":"ref","name":"ref","type":"character"},{"id":"n","name":"n","type":"numeric"},{"id":"hits","name":"hits","type":"numeric"},{"id":"misses","name":"misses","type":"numeric"},{"id":"false_alarms","name":"false_alarms","type":"numeric"},{"id":"correct_neg","name":"correct_neg","type":"numeric"},{"id":"POD","name":"POD","type":"numeric"},{"id":"FAR","name":"FAR","type":"numeric"},{"id":"CSI","name":"CSI","type":"numeric"},{"id":"bias_score","name":"bias_score","type":"numeric"}],"pagination":false,"defaultPageSize":10,"highlight":true,"striped":true,"dataKey":"392c4192a908b11f5126aff48cfae77b"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <div class="cell">
@@ -261,13 +281,12 @@ Figure&nbsp;3: Histograms of daily precipitation on wet days only (reference &gt
 <img src="behaviour_results_files/figure-html/fig-precip-events-1.png" class="img-fluid figure-img" width="960">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-precip-events-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4: Stacked counts of precipitation event outcomes (threshold ≥ 1 ) for each dataset (ERA5, Buoy, Town, VCS) relative to the reference (Airport).
+Figure&nbsp;5: Stacked counts of precipitation event outcomes (threshold ≥ 1 ) for each dataset (ERA5, Buoy, Town, VCS) relative to the reference (Airport).
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p><em>Stacked counts of precipitation event outcomes (threshold ≥ 1 mm/day) for each dataset relative to the reference.</em></p>
 <p>ERA5 produces many hits but also the largest false‑alarm count, while Town_40177 shows the most balanced outcomes (high hits, low false alarms). VCS_On is conservative (few false alarms but more misses), and Buoy has fewer hits overall.</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -277,14 +296,13 @@ Figure&nbsp;4: Stacked counts of precipitation event outcomes (threshold ≥ 1
 <img src="behaviour_results_files/figure-html/fig-Rain-event-scores-1.png" class="img-fluid figure-img" width="960">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-Rain-event-scores-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5: Event‑detection skill for precipitation ≥ 1 mm per day, showing Probability detection (POD), false alarm ration (FAR), critical success index (CSI) and bias.
+Figure&nbsp;6: Event‑detection skill for precipitation ≥ 1 mm per day, showing Probability detection (POD), false alarm ration (FAR), critical success index (CSI) and bias.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p><em>Event‑detection skill for precipitation ≥ 1 mm/day.</em></p>
-<p>Town_40177 has the highest CSI and low FAR, indicating the most robust event agreement. ERA5 shows the highest POD but also the highest FAR and bias_score (&gt;1), reflecting over‑prediction. VCS_On is conservative (low FAR, lower POD), and Buoy has the weakest skill overall.</p>
+<p>Town_40177 has the highest critical sucess index (CSI) score and low ralse alarm ratio (FAR), indicating the most robust event agreement. ERA5 shows the highest probability of detection (POD), but also the highest FAR and bias_score (&gt;1), showing its over prediction nature. VCS_On shows low FAR and lower POD, while the Buoy data has the weakest skill overall, but also the lowest overall counts compared to the reference.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-false-alarm-mag" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -293,20 +311,18 @@ Figure&nbsp;5: Event‑detection skill for precipitation ≥ 1 mm per day, s
 <img src="behaviour_results_files/figure-html/fig-false-alarm-mag-1.png" class="img-fluid figure-img" width="960">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-false-alarm-mag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6: Distribution of false‑alarm precipitation amounts (ref ≤ 1 mm per day, target &gt; 1 mm per day) on a log1p scale.
+Figure&nbsp;7: Distribution of false‑alarm precipitation amounts (ref ≤ 1 mm per day, target &gt; 1 mm per day) on a log1p scale.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p><em>Distribution of false‑alarm precipitation amounts (ref ≤ 1 mm/day, target &gt; 1 mm/day) on a log1p scale.</em></p>
-<p>ERA5 shows the largest and most frequent false‑alarm magnitudes, while Town_40177 and VCS_On are more constrained. Buoy contributes few false alarms but also fewer detected events overall.</p>
-<p>ERA5 has very high POD (0.95) but high FAR (0.42) and bias_score &gt; 1 (1.64), meaning it detects most events but over‑predicts rain (many false alarms). Town_40177 shows the best balance: high POD (0.86), low FAR (0.08), and the highest CSI (0.795), indicating the most reliable event agreement overall. VCS_On has low FAR (0.024) but a lower POD (0.75), indicating it is conservative—it misses more events but rarely produces false alarms. Buoy is least reliable for event detection: lower POD (0.60) and CSI (0.548) despite a moderate FAR. False‑alarm magnitudes (when ref ≤ 1 mm):</p>
-<p>ERA5 false alarms are numerous and span large magnitudes, indicating systematic wet bias. Town_40177 and VCS_On false alarms are fewer and generally smaller. Buoy has the fewest false alarms but also the poorest detection rate.</p>
+<p>ERA5 shows the largest and most frequent false alarm magnitudes, while Town_40177 and VCS_On are more constrained. Buoy contributes few false alarms but also fewer detected events overall.</p>
+<p>ERA5 VCS and Town all have a bias score 1 or &gt;1 and 0.9 or greater POD, indicating over prediction of rain (more false alarms), while the Buoy data has lower bias score (0.52) and POD (0.44) showing it underpredicts rain events. Even thought ERA5 had the highest POD it also had the highest FAR (0.42) while VCS has the lowest FAR and strongest CSI (0.827). Town also produced a strong CSI (0.824) while ERA5 and Buoy both have weak to moderate scores.</p>
 </section>
 <section id="seasonal-behaviour" class="level2">
 <h2 class="anchored" data-anchor-id="seasonal-behaviour">Seasonal behaviour</h2>
-<p>Climatology and seasonal bias plots highlight over/under-capture of extremes across the year.</p>
+<p>Climatology and seasonal bias plots show potential detection or lack of for extremes across the year.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-climatology-temp" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -315,13 +331,12 @@ Figure&nbsp;6: Distribution of false‑alarm precipitation amounts (ref ≤ 1�
 <img src="behaviour_results_files/figure-html/fig-climatology-temp-1.png" class="img-fluid figure-img" width="960">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-climatology-temp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;7: Monthly climatology of daily temperature (°C) for each dataset (Airport, ERA5, Buoy, Town, VCS), showing monthly means (lines) and interquartile ranges (shaded bands 25 and 75). Airport_1770 is the reference; other datasets are overlaid to highlight seasonal offsets and variability. Showing any systematic seasonal bias in mean and variability. Uses overlap with reference dates to ensure fair comparison.
+Figure&nbsp;8: Monthly climatology of daily temperature (°C) for each dataset (Airport, ERA5, Buoy, Town, VCS), showing monthly means (lines) and interquartile ranges (shaded bands 25 and 75). Airport_1770 is the reference; other datasets are overlaid to highlight seasonal offsets and variability. Showing any systematic seasonal bias in mean and variability. Uses overlap with reference dates to ensure fair comparison.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p><em>Monthly climatology of daily temperature (°C) for each dataset, showing monthly means (lines) and interquartile ranges (shaded bands 25 and 75). Airport_1770 is the reference; other datasets are overlaid to highlight seasonal offsets and variability. Showing any systematic seasonal bias in mean and variability. Uses overlap with reference dates to ensure fair comparison. </em></p>
 <p>All datasets reproduce the same seasonal cycle (summer peak, winter minimum). ERA5 is consistently cooler than the reference, while Buoy and VCS_On are warmer. Town_40177 tracks the airport most closely across all months. IQR bands broadly overlap, indicating similar seasonal variability, but the persistent offsets indicate systematic seasonal bias rather than random error.</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -331,30 +346,28 @@ Figure&nbsp;7: Monthly climatology of daily temperature (°C) for each dataset (
 <img src="behaviour_results_files/figure-html/fig-climatology-wind-1.png" class="img-fluid figure-img" width="960">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-climatology-wind-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8: Monthly climatology of daily wind speed (m s⁻¹) from datasets (Airport, Buoy, ERA5, Town, VCS), with monthly means and IQR shading. Differences in mean level and spread reveal seasonal wind biases relative to the reference.
+Figure&nbsp;9: Monthly climatology of daily wind speed (m s⁻¹) from datasets (Airport, Buoy, ERA5, Town, VCS), with monthly means and IQR shading. Differences in mean level and spread reveal seasonal wind biases relative to the reference.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p><em>Monthly climatology of daily wind speed (m s⁻¹), with monthly means and IQR shading. Differences in mean level and spread reveal seasonal wind biases relative to the reference.</em></p>
-<p>All datasets show higher winds in spring–summer and lower in winter, but the magnitude differs. ERA5 is consistently lower than the reference across all months (systematic low bias). Buoy and VCS_On are higher than the reference, while Town_40177 is slightly low but closer. The Buoy and VCS_On bands are wider, suggesting greater variability or local effects.</p>
+<p>All datasets show higher winds in spring and summer and lower in winter, but the magnitude differs. ERA5 is consistently lower than the reference across all months (systematic low bias). Buoy and VCS_On are higher than the reference, while Town_40177 is lower. The VCS_On bands are closest to the reference, The thisckness in the IQR bands suggest greater variation or local effects.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="fig-climatology-pracip" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-climatology-precip" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-climatology-pracip-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="behaviour_results_files/figure-html/fig-climatology-pracip-1.png" class="img-fluid figure-img" width="960">
+<div aria-describedby="fig-climatology-precip-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="behaviour_results_files/figure-html/fig-climatology-precip-1.png" class="img-fluid figure-img" width="960">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-climatology-pracip-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;9: Monthly climatology of daily precipitation (mm) for each dataset (Airport, Buoy, ERA5, Town, VCS), showing monthly means and IQRs. This highlights seasonal rainfall patterns and dataset‑specific wet biases.
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-climatology-precip-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;10: Monthly climatology of daily precipitation (mm) for each dataset (Airport, Buoy, ERA5, Town, VCS), showing monthly means and IQRs. This highlights seasonal rainfall patterns and dataset‑specific wet biases.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p><em>Monthly climatology of daily precipitation (mm) for each dataset, showing monthly means and IQRs. This highlights seasonal rainfall patterns and dataset‑specific wet biases.</em></p>
-<p>All datasets show a winter–spring enhancement and a relative summer minimum, but the magnitude differs substantially. ERA5 is consistently wetter than the reference across months, while Buoy is markedly drier. Town_40177 aligns closely with the airport, and VCS_On is slightly wetter in several months. Wider IQRs for ERA5 indicate more variability and heavier tails.</p>
+<p>All datasets show a winter spring increase and a relative summer decrease, but the magnitude differs substantially. ERA5 is consistently wetter than the reference across months, while Buoy is clearly drier exept for september. Town_40177 aligns closely with the airport, and VCS_On is slightly wetter in several months but closer in the warmer dryer parts of the year. Wider IQRs for ERA5 indicate more variability and heavier tails.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-seasonal-bias-temp" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -363,14 +376,13 @@ Figure&nbsp;9: Monthly climatology of daily precipitation (mm) for each dataset 
 <img src="behaviour_results_files/figure-html/fig-seasonal-bias-temp-1.png" class="img-fluid figure-img" width="960">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-seasonal-bias-temp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;10: Seasonal mean temperature bias of ((target (Buoy, ERA5, Town, VCS) − reference(airport)) with interquartile ranges. Positive values indicate warm bias; negative values indicate cool bias.
+Figure&nbsp;11: Seasonal mean temperature bias of ((target (Buoy, ERA5, Town, VCS) − reference(airport)) with interquartile ranges. Positive values indicate warm bias; negative values indicate cool bias.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p><em>Seasonal mean temperature bias (target − reference) with interquartile ranges. Positive values indicate warm bias; negative values indicate cool bias.</em></p>
-<p>ERA5 is cool‑biased in all seasons, strongest in spring. Buoy shows a warm bias in all seasons, especially autumn/winter. Town_40177 is near zero in every season (best match). VCS_On is consistently warm‑biased but smaller than Buoy.</p>
+<p>ERA5 is cool biased in all seasons, most pronounced spring. Buoy shows a warm bias in all seasons, especially autumn/winter. Town_40177 is near zero in every season (best match). VCS_On is consistently warm biased but smaller than Buoy.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-scatter-season-temp" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -379,13 +391,12 @@ Figure&nbsp;10: Seasonal mean temperature bias of ((target (Buoy, ERA5, Town, VC
 <img src="behaviour_results_files/figure-html/fig-scatter-season-temp-1.png" class="img-fluid figure-img" width="960">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatter-season-temp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;11: Seasonal scatter plots of daily Temperature comparing each dataset (ERA5, Buoy, Town, VCS) to the reference (Airport) dataset. Dashed lines indicate 1:1 agreement; solid lines are fitted regressions. Rows represent seasons; columns represent datasets.
+Figure&nbsp;12: Seasonal scatter plots of daily Temperature comparing each dataset (ERA5, Buoy, Town, VCS) to the reference (Airport) dataset. Dashed lines indicate 1:1 agreement; solid lines are fitted regressions. Rows represent seasons; columns represent datasets.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p><em>Seasonal scatter plots of daily wind speed comparing each dataset to the reference dataset. Dashed lines indicate 1:1 agreement; solid lines are fitted regressions. Rows represent seasons; columns represent datasets.</em></p>
 <p>Town_40177 and VCS_On show tighter clustering around the 1:1 line across seasons, indicating stronger agreement. ERA5 shows systematic underestimation (regression slope &lt; 1) in all seasons, especially at higher winds. Buoy shows reasonable agreement but with more spread in summer and spring.</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -395,14 +406,13 @@ Figure&nbsp;11: Seasonal scatter plots of daily Temperature comparing each datas
 <img src="behaviour_results_files/figure-html/fig-seasonal-scatter-wind-1.png" class="img-fluid figure-img" width="960">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-seasonal-scatter-wind-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;12: Seasonal scatter plots of daily wind speed comparing each dataset (ERA5, Buoy, Town, VCS) to the reference (Airport) dataset. Dashed lines indicate 1:1 agreement; solid lines are fitted regressions. Rows represent seasons; columns represent datasets.
+Figure&nbsp;13: Seasonal scatter plots of daily wind speed comparing each dataset (ERA5, Buoy, Town, VCS) to the reference (Airport) dataset. Dashed lines indicate 1:1 agreement; solid lines are fitted regressions. Rows represent seasons; columns represent datasets.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p><em>Seasonal scatter plots of daily precipitation comparing each dataset to Airport_1770. Dashed lines show 1:1 agreement and solid lines show fitted regressions.</em></p>
-<p>Interpretation Town_40177 and VCS_On are closest to the 1:1 line in all seasons, indicating the best precipitation agreement. ERA5 tends to overestimate moderate and heavy events (slope &gt; 1), while Buoy underestimates rainfall across seasons and shows the greatest dispersion at higher totals.</p>
+<p>VCS_On are closest to the 1:1 line in all seasons, indicating the best precipitation agreement. Town and ERA5 tends to overestimate moderate and heavy events (slope &gt; 1), while Buoy underestimates rainfall across seasons and shows the greatest dispersion at higher totals.</p>
 
 
 </section>

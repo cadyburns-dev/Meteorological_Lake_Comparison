@@ -150,7 +150,7 @@ reactable(
 
 ### Temperature (Temp_C)
 
-Town_40177 shows near‑perfect agreement with Airport_1770 (r=0.99, RMSE=0.48, bias=0.01). ERA5 is strong but cool‑biased (r=0.95, RMSE=1.42, bias −0.53). Buoy and VCS_On are similar in correlation (r=0.92 and 0.91) with slight warm biases (bias +0.87 and +0.48, RMSE \~1.8). Overall high agreeability across all datasets with = or \> 0.90 CCC score
+Town_40177 shows near‑perfect agreement with Airport_1770 (r=0.99, RMSE=0.48, bias=0.01). ERA5 is strong but cool‑biased (r=0.95, RMSE=1.42, bias −0.53). Buoy and VCS_On are similar in correlation (r=0.92 and 0.91) with slight warm biases (bias +0.87 and +0.48, RMSE \~1.8). Overall high agreeability across all datasets with = or \> 0.90 CCC score.
 
 ### Precipitation (Precip_mm)
 
@@ -170,7 +170,7 @@ Density distribution overlays show bias or spread differences
 plot_distribution(ref_df, targets_list, "Temp_C")
 ```
 
-The distributions are broadly similar, but ERA5 is shifted slightly cooler (left of the reference), while Buoy and VCS_On are shifted warmer (right of the reference). Town_40177 most closely overlaps the reference distribution. Differences in tail thickness suggest small changes in variability, but the overall temperature range is consistent.
+The distributions are broadly similar with a classic bimodal structure, but ERA5 is shifted slightly cooler (left of the reference) with the only hint of a multimodal structure forming at around 12 degrees. Buoy and VCS_On are shifted warmer (right of the reference). Buoy shows a consistant hihger density of temperature between 10 and 20 degrees but has the lowest cooler density below 7.5 degrees. Town_40177 most closely overlaps the reference distribution. Differences in tail thickness suggest small changes in variability, but the overall temperature range is consistent.
 
 ```{r}
 #| label: fig-density-wind
@@ -178,7 +178,7 @@ The distributions are broadly similar, but ERA5 is shifted slightly cooler (left
 plot_distribution(ref_df, targets_list, "Wind_Spd_ms")
 ```
 
-ERA5 is shifted to lower wind speeds (left) with a longer tail, showing a consistent low‑wind bias. Buoy and VCS_On have higher density right tails (higher wind) than the reference, showing higher frequency of moderate–strong winds measurments. Town_40177 is closest to the reference peak but has dampend higher wind records.
+ERA5 is shifted to lower wind speeds (left) with a longer tail and a less defined unimodal shape, showing a consistent low‑wind bias. Buoy and VCS_On are shifted to the right with have higher density right tails (higher wind) than the reference, particulary the Buoy hold a stronger density showing higher frequency of moderate–strong winds measurments (high variability). Town shows less wind variability compared to the other datassets.
 
 ```{r}
 #| label: fig-Histogram-Precip
@@ -186,7 +186,7 @@ ERA5 is shifted to lower wind speeds (left) with a longer tail, showing a consis
 plot_distribution(ref_df, targets_list, "Precip_mm")
 ```
 
-All datasets are strongly zero‑inflated, but ERA5 shows a longer right tail and more moderate rainfall counts that are spread out, consistent with wet bias. Buoy has fewer non‑zero counts, indicating a lack of precipitation detection. VCS_On is closest to the reference, with similar tails and event frequencies. Town_40177 follows a similar pattern to the reference, but seems to underrepresent rain.
+All datasets are strongly zero‑inflated, but ERA5 shows a longer right tail and more moderate rainfall counts that are spread out, consistent with wet bias. Buoy has fewer non zero counts, indicating a lack of precipitation detection. VCS_On is closest to the reference, with similar tails and event frequencies. Town_40177 follows a similar pattern to the reference, but seems to underrepresent rain.
 
 ## Scatter vs reference (1:1)
 
@@ -207,7 +207,7 @@ Temperature agreement is strong across all datasets, with near‑linear relation
 plot_scatter_faceted(ref_df, targets_list, "Wind_Spd_ms", ncol = 2)
 ```
 
-All datasets show positive associations with the airport reference, but performance differs. Town_40177 and VCS_On show the strongest correlations and lowest errors, with regression lines closest to the 1:1 line. Buoy shows lower but moderate correlation and a positive bias (overestimation), while ERA5 shows weaker correlation and a strong negative bias (underestimation) with the largest RMSE among the four.
+The heteroscedastcity shows errors are not constant but high wind days more uncertanty. All datasets show positive associations with the airport reference, but performance differs. Town_40177 and VCS_On show the strongest correlations and lowest errors, with regression lines closest to the 1:1 line, Town wind is dampened in stronger winds. however, VCS shows Heteroscedasticity. Buoy shows lower but moderate correlation and a positive bias (overestimation), while ERA5 shows weaker correlation and a strong negative bias (underestimation) with the largest RMSE among the four and dampened/smoother higher wimds.
 
 ```{r}
 #| label: fig-scatter-precip
@@ -226,6 +226,7 @@ if ("RadSWD_Wm2" %in% vars) plot_scatter_faceted(ref_df, targets_list, "RadSWD_W
 ## Rolling diagnostics (drift through time)
 
 Rolling diagnostics reveal gradual offsets or drift through time where breaks away from 0 bias or a changing correlation is looked for, answering the "does it shift seasonally?" question.
+Because precipitation is intermittent and heavy tailed, errors are regime-dependent (large during event windows). Consideer the 30-day-rolling plots along side wet-day/event metrics, not all-days metrics alone. 
 
 ### Temperature
 
@@ -248,7 +249,7 @@ The bias is consistently negative, indicating ERA5 is cooler than the airport on
 
 ### Buoy temperature
 
-Bias is mostly positive, with two standout negative points. In particular, in late 2019, which coincides with sharp drops in correlation and spikes in MAE/RMSE due to data errors/missreadings in this period. Outside these events, correlation is high, and errors are low. Buoy temperatures tend to be higher than the reference.
+Bias is mostly positive, with two standout negative points. In particular, in late 2019, which coincides with sharp drops in correlation and spikes in MAE/RMSE. Outside these events, correlation is high, and errors are low. Buoy temperatures tend to be higher than the reference.
 
 ### Town temperature
 
@@ -305,3 +306,19 @@ Early anomaly dominates with a short early interval shows extreme disagreement (
 #| layout-ncol: 2
 purrr::iwalk(targets_list, ~ print(plot_rolling_diagnostics(ref_df, .x, .y, "Precip_mm", window_days = window_days)))
 ```
+
+### ERA5
+
+ERA5 show a wet bias dominated with moderate correlation overall with periodic short lived drops. MAE/RMSE are largely variable showing temporal cohesion is present but not magnatude compared to the reference dataset, especially in high rain events. 
+
+### Buoy
+
+The most unstable rainfall dataset is buoy rainfall. Buoy precipitation shows a consistand underestimation. Clear instability is shows with teh shape of the data. MAE/RMSE are elevated and show a staircase increase late in the data.
+
+### Town
+
+Town precipitation shows overall high correlation with notable plunges. Bias is relativly neutral with a dry bias (2017 and 2023) followed by a 2017 spike (small wet bias) which matched the incresed MAE and RMSE in 2017 and 2023 (deterioration episodes). MAE/RMSE is relativly low with some short periods of small rises. 
+
+### VCS
+
+A Shift from wet (early data) to dry (late data) bias is seen across the daataset. Correlation is high for the most part with occasional drops. MAE/RMSE are relatively stable and moderate relative to ERA5 and BUoy, showing alignment with the reference. 

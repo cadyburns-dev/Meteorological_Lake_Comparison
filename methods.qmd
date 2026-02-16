@@ -14,11 +14,11 @@ This section documents how the meteorological datasets were prepared, aligned, a
 Daily meteorological datasets were compiled for Lake Rotorua from ERA5‑Land reanalysis, the Limnotrack buoy (in‑situ) on Lake Rotorua, NIWA Airport_1770 observations, NIWA Town_40177 observations, and the NIWA Virtual Climate Station Network (VCS_On). ERA5 variables were extracted using `aemetools::get_era5_land_point_nz`, VCS and reference (Airport and town) data were downloaded manually (and separably at times - joined later in R) from NIWA "Earth Science New Zealand" [datahub](https://cliflo.niwa.co.nz/) [(click to access)](https://data.niwa.co.nz/pages/clidb-on-datahub) and saved as CSV in "data/raw" folder. All datasets were standardised to common variable names (`Temp_C`, `Precip_mm`, `Wind_Spd_ms`, `RadSWD_Wm2`) with a shared Date field.
 
 \
-Sub‑daily records (5&15 minute buoy and hourly station data) were parsed in UTC and aggregated to daily values, using sums for fluxes (precipitation) and means for temperature, wind speed, and radiation. Radiation in MJ m⁻² was converted to W m⁻² using `Rad_MJm2 * 1e6 / 86400` for daily totals and `Rad_MJm2 * 1e6 / 3600` for hourly values prior to daily means. Buoy wind speeds were corrected for a documented unit change (knots to m/s before a switch date), and buoy precipitation was converted from mm hr⁻¹ to 5‑minute depth before aggregation. Historical buoy records (15‑minute) were aggregated to daily means, with known incorrect wind periods set to `NA` to keep a continuous date. Town_40177 and Airport_1770 were assembled from hourly radiation/temperature (daily means) plus daily wind and rain. VCS_On daily data were converted to numeric, with temperature computed as the mean of Tmin and Tmax. All daily datasets were written as aligned CSVs, which were then used to compare overlappin
+Sub‑daily records (5&15 minute buoy and hourly station data) were parsed in UTC and aggregated to daily values, using totals for precipitation and means for temperature, wind speed, and radiation. Radiation in MJ m⁻² was converted to W m⁻² using `Rad_MJm2 * 1e6 / 86400` for daily totals and `Rad_MJm2 * 1e6 / 3600` for hourly values prior to daily means. Buoy wind speeds were corrected for a documented unit change (knots to m/s before a switch date), and buoy precipitation was converted from mm hr⁻¹ to 5‑minute depth before aggregation. Historical buoy records (15‑minute) were aggregated to daily means, with known incorrect wind periods set to `NA` to keep a continuous date. Town_40177 and Airport_1770 were assembled from hourly radiation/temperature (daily means) plus daily wind and rain. VCS_On daily data were converted to numeric, with temperature computed as the mean of Tmin and Tmax. All daily datasets were written as aligned CSVs, which were then used to compare against eachother for dates that overlapped.
 
 ## Reference site justification
 
-Airport station data were used as the primary reference because they are maintained, quality-controlled, and co-located near the lake with low data gaps over a longer period. All alternative sources (ERA5, VCSN, buoy, Town) were evaluated against this reference over their overlapping dates.
+Airport station data were used as the primary reference because they are maintained, quality-controlled, and located near the lake with low data gaps over a longer period. All alternative sources (ERA5, VCSN, buoy, Town) were evaluated against this reference over their overlapping dates. The reference source (airport) is referred to as "obs", 'reference' throughout, while the other sources we compare to the reference are referred to as "sim" or "target" at times.
 
 # **Metrics**
 
@@ -26,12 +26,12 @@ Metrics are computed on paired daily values after joining by `Date` and dropping
 
 ## Core performance metrics and formulas (paired daily values)
 
-**Pearson correlation (r)** [@pearson1896mathematical] for overall co-variation `(cor(obs, sim) ).`
+***Pearson correlation*** **(r)** [@pearson1896mathematical] for overall co-variation `(cor(obs, sim) ).`
 
 $$r = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}         {\sqrt{\sum_{i=1}^{n} (x_i - \bar{x})^2 \; \sum_{i=1}^{n} (y_i - \bar{y})^2}}
-$$Pearson correlation coefficient between the reference series (obs; Airport_1770) and the target dataset (sim). Here, (x_i) denotes the reference value on day (i), (y_i) denotes the target value on day (i), and (\\bar{x}), (\\bar{y}) are their respective means over the overlap period (after removing missing values)
+$$Pearson correlation coefficient between the reference series (obs; Airport_1770) and the target dataset (sim). Here, (x_i) denotes the reference value on day (i), (y_i) denotes the target value on day (i), and (\\bar{x}), (\\bar{y}) are their respective means over the overlap period (after removing missing values). This measures how well the two sources move together.
 
-Linear regression: Slope and intercept (scaling and offset bias) `lm(sim ~obs)`
+***Linear regression:*** Slope and intercept (scaling and offset bias) `lm(sim ~obs)`
 
 $$
 y_i = \beta_0 + \beta_1 x_i + \epsilon_i
@@ -39,37 +39,37 @@ $$
 
 Linear regression model used to estimate agreement between the reference series (obs; Airport_1770) and each target dataset (sim). Here, (x_i) is the reference value on day (i), (y_i) is the target value on day (i), (\\beta_0) is the intercept, (\\beta_1) is the slope, and (\\epsilon_i) is the residual error (using paired, non‑missing daily values).
 
-**MAE: Mean absolute error** `mean(|sim-obs|)`.
+***MAE: Mean absolute error*** `mean(|sim-obs|)`.
 
 $$
 \mathrm{MAE} = \frac{1}{n}\sum_{i=1}^{n}\left|\,y_i - x_i\,\right|
-$$Mean Absolute Error (MAE) between the reference series (obs; (x_i)) and the target series (sim; (y_i)) over the overlapping days. Here (n) is the number of paired, non‑missing daily observations.
+$$Mean Absolute Error (MAE) between the reference series (obs; (x_i)) and the target series (sim; (y_i)) over the overlapping days. Here (n) is the number of paired, non‑missing daily observations. This shows the average magnitude of errors between pairs of observations. Where the smaller the MAE, the closer the agreement between measurments..
 
-RMSE: Root mean square error `sqrt(mean((sin-obs)^2))`.
+***RMSE: Root mean square error*** `sqrt(mean((sin-obs)^2))`.
 
 $$
 \mathrm{RMSE} = \sqrt{\frac{1}{n}\sum_{i=1}^{n}\left(y_i - x_i\right)^2}
 $$
 
-**Root Mean Square Error (RMSE)** between the reference series (obs; (x_i)) and the target series (sim; (y_i)) over the overlapping days. Here (n) is the number of paired, non‑missing daily observations.
+Root Mean Square Error (RMSE) between the reference series (obs; (x_i)) and the target series (sim; (y_i)) over the overlapping days. Here (n) is the number of paired, non‑missing daily observations.
 
-**Lin's concordance correlation coefficient (CCC)** to combine accuracy and precision [@lin1989]. Values were interpreted under the McBride 2005 scale, where; \> 0.99: Almost perfect, 0.95–0.99: Substantial, 0.90–0.95: Moderate and \< 0.90: Poor strength of agreement [@rekasi2024].
+***Lin's concordance correlation coefficient (CCC)*** to combine accuracy and precision [@lin1989]. Values were interpreted under the McBride 2005 scale, where; \> 0.99: Almost perfect, 0.95–0.99: Substantial, 0.90–0.95: Moderate and \< 0.90: Poor strength of agreement [@rekasi2024]. CCC penalises both bias and mismatched variance, it is correlation dependent. It assesses how well two sets of observations fall on the lane of perfect agreement (y=x).
 
 $$
 [\text{CCC} = \frac{2 r \sigma_{obs} \sigma_{sim}}{\sigma_{obs}^2 + \sigma_{sim}^2 + (\mu_{obs} - \mu_{sim})^2}]
 $$
 
-Bias `mean(sim - obs)`, and relative bias if mean obs is non-zero.
+***Bias*** `mean(sim - obs)`, and relative bias if mean obs is non-zero. Bias can tell us the direction of a systematic error, e.g. how far the dataset has shifted above or below the reference on average.
 
-Relative bias: Expressed as percent (%) of mean observed, `100xbias/mean(obs)`.
+Relative bias: Give context to the bias. Expressed as percent (%) of mean observed, `100xbias/mean(obs)`. When considering light and heavy rain the relative bias can show the importance. For example a bias of +1mm/day is huge when tracking light rain only, but trivial if looking for heavy rain events.
 
 ## Event‑based performance evaluated using reference‑defined subsets
 
-Wet‑day precipitation metrics use `Precip_mm > 1 mm` in the reference (set via `wet_threshold_mm = 1`), to assess performance on meaningful rain days. et‑day metrics were computed only when the reference precipitation exceeded 1 mm (Airport_1770), to focus on "meaningful" rain events.
+Wet‑day precipitation metrics use `Precip_mm > 1 mm` in the reference (set with `wet_threshold_mm = 1`), to assess performance on "relevant" raining days. Wet‑day metrics were applied only when the reference precipitation exceeded 1 mm (Airport_1770), to focus on "notable" rain events.
 
-Windy‑day metrics used the top 10% of the reference dataset wind speeds (`windy_top_pct = 0.10`), defined by the the 90th percentile of the reference (e.g Airport) wind during the overlap period, metrics were computed only on those high‑wind days for the windy_day componend. (A fixed threshold of 10 m/s is coded for as an alternative but not used)
+Windy‑day metrics used the top 10% of the reference dataset wind speeds (`windy_top_pct = 0.10`), defined by the the 90th percentile of the reference (e.g Airport) wind during the overlap period, metrics were computed only on those high‑wind days for the windy_day column. (A fixed threshold of 10 m/s is coded for as an alternative but not used)
 
-For example: ERA5 vs Airport for precipitation where airport precipitation= reference "obs" series ERA5 precipitation = dataset/source we are evaluating "sim". mertrics_all uses every day where both datasets have values (after NA removal) (baseline overall preformance) metrics_wet uses only days where the reference has “meaningful rain”:if threshold_mm = 1, it keeps days where airport precipitation mm \> 1. This answers: “How well does ERA5 match rainy days?”(which usually matters more for modelling than dry days). metrics_windy uses only days where the reference indictes high wind :if threshold_ms = 10, it keeps days where airport wind speed m/s \>=10. This answers: “How well does ERA5 match wind-storm days?” which matters because correlation may look high but preform poorly in seasonal extremes, wind and rain heavy events.
+For example: ERA5 vs Airport for precipitation, where airport precipitation= reference "obs" series ERA5 precipitation = source we are evaluating "sim". mertrics_all uses every day where both datasets have values (after NA removal) (baseline overall performance) metrics_wet uses only days where the reference has “meaningful rain”:if threshold_mm = 1, it keeps days where airport precipitation mm \> 1. This answers: “How well does ERA5 match rainy days?”(which usually matters more for modelling than dry days). metrics_windy uses only days where the reference indictes high wind : if threshold_ms = 10, it keeps days where airport wind speed m/s \>=10. This answers: “How well does ERA5 match wind-storm days?” which matters because correlation may look high but perform poorly in seasonal extremes, wind and rain heavy events.
 
 Event‑agreement statistics [@forecast2003] for precipitation (`threshold ≥ 1 mm/day`, as set in the event‑skill section) include:
 
@@ -88,7 +88,7 @@ FAR (False Alarm Ratio) = FA / (H + FA)\
 *“Of the predicted events, how many were false?”*
 
 CSI (Critical Success Index) = H / (H + M + FA)\
-*“Overall event accuracy, ignoring correct negatives.”*
+*“Overall event accuracy, ignoring correct negatives.”* >0.7 = strong, 0.4-0.7 = Moderate ,0.4 = weak
 
 Bias score = (H + FA) / (H + M)\
 *“Do we predict too many events (\>1) or too few (\<1)?”*
@@ -205,9 +205,9 @@ make_long_overlap <- function(ref_df, targets_list, var, ref_name = "Airport_177
 
 ```
 
-The analysis produces:
+### **Time‑series line plots**
 
-**Time‑series line plots** for Temp_C, Wind_Spd_ms, and RadSWD_Wm2 (faceted by dataset).
+for Temp_C, Wind_Spd_ms, and RadSWD_Wm2 (faceted by dataset).
 
 ```{r}
 #| eval: false
@@ -229,48 +229,90 @@ plot_timeseries_line <- function(ref_df, targets_list, var, ref_name = "Airport_
 }
 ```
 
-**Precipitation hydrographs** (daily bars), optionally with a 7‑day rolling sum.
+### **Precipitation hydrographs**
+
+Daily hydrograph and 7-day-rolling totals
 
 ```{r}
 #| eval: false
 #| code-fold: true
 #| code-summary: "Show example code: Precipitation"
-plot_precip_hydrograph <- function(ref_df, targets_list, ref_name = "Airport_1770", show_7day_sum = TRUE) {
+# -----------------------------
+# Precipitation plot mode
+# display = "bars"    -> daily totals (mm/day)
+# display = "rolling" -> rolling totals (mm/window_days)
+# -----------------------------
+plot_precip_hydrograph <- function(ref_df,
+                                   targets_list,
+                                   ref_name = "Airport_1770",
+                                   display = c("bars", "rolling"),
+                                   window_days = 7,
+                                   show_7day_sum = NULL) {
+
+  # Backward compatibility with older calls using show_7day_sum.  # changed at a later date  old code called 7day_sam new one calls "display = bars or rolling"
+  if (!is.null(show_7day_sum)) {
+    display <- if (isTRUE(show_7day_sum)) "rolling" else "bars"
+  } else {
+    display <- match.arg(display)
+  }
 
   df <- make_long_overlap(ref_df, targets_list, "Precip_mm", ref_name = ref_name)
 
-  p <- ggplot(df, aes(Date, value, fill = source)) +
-    geom_col(alpha = 0.55) +
+  p <- ggplot() +
     facet_wrap(~ source, ncol = 1, scales = "fixed") +
-    scale_fill_manual(values = target_colors) +
-    labs(
-      title = "Precipitation hydrograph (daily totals; overlap with reference)",
-      x = NULL, y = "Precip (mm/day)"
-    ) +
     theme_bw() +
     theme(legend.position = "none")
 
-  # OPTIONAL 7-day sum is useful for storm periods but is on a different scale than daily totals.
-    #  7-day rolling sum line per dataset to show storm periods more clearly
-  # Allows to see week long totals over the daily bars
-  if (isTRUE(show_7day_sum)) {
-    df7 <- df |>
+  if (display == "bars") {
+    p <- p +
+      geom_col(
+        data = df,
+        aes(Date, value, fill = source),
+        alpha = 0.55
+      ) +
+      scale_fill_manual(values = target_colors) +
+      labs(
+        title = "Precipitation hydrograph (daily totals)",
+        x = NULL,
+        y = "Precip (mm/day)"
+      )
+  } else {
+    df_roll <- df |>
       arrange(source, Date) |>
       group_by(source) |>
-      mutate(sum7 = slider::slide_dbl(value, ~ sum(.x, na.rm = TRUE), .before = 6, .complete = TRUE)) |>
+      mutate(
+        roll_sum = slider::slide_dbl(
+          value, ~ sum(.x, na.rm = TRUE),
+          .before = window_days - 1,
+          .complete = TRUE
+        )
+      ) |>
       ungroup()
 
     p <- p +
-      geom_line(data = df7, aes(Date, sum7, color = source), inherit.aes = FALSE, alpha = 0.85) +
-      scale_color_manual(values = target_colors)
+      geom_line(
+        data = df_roll,
+        aes(Date, roll_sum, color = source),
+        linewidth = 0.5,
+        alpha = 0.95
+      ) +
+      scale_color_manual(values = target_colors) +
+      labs(
+        title = paste0("Precipitation hydrograph (", window_days, "-day rolling totals)"),
+        x = NULL,
+        y = paste0("Precip (mm/", window_days, " days)")
+      )
   }
 
   p
 }
 
+
 ```
 
-**Distribution plots**: `geom_density` kernel density overlays for temperature and wind; zero‑inflated precipitation histograms for all days; wet‑day precipitation histograms (ref \> 1 mm), [@scott2015multivariate]
+### **Distribution plots**:
+
+`geom_density` kernel density overlays for temperature and wind; zero‑inflated precipitation histograms for all days; wet‑day precipitation histograms (ref \> 1 mm), [@scott2015multivariate]
 
 ```{r}
 #| eval: false
@@ -326,7 +368,9 @@ plot_precip_wetday_distribution <- function(ref_df, targets_list, threshold_mm =
 
 ```
 
-**Cumulative frequency (CDF) plots** for precipitation.
+### **Cumulative frequency (CDF) plots**
+
+For precipitation.
 
 ```{r}
 #| eval: false
@@ -349,7 +393,9 @@ plot_precip_cdf <- function(ref_df, targets_list, ref_name = "Airport_1770") {
 
 ```
 
-**Scatter plots vs reference**, with 1:1 line and fitted regression, annotated with n, R, RMSE, and bias.
+### **Scatter plots vs reference**
+
+With 1:1 line and fitted regression, annotated with n, R, RMSE, and bias.
 
 ```{r}
 #| eval: false
@@ -427,7 +473,9 @@ plot_scatter_faceted <- function(ref_df, targets_list, var, ref_name = "Airport_
 }
 ```
 
-**Rolling diagnostics** (30‑day window) of bias, correlation, MAE, and RMSE to evaluate temporal drift.
+### **Rolling diagnostics**
+
+30‑day window of bias, correlation, MAE, and RMSE to evaluate temporal drift.
 
 ```{r}
 #| eval: false
@@ -476,7 +524,9 @@ plot_rolling_diagnostics <- function(ref_df, target_df, target_name, var, window
 
 ```
 
-**Monthly climatology (mean ± IQR)** for temperature, wind, and precipitation.
+### **Monthly climatology (mean ± IQR)**
+
+For temperature, wind, and precipitation.
 
 ```{r}
 #| eval: false
@@ -529,22 +579,24 @@ plot_monthly_climatology <- function(ref_df, targets_list, var,
 
 ```
 
-**Seasonal analysis** set warm and cool periods and seasonal monthly bins
+### **Seasonal analysis**
+
+Set warm and cool periods and seasonal monthly bins
 
 ```{r}
 #| eval: false
 #| code-fold: true
 #| code-summary: "Show example code: Seasonal/climatology selection"
 season_defs_default <- list(
-  summer = c(12, 1, 2),
-  autumn = c(3, 4, 5),
-  winter = c(6, 7, 8),
-  spring = c(9, 10, 11)
+  summer = c(12, 1, 2), # December, January, Feb
+  autumn = c(3, 4, 5), # March, April, May
+  winter = c(6, 7, 8), #Jaune, July, August
+  spring = c(9, 10, 11) # Sep, Oct, Nov
 )
 
 season_defs_warmcool <- list(
-  warm = c(11, 12, 1, 2, 3, 4),
-  cool = c(5, 6, 7, 8, 9, 10)
+  warm = c(11, 12, 1, 2, 3, 4),    #Nov, Dec, Jan, Feb, March, April
+  cool = c(5, 6, 7, 8, 9, 10)      #May, June, July, Aug, Sep, Oct
 )
 
 assign_season <- function(date, season_defs = season_defs_default) {
@@ -557,7 +609,9 @@ assign_season <- function(date, season_defs = season_defs_default) {
 }
 ```
 
-**Seasonal bias plots** (target − reference) by DJF/MAM/JJA/SON.
+### **Seasonal bias plots**
+
+Target − reference by seasons.
 
 ```{r}
 #| eval: false
@@ -606,7 +660,9 @@ plot_seasonal_bias <- function(ref_df, targets_list, var,
 
 ```
 
-**Seasonal scatter panels** for wind and precipitation, showing seasonal structure in agreement.
+### **Seasonal scatter panels**
+
+For wind and precipitation, showing seasonal structure in agreement.
 
 ```{r}
 #| eval: false
@@ -643,7 +699,9 @@ plot_seasonal_scatter <- function(ref_df, targets_list, var,
 }
 ```
 
-**Event‑agreement plots** for precipitation: stacked outcome counts (hits/misses/false alarms/correct negatives), skill score bars (POD, FAR, CSI, bias score), and false‑alarm magnitude histograms (log1p scale).
+### **Event‑agreement plots**
+
+For precipitation: stacked outcome counts (hits/misses/false alarms/correct negatives), skill score bars (POD, FAR, CSI, bias score), and false‑alarm magnitude histograms (log1p scale).
 
 ```{r}
 #| eval: false
@@ -778,8 +836,6 @@ skill_precip <- event_skill_all_targets(
 
 ```
 
-This workflow ensures statistical results are computed on matched daily observations, with targeted event thresholds and seasonally resolved diagnostics to interpret both mean agreement and extreme‑event performance.
-
 ## 
 
 # Data availability / overlap
@@ -796,9 +852,9 @@ Analyses were performed in R [@R-alan2024]. Data wrangling and visualization use
 
 # Limitations
 
-Spatial representativeness differs: point sensors (buoy, airport) capture local effects, while gridded/reanalysis products smooth extremes. Differences in wind measurement points/heights result in dataset differences, while precipitation measurements are subject to topographical and equipment differences. Residual timestamp misalignment could affect daily aggregates despite UTC standardisation. Zero-inflated precipitation can inflate r; wet-day metrics mitigate but do not eliminate this effect. Findings depend on the overlapping period; results may change with different seasons or longer records. Wet/windy thresholds are pragmatic; sensitivity checks are recommended if thresholds influence decisions.
+Spatial representativeness differs: point sensors (buoy, airport) capture local effects, while gridded/reanalysis products smooth extremes. Differences in wind measurement points/heights result in dataset differences, while precipitation measurements are subject to topographical and equipment differences. Residual timestamp misalignment could affect daily aggregates despite UTC standardisation. Zero inflated precipitation can inflate r wet-day metrics mitigate, but do not eliminate this effect. Findings depend on the overlapping period; results may change with different seasons or longer records. Wet/windy thresholds are pragmatic; sensitivity checks are recommended if thresholds influence decisions. If there are not enough overlapping dates or complete missing variables plots will not render. For example Radiation for rotorua went through the same methods process as the rest of the variables but a lack over overlap resulted in no diagnostic execution. Too low for statistical evaluation.
 
-Although ground based meterological datasets are often considered the best reference, they are often plagued with gaps and at times succumb to the limitations of routine record keeping maintance.
+Although ground based meterological datasets are usually considered the best reference, they are often plagued with gaps and at times succumb to the limitations of routine record keeping maintance.
 
 Future users should adapt thresholds, reference choice, and aggregation rules to their lake, documenting any deviations.
 

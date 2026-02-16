@@ -9,19 +9,17 @@ params:
   buffer_km: 10
 ---
 
-Meterological data is utalised for many different lake assesments, from understanding lake regime shifts to modeling future lake dynamices [@freshwat2020]. It is therfore vital to use the best avalable meterological data for the location and time of choice. Too often meterological data are incomplete and unreliable. ERA5 (ECMWF fifth gen) data gridded at 31km is widely used due to its comprehensive and clean nature combining observations with model data, however it is coarse and some variables are known to misrepresent data at the land/lake surface (low atmosphere metorology). NIWAs virtual climate station network takes captured observational station data and created a 5km grid conecting other weather stations to allow for intergrated data in a chosen location. The VCSN data is somewhat intertwined with the Airport data which is used as the Reference for the Rotorua Lake demo. Meterological datasets in more densely populated areas or with large topographical gradients will typically result in micro-climatic datasets due to the physical nature of these environments. In partucular wind, rain and even temperature in larger cities. Additionally, stations placed in higher altitudes can often misrepresent lower altitudes. When wanting to use datasets for lake specific projects Buoy data has the opportunity to allow for more accurate readings due to its on water position. However precipitation data is often inaccurate, especially in higher wind events, causing movement of monitoring equipment. This is especially true in large lakes that can develope substantial waves. For this reason wind can also be skewed in events. Temperature for a given Lake from a Buoy is regarded the most likely accurate candidate as fulxtuations from a water body and fluxes from land follow different physical laws.
+Meteorological data is utilised for many different lake assessments, from understanding lake regime shifts to modelling future lake dynamics [@freshwat2020a]. It is therefore vital to use the best available meteorological data for the location and time of choice. Too often meteorological data are incomplete and unreliable. ERA5 (ECMWF fifth gen) data gridded at 9km [@setchellb] is widely used due to its comprehensive and clean nature, combining observations with model data, however, it is more coarse than other available sources and some variables are known to misrepresent data at the lake surface (low atmosphere meteorology). NIWAs virtual climate station network takes captured observational station data and creates a 5km grid connecting other weather stations and integrates data in a chosen location. The VCSN data is somewhat intertwined with the Airport data, which is used as the Reference for the Rotorua Lake demo. Meteorological datasets in more densely populated areas or with large topographical gradients will typically result in micro-climatic datasets due to the physical nature of these environments. In partucular wind, rain and even temperature in larger cities. Additionally, stations placed in higher altitudes can often misrepresent lower altitudes. When using datasets for lake specific projects Buoy data has the opportunity to allow for more accurate readings due to its on water position. However, precipitation data is often inaccurate, especially in higher wind events, causing movement of monitoring equipment. This is especially true in large lakes that can develop substantial waves. For this reason, wind can also be skewed in events. Temperature for a given lake from a Buoy is regarded the most likely accurate candidate, as fluctuations from a water body and fluxes from land follow different physical laws.
 
-The question here is how does coarse global, modelled national, Local, and Lake source metorological data compare. Is there a better data source in cool or warm periods? or in a storm event? or for a specific variable? or Is there a better data source for local models?
-
-By analysing the different datasets in a given location compared to a verifiable meteorological dataset we can start to see where datasets perform well and where they lack agreement.
+The question here is how coarse global, modelled national, Local observational, and Lake source meteorological data compare. Is there a better data source in cool or warm periods? how about in a storm event? or for a specific variable? and perhapse there a better data source for local models?
 
 ## Objective
 
-To analyse different meterological data avalable for a given location, access accuarcy, precision, bias and overall aggreability.
+To analyse different meteorological data available for a given location, access accuracy, precision, bias and overall agreement.
 
 ## Data sources
 
-Limnotrack Buoy on lake, NIWA virtual climate station network (VCSN) , ERA5 statlite data, Observational data "Airport" station, Obresvational data "Town" station.
+Limnotrack Buoy on lake, NIWA virtual climate station network (VCSN), ERA5 statlite data, Observational data "Airport" station, Observational data "Town" station.
 
 Data source and station names will vary from location to location. Selecting stations from these websites is laid out in the reproducibility tab, methods tab and 02_prepare_raw_data R script.
 
@@ -29,17 +27,17 @@ Data source and station names will vary from location to location. Selecting sta
 
 The outputs of this project will show:
 
-1.  Correlation coeficient (Pearsons r)
+1.  Correlation coefficient (Pearsons r)
 
-2.  Change in intercept and slope (linear regrassion slope and intercept)
+2.  Change in intercept and slope (linear regression slope and intercept)
 
 3.  Mean absolute error (MAE)
 
 4.  Root mean squared error (RMSE)
 
-5.  Concordance (ccc)
+5.  Concordance correlation coefficient (CCC)
 
-6.  Mean and realitive bias
+6.  Mean and relative bias (%)
 
 7.  Event score
 
@@ -47,11 +45,11 @@ The outputs of this project will show:
 
 9.  Probability detection (POD)
 
-10. False alarm ration (FAR)
+10. False alarm ratio (FAR)
 
 11. Critical success index (CSI)
 
-    These metrics along with plots and diagnostics will answer bias questions, seasonal behaviour, event disagreement and extremes
+    These metrics along with plots and diagnostics, will answer bias questions, seasonal behaviour, event disagreement and extremes
 
 ## Study area
 

@@ -241,6 +241,17 @@ window.Quarto = {
   </ul></li>
   <li><a href="#plotting-and-diagnostics" id="toc-plotting-and-diagnostics" class="nav-link" data-scroll-target="#plotting-and-diagnostics"><strong>Plotting and Diagnostics</strong></a>
   <ul class="collapse">
+  <li><a href="#timeseries-line-plots" id="toc-timeseries-line-plots" class="nav-link" data-scroll-target="#timeseries-line-plots"><strong>Time‑series line plots</strong></a></li>
+  <li><a href="#precipitation-hydrographs" id="toc-precipitation-hydrographs" class="nav-link" data-scroll-target="#precipitation-hydrographs"><strong>Precipitation hydrographs</strong></a></li>
+  <li><a href="#distribution-plots" id="toc-distribution-plots" class="nav-link" data-scroll-target="#distribution-plots"><strong>Distribution plots</strong>:</a></li>
+  <li><a href="#cumulative-frequency-cdf-plots" id="toc-cumulative-frequency-cdf-plots" class="nav-link" data-scroll-target="#cumulative-frequency-cdf-plots"><strong>Cumulative frequency (CDF) plots</strong></a></li>
+  <li><a href="#scatter-plots-vs-reference" id="toc-scatter-plots-vs-reference" class="nav-link" data-scroll-target="#scatter-plots-vs-reference"><strong>Scatter plots vs reference</strong></a></li>
+  <li><a href="#rolling-diagnostics" id="toc-rolling-diagnostics" class="nav-link" data-scroll-target="#rolling-diagnostics"><strong>Rolling diagnostics</strong></a></li>
+  <li><a href="#monthly-climatology-mean-iqr" id="toc-monthly-climatology-mean-iqr" class="nav-link" data-scroll-target="#monthly-climatology-mean-iqr"><strong>Monthly climatology (mean ± IQR)</strong></a></li>
+  <li><a href="#seasonal-analysis" id="toc-seasonal-analysis" class="nav-link" data-scroll-target="#seasonal-analysis"><strong>Seasonal analysis</strong></a></li>
+  <li><a href="#seasonal-bias-plots" id="toc-seasonal-bias-plots" class="nav-link" data-scroll-target="#seasonal-bias-plots"><strong>Seasonal bias plots</strong></a></li>
+  <li><a href="#seasonal-scatter-panels" id="toc-seasonal-scatter-panels" class="nav-link" data-scroll-target="#seasonal-scatter-panels"><strong>Seasonal scatter panels</strong></a></li>
+  <li><a href="#eventagreement-plots" id="toc-eventagreement-plots" class="nav-link" data-scroll-target="#eventagreement-plots"><strong>Event‑agreement plots</strong></a></li>
   <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"></a></li>
   </ul></li>
   <li><a href="#data-availability-overlap" id="toc-data-availability-overlap" class="nav-link" data-scroll-target="#data-availability-overlap">Data availability / overlap</a>
@@ -249,9 +260,9 @@ window.Quarto = {
   </ul></li>
   <li><a href="#software-and-packages" id="toc-software-and-packages" class="nav-link" data-scroll-target="#software-and-packages">Software and packages</a></li>
   <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">Limitations</a></li>
-  <li><a href="#references-methods-background" id="toc-references-methods-background" class="nav-link" data-scroll-target="#references-methods-background">References (methods background)</a>
+  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1"></a>
   <ul class="collapse">
-  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1"></a></li>
+  <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2"></a></li>
   </ul></li>
   </ul>
 </nav>
@@ -291,11 +302,11 @@ window.Quarto = {
 <p><br>
 Daily meteorological datasets were compiled for Lake Rotorua from ERA5‑Land reanalysis, the Limnotrack buoy (in‑situ) on Lake Rotorua, NIWA Airport_1770 observations, NIWA Town_40177 observations, and the NIWA Virtual Climate Station Network (VCS_On). ERA5 variables were extracted using <code>aemetools::get_era5_land_point_nz</code>, VCS and reference (Airport and town) data were downloaded manually (and separably at times - joined later in R) from NIWA “Earth Science New Zealand” <a href="https://cliflo.niwa.co.nz/">datahub</a> <a href="https://data.niwa.co.nz/pages/clidb-on-datahub">(click to access)</a> and saved as CSV in “data/raw” folder. All datasets were standardised to common variable names (<code>Temp_C</code>, <code>Precip_mm</code>, <code>Wind_Spd_ms</code>, <code>RadSWD_Wm2</code>) with a shared Date field.</p>
 <p><br>
-Sub‑daily records (5&amp;15 minute buoy and hourly station data) were parsed in UTC and aggregated to daily values, using sums for fluxes (precipitation) and means for temperature, wind speed, and radiation. Radiation in MJ m⁻² was converted to W m⁻² using <code>Rad_MJm2 * 1e6 / 86400</code> for daily totals and <code>Rad_MJm2 * 1e6 / 3600</code> for hourly values prior to daily means. Buoy wind speeds were corrected for a documented unit change (knots to m/s before a switch date), and buoy precipitation was converted from mm hr⁻¹ to 5‑minute depth before aggregation. Historical buoy records (15‑minute) were aggregated to daily means, with known incorrect wind periods set to <code>NA</code> to keep a continuous date. Town_40177 and Airport_1770 were assembled from hourly radiation/temperature (daily means) plus daily wind and rain. VCS_On daily data were converted to numeric, with temperature computed as the mean of Tmin and Tmax. All daily datasets were written as aligned CSVs, which were then used to compare overlappin</p>
+Sub‑daily records (5&amp;15 minute buoy and hourly station data) were parsed in UTC and aggregated to daily values, using totals for precipitation and means for temperature, wind speed, and radiation. Radiation in MJ m⁻² was converted to W m⁻² using <code>Rad_MJm2 * 1e6 / 86400</code> for daily totals and <code>Rad_MJm2 * 1e6 / 3600</code> for hourly values prior to daily means. Buoy wind speeds were corrected for a documented unit change (knots to m/s before a switch date), and buoy precipitation was converted from mm hr⁻¹ to 5‑minute depth before aggregation. Historical buoy records (15‑minute) were aggregated to daily means, with known incorrect wind periods set to <code>NA</code> to keep a continuous date. Town_40177 and Airport_1770 were assembled from hourly radiation/temperature (daily means) plus daily wind and rain. VCS_On daily data were converted to numeric, with temperature computed as the mean of Tmin and Tmax. All daily datasets were written as aligned CSVs, which were then used to compare against eachother for dates that overlapped.</p>
 </section>
 <section id="reference-site-justification" class="level2">
 <h2 class="anchored" data-anchor-id="reference-site-justification">Reference site justification</h2>
-<p>Airport station data were used as the primary reference because they are maintained, quality-controlled, and co-located near the lake with low data gaps over a longer period. All alternative sources (ERA5, VCSN, buoy, Town) were evaluated against this reference over their overlapping dates.</p>
+<p>Airport station data were used as the primary reference because they are maintained, quality-controlled, and located near the lake with low data gaps over a longer period. All alternative sources (ERA5, VCSN, buoy, Town) were evaluated against this reference over their overlapping dates. The reference source (airport) is referred to as “obs”, ‘reference’ throughout, while the other sources we compare to the reference are referred to as “sim” or “target” at times.</p>
 </section>
 </section>
 <section id="metrics" class="level1">
@@ -303,35 +314,35 @@ Sub‑daily records (5&amp;15 minute buoy and hourly station data) were parsed i
 <p>Metrics are computed on paired daily values after joining by <code>Date</code> and dropping NA s. For each target (“sim”) vs reference (“obs”), the following are calculated. The set up for this begins in 01-metrics_helpers script and continues after 02_prepare_raw_data script in the 03_analysis_helpers 04-analysis_plotting scripts.</p>
 <section id="core-performance-metrics-and-formulas-paired-daily-values" class="level2">
 <h2 class="anchored" data-anchor-id="core-performance-metrics-and-formulas-paired-daily-values">Core performance metrics and formulas (paired daily values)</h2>
-<p><strong>Pearson correlation (r)</strong> <span class="citation" data-cites="pearson1896mathematical">(<a href="#ref-pearson1896mathematical" role="doc-biblioref">Pearson 1896</a>)</span> for overall co-variation <code>(cor(obs, sim) ).</code></p>
+<p><strong><em>Pearson correlation</em></strong> <strong>(r)</strong> <span class="citation" data-cites="pearson1896mathematical">(<a href="#ref-pearson1896mathematical" role="doc-biblioref">Pearson 1896</a>)</span> for overall co-variation <code>(cor(obs, sim) ).</code></p>
 <p><span class="math display">\[r = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}         {\sqrt{\sum_{i=1}^{n} (x_i - \bar{x})^2 \; \sum_{i=1}^{n} (y_i - \bar{y})^2}}
-\]</span>Pearson correlation coefficient between the reference series (obs; Airport_1770) and the target dataset (sim). Here, (x_i) denotes the reference value on day (i), (y_i) denotes the target value on day (i), and (\bar{x}), (\bar{y}) are their respective means over the overlap period (after removing missing values)</p>
-<p>Linear regression: Slope and intercept (scaling and offset bias) <code>lm(sim ~obs)</code></p>
+\]</span>Pearson correlation coefficient between the reference series (obs; Airport_1770) and the target dataset (sim). Here, (x_i) denotes the reference value on day (i), (y_i) denotes the target value on day (i), and (\bar{x}), (\bar{y}) are their respective means over the overlap period (after removing missing values). This measures how well the two sources move together.</p>
+<p><strong><em>Linear regression:</em></strong> Slope and intercept (scaling and offset bias) <code>lm(sim ~obs)</code></p>
 <p><span class="math display">\[
 y_i = \beta_0 + \beta_1 x_i + \epsilon_i
 \]</span></p>
 <p>Linear regression model used to estimate agreement between the reference series (obs; Airport_1770) and each target dataset (sim). Here, (x_i) is the reference value on day (i), (y_i) is the target value on day (i), (\beta_0) is the intercept, (\beta_1) is the slope, and (\epsilon_i) is the residual error (using paired, non‑missing daily values).</p>
-<p><strong>MAE: Mean absolute error</strong> <code>mean(|sim-obs|)</code>.</p>
+<p><strong><em>MAE: Mean absolute error</em></strong> <code>mean(|sim-obs|)</code>.</p>
 <p><span class="math display">\[
 \mathrm{MAE} = \frac{1}{n}\sum_{i=1}^{n}\left|\,y_i - x_i\,\right|
-\]</span>Mean Absolute Error (MAE) between the reference series (obs; (x_i)) and the target series (sim; (y_i)) over the overlapping days. Here (n) is the number of paired, non‑missing daily observations.</p>
-<p>RMSE: Root mean square error <code>sqrt(mean((sin-obs)^2))</code>.</p>
+\]</span>Mean Absolute Error (MAE) between the reference series (obs; (x_i)) and the target series (sim; (y_i)) over the overlapping days. Here (n) is the number of paired, non‑missing daily observations. This shows the average magnitude of errors between pairs of observations. Where the smaller the MAE, the closer the agreement between measurments..</p>
+<p><strong><em>RMSE: Root mean square error</em></strong> <code>sqrt(mean((sin-obs)^2))</code>.</p>
 <p><span class="math display">\[
 \mathrm{RMSE} = \sqrt{\frac{1}{n}\sum_{i=1}^{n}\left(y_i - x_i\right)^2}
 \]</span></p>
-<p><strong>Root Mean Square Error (RMSE)</strong> between the reference series (obs; (x_i)) and the target series (sim; (y_i)) over the overlapping days. Here (n) is the number of paired, non‑missing daily observations.</p>
-<p><strong>Lin’s concordance correlation coefficient (CCC)</strong> to combine accuracy and precision <span class="citation" data-cites="lin1989">(<a href="#ref-lin1989" role="doc-biblioref">L. I.-K. Lin 1989</a>)</span>. Values were interpreted under the McBride 2005 scale, where; &gt; 0.99: Almost perfect, 0.95–0.99: Substantial, 0.90–0.95: Moderate and &lt; 0.90: Poor strength of agreement <span class="citation" data-cites="rekasi2024">(<a href="#ref-rekasi2024" role="doc-biblioref">Rekasi 2024</a>)</span>.</p>
+<p>Root Mean Square Error (RMSE) between the reference series (obs; (x_i)) and the target series (sim; (y_i)) over the overlapping days. Here (n) is the number of paired, non‑missing daily observations.</p>
+<p><strong><em>Lin’s concordance correlation coefficient (CCC)</em></strong> to combine accuracy and precision <span class="citation" data-cites="lin1989">(<a href="#ref-lin1989" role="doc-biblioref">L. I.-K. Lin 1989</a>)</span>. Values were interpreted under the McBride 2005 scale, where; &gt; 0.99: Almost perfect, 0.95–0.99: Substantial, 0.90–0.95: Moderate and &lt; 0.90: Poor strength of agreement <span class="citation" data-cites="rekasi2024">(<a href="#ref-rekasi2024" role="doc-biblioref">Rekasi 2024</a>)</span>. CCC penalises both bias and mismatched variance, it is correlation dependent. It assesses how well two sets of observations fall on the lane of perfect agreement (y=x).</p>
 <p><span class="math display">\[
 [\text{CCC} = \frac{2 r \sigma_{obs} \sigma_{sim}}{\sigma_{obs}^2 + \sigma_{sim}^2 + (\mu_{obs} - \mu_{sim})^2}]
 \]</span></p>
-<p>Bias <code>mean(sim - obs)</code>, and relative bias if mean obs is non-zero.</p>
-<p>Relative bias: Expressed as percent (%) of mean observed, <code>100xbias/mean(obs)</code>.</p>
+<p><strong><em>Bias</em></strong> <code>mean(sim - obs)</code>, and relative bias if mean obs is non-zero. Bias can tell us the direction of a systematic error, e.g.&nbsp;how far the dataset has shifted above or below the reference on average.</p>
+<p>Relative bias: Give context to the bias. Expressed as percent (%) of mean observed, <code>100xbias/mean(obs)</code>. When considering light and heavy rain the relative bias can show the importance. For example a bias of +1mm/day is huge when tracking light rain only, but trivial if looking for heavy rain events.</p>
 </section>
 <section id="eventbased-performance-evaluated-using-referencedefined-subsets" class="level2">
 <h2 class="anchored" data-anchor-id="eventbased-performance-evaluated-using-referencedefined-subsets">Event‑based performance evaluated using reference‑defined subsets</h2>
-<p>Wet‑day precipitation metrics use <code>Precip_mm &gt; 1 mm</code> in the reference (set via <code>wet_threshold_mm = 1</code>), to assess performance on meaningful rain days. et‑day metrics were computed only when the&nbsp;reference precipitation exceeded 1 mm&nbsp;(Airport_1770), to focus on “meaningful” rain events.</p>
-<p>Windy‑day metrics used the top 10% of the reference dataset wind speeds (<code>windy_top_pct = 0.10</code>), defined by the the 90th percentile of the reference (e.g Airport) wind during the overlap period, metrics were computed only on those high‑wind days for the windy_day componend. (A fixed threshold of 10 m/s is coded for as an alternative but not used)</p>
-<p>For example: ERA5 vs Airport for precipitation where airport precipitation= reference “obs” series ERA5 precipitation = dataset/source we are evaluating “sim”. mertrics_all uses every day where both datasets have values (after NA removal) (baseline overall preformance) metrics_wet uses only days where the reference has “meaningful rain”:if threshold_mm = 1, it keeps days where airport precipitation mm &gt; 1. This answers: “How well does ERA5 match rainy days?”(which usually matters more for modelling than dry days). metrics_windy uses only days where the reference indictes high wind :if threshold_ms = 10, it keeps days where airport wind speed m/s &gt;=10. This answers: “How well does ERA5 match wind-storm days?” which matters because correlation may look high but preform poorly in seasonal extremes, wind and rain heavy events.</p>
+<p>Wet‑day precipitation metrics use <code>Precip_mm &gt; 1 mm</code> in the reference (set with <code>wet_threshold_mm = 1</code>), to assess performance on “relevant” raining days. Wet‑day metrics were applied only when the&nbsp;reference precipitation exceeded 1 mm&nbsp;(Airport_1770), to focus on “notable” rain events.</p>
+<p>Windy‑day metrics used the top 10% of the reference dataset wind speeds (<code>windy_top_pct = 0.10</code>), defined by the the 90th percentile of the reference (e.g Airport) wind during the overlap period, metrics were computed only on those high‑wind days for the windy_day column. (A fixed threshold of 10 m/s is coded for as an alternative but not used)</p>
+<p>For example: ERA5 vs Airport for precipitation, where airport precipitation= reference “obs” series ERA5 precipitation = source we are evaluating “sim”. mertrics_all uses every day where both datasets have values (after NA removal) (baseline overall performance) metrics_wet uses only days where the reference has “meaningful rain”:if threshold_mm = 1, it keeps days where airport precipitation mm &gt; 1. This answers: “How well does ERA5 match rainy days?”(which usually matters more for modelling than dry days). metrics_windy uses only days where the reference indictes high wind : if threshold_ms = 10, it keeps days where airport wind speed m/s &gt;=10. This answers: “How well does ERA5 match wind-storm days?” which matters because correlation may look high but perform poorly in seasonal extremes, wind and rain heavy events.</p>
 <p>Event‑agreement statistics <span class="citation" data-cites="forecast2003">(<a href="#ref-forecast2003" role="doc-biblioref">Jolliffe 2003</a>)</span> for precipitation (<code>threshold ≥ 1 mm/day</code>, as set in the event‑skill section) include:</p>
 <p>Hits (H) (ref event &amp; target event), <em>both obs and sim say “event”</em></p>
 <p>Misses (M) (ref event &amp; target no event), <em>obs says “event” but sim does not</em></p>
@@ -342,7 +353,7 @@ y_i = \beta_0 + \beta_1 x_i + \epsilon_i
 <p>FAR (False Alarm Ratio) = FA / (H + FA)<br>
 <em>“Of the predicted events, how many were false?”</em></p>
 <p>CSI (Critical Success Index) = H / (H + M + FA)<br>
-<em>“Overall event accuracy, ignoring correct negatives.”</em></p>
+<em>“Overall event accuracy, ignoring correct negatives.”</em> &gt;0.7 = strong, 0.4-0.7 = Moderate ,0.4 = weak</p>
 <p>Bias score = (H + FA) / (H + M)<br>
 <em>“Do we predict too many events (&gt;1) or too few (&lt;1)?”</em></p>
 <p>These quantify detection performance separately from continuous error metrics.</p>
@@ -455,8 +466,9 @@ Plots are generated from overlap‑aligned daily data to ensure consistent compa
 <span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p>The analysis produces:</p>
-<p><strong>Time‑series line plots</strong> for Temp_C, Wind_Spd_ms, and RadSWD_Wm2 (faceted by dataset).</p>
+<section id="timeseries-line-plots" class="level3">
+<h3 class="anchored" data-anchor-id="timeseries-line-plots"><strong>Time‑series line plots</strong></h3>
+<p>for Temp_C, Wind_Spd_ms, and RadSWD_Wm2 (faceted by dataset).</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show example code: Time series plots</summary>
@@ -476,45 +488,88 @@ Plots are generated from overlap‑aligned daily data to ensure consistent compa
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p><strong>Precipitation hydrographs</strong> (daily bars), optionally with a 7‑day rolling sum.</p>
+</section>
+<section id="precipitation-hydrographs" class="level3">
+<h3 class="anchored" data-anchor-id="precipitation-hydrographs"><strong>Precipitation hydrographs</strong></h3>
+<p>Daily hydrograph and 7-day-rolling totals</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show example code: Precipitation</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>plot_precip_hydrograph <span class="ot">&lt;-</span> <span class="cf">function</span>(ref_df, targets_list, <span class="at">ref_name =</span> <span class="st">"Airport_1770"</span>, <span class="at">show_7day_sum =</span> <span class="cn">TRUE</span>) {</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">make_long_overlap</span>(ref_df, targets_list, <span class="st">"Precip_mm"</span>, <span class="at">ref_name =</span> ref_name)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(Date, value, <span class="at">fill =</span> source)) <span class="sc">+</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="at">alpha =</span> <span class="fl">0.55</span>) <span class="sc">+</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> source, <span class="at">ncol =</span> <span class="dv">1</span>, <span class="at">scales =</span> <span class="st">"fixed"</span>) <span class="sc">+</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> target_colors) <span class="sc">+</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">"Precipitation hydrograph (daily totals; overlap with reference)"</span>,</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Precip (mm/day)"</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># OPTIONAL 7-day sum is useful for storm periods but is on a different scale than daily totals.</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="co">#  7-day rolling sum line per dataset to show storm periods more clearly</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Allows to see week long totals over the daily bars</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">isTRUE</span>(show_7day_sum)) {</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    df7 <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">arrange</span>(source, Date) <span class="sc">|&gt;</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">group_by</span>(source) <span class="sc">|&gt;</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(<span class="at">sum7 =</span> slider<span class="sc">::</span><span class="fu">slide_dbl</span>(value, <span class="sc">~</span> <span class="fu">sum</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.before =</span> <span class="dv">6</span>, <span class="at">.complete =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ungroup</span>()</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> p <span class="sc">+</span></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_line</span>(<span class="at">data =</span> df7, <span class="fu">aes</span>(Date, sum7, <span class="at">color =</span> source), <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>, <span class="at">alpha =</span> <span class="fl">0.85</span>) <span class="sc">+</span></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_color_manual</span>(<span class="at">values =</span> target_colors)</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>  p</span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># -----------------------------</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Precipitation plot mode</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># display = "bars"    -&gt; daily totals (mm/day)</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># display = "rolling" -&gt; rolling totals (mm/window_days)</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># -----------------------------</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>plot_precip_hydrograph <span class="ot">&lt;-</span> <span class="cf">function</span>(ref_df,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                                   targets_list,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">ref_name =</span> <span class="st">"Airport_1770"</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">display =</span> <span class="fu">c</span>(<span class="st">"bars"</span>, <span class="st">"rolling"</span>),</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">window_days =</span> <span class="dv">7</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">show_7day_sum =</span> <span class="cn">NULL</span>) {</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Backward compatibility with older calls using show_7day_sum.  # changed at a later date  old code called 7day_sam new one calls "display = bars or rolling"</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(show_7day_sum)) {</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    display <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">isTRUE</span>(show_7day_sum)) <span class="st">"rolling"</span> <span class="cf">else</span> <span class="st">"bars"</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    display <span class="ot">&lt;-</span> <span class="fu">match.arg</span>(display)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">make_long_overlap</span>(ref_df, targets_list, <span class="st">"Precip_mm"</span>, <span class="at">ref_name =</span> ref_name)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> source, <span class="at">ncol =</span> <span class="dv">1</span>, <span class="at">scales =</span> <span class="st">"fixed"</span>) <span class="sc">+</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (display <span class="sc">==</span> <span class="st">"bars"</span>) {</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> p <span class="sc">+</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_col</span>(</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> df,</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(Date, value, <span class="at">fill =</span> source),</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">alpha =</span> <span class="fl">0.55</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> target_colors) <span class="sc">+</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"Precipitation hydrograph (daily totals)"</span>,</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="st">"Precip (mm/day)"</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    df_roll <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>      <span class="fu">arrange</span>(source, Date) <span class="sc">|&gt;</span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>      <span class="fu">group_by</span>(source) <span class="sc">|&gt;</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>        <span class="at">roll_sum =</span> slider<span class="sc">::</span><span class="fu">slide_dbl</span>(</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>          value, <span class="sc">~</span> <span class="fu">sum</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>          <span class="at">.before =</span> window_days <span class="sc">-</span> <span class="dv">1</span>,</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>          <span class="at">.complete =</span> <span class="cn">TRUE</span></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">|&gt;</span></span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ungroup</span>()</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> p <span class="sc">+</span></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_line</span>(</span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> df_roll,</span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(Date, roll_sum, <span class="at">color =</span> source),</span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>        <span class="at">linewidth =</span> <span class="fl">0.5</span>,</span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>        <span class="at">alpha =</span> <span class="fl">0.95</span></span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_color_manual</span>(<span class="at">values =</span> target_colors) <span class="sc">+</span></span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(</span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="fu">paste0</span>(<span class="st">"Precipitation hydrograph ("</span>, window_days, <span class="st">"-day rolling totals)"</span>),</span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="fu">paste0</span>(<span class="st">"Precip (mm/"</span>, window_days, <span class="st">" days)"</span>)</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>  p</span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p><strong>Distribution plots</strong>: <code>geom_density</code> kernel density overlays for temperature and wind; zero‑inflated precipitation histograms for all days; wet‑day precipitation histograms (ref &gt; 1 mm), <span class="citation" data-cites="scott2015multivariate">(<a href="#ref-scott2015multivariate" role="doc-biblioref">Scott 2015</a>)</span></p>
+</section>
+<section id="distribution-plots" class="level3">
+<h3 class="anchored" data-anchor-id="distribution-plots"><strong>Distribution plots</strong>:</h3>
+<p><code>geom_density</code> kernel density overlays for temperature and wind; zero‑inflated precipitation histograms for all days; wet‑day precipitation histograms (ref &gt; 1 mm), <span class="citation" data-cites="scott2015multivariate">(<a href="#ref-scott2015multivariate" role="doc-biblioref">Scott 2015</a>)</span></p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show example function: plot_distribution()</summary>
@@ -567,7 +622,10 @@ Plots are generated from overlap‑aligned daily data to ensure consistent compa
 <span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p><strong>Cumulative frequency (CDF) plots</strong> for precipitation.</p>
+</section>
+<section id="cumulative-frequency-cdf-plots" class="level3">
+<h3 class="anchored" data-anchor-id="cumulative-frequency-cdf-plots"><strong>Cumulative frequency (CDF) plots</strong></h3>
+<p>For precipitation.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show example function: plot_distribution()</summary>
@@ -587,7 +645,10 @@ Plots are generated from overlap‑aligned daily data to ensure consistent compa
 <span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p><strong>Scatter plots vs reference</strong>, with 1:1 line and fitted regression, annotated with n, R, RMSE, and bias.</p>
+</section>
+<section id="scatter-plots-vs-reference" class="level3">
+<h3 class="anchored" data-anchor-id="scatter-plots-vs-reference"><strong>Scatter plots vs reference</strong></h3>
+<p>With 1:1 line and fitted regression, annotated with n, R, RMSE, and bias.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show example code: Scatter plots</summary>
@@ -663,7 +724,10 @@ Plots are generated from overlap‑aligned daily data to ensure consistent compa
 <span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p><strong>Rolling diagnostics</strong> (30‑day window) of bias, correlation, MAE, and RMSE to evaluate temporal drift.</p>
+</section>
+<section id="rolling-diagnostics" class="level3">
+<h3 class="anchored" data-anchor-id="rolling-diagnostics"><strong>Rolling diagnostics</strong></h3>
+<p>30‑day window of bias, correlation, MAE, and RMSE to evaluate temporal drift.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show example code: Rolling diagnostics</summary>
@@ -709,7 +773,10 @@ Plots are generated from overlap‑aligned daily data to ensure consistent compa
 <span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p><strong>Monthly climatology (mean ± IQR)</strong> for temperature, wind, and precipitation.</p>
+</section>
+<section id="monthly-climatology-mean-iqr" class="level3">
+<h3 class="anchored" data-anchor-id="monthly-climatology-mean-iqr"><strong>Monthly climatology (mean ± IQR)</strong></h3>
+<p>For temperature, wind, and precipitation.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show example function: make_monthly_climatology</summary>
@@ -759,20 +826,23 @@ Plots are generated from overlap‑aligned daily data to ensure consistent compa
 <span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p><strong>Seasonal analysis</strong> set warm and cool periods and seasonal monthly bins</p>
+</section>
+<section id="seasonal-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="seasonal-analysis"><strong>Seasonal analysis</strong></h3>
+<p>Set warm and cool periods and seasonal monthly bins</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show example code: Seasonal/climatology selection</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>season_defs_default <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">summer =</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">1</span>, <span class="dv">2</span>),</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">autumn =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>),</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">winter =</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>),</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">spring =</span> <span class="fu">c</span>(<span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">11</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">summer =</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="co"># December, January, Feb</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">autumn =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), <span class="co"># March, April, May</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">winter =</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>), <span class="co">#Jaune, July, August</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">spring =</span> <span class="fu">c</span>(<span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">11</span>) <span class="co"># Sep, Oct, Nov</span></span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>season_defs_warmcool <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">warm =</span> <span class="fu">c</span>(<span class="dv">11</span>, <span class="dv">12</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>),</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">cool =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">warm =</span> <span class="fu">c</span>(<span class="dv">11</span>, <span class="dv">12</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>),    <span class="co">#Nov, Dec, Jan, Feb, March, April</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">cool =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>)      <span class="co">#May, June, July, Aug, Sep, Oct</span></span>
 <span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>assign_season <span class="ot">&lt;-</span> <span class="cf">function</span>(date, <span class="at">season_defs =</span> season_defs_default) {</span>
@@ -785,7 +855,10 @@ Plots are generated from overlap‑aligned daily data to ensure consistent compa
 <span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p><strong>Seasonal bias plots</strong> (target − reference) by DJF/MAM/JJA/SON.</p>
+</section>
+<section id="seasonal-bias-plots" class="level3">
+<h3 class="anchored" data-anchor-id="seasonal-bias-plots"><strong>Seasonal bias plots</strong></h3>
+<p>Target − reference by seasons.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show example code: Searonal bias</summary>
@@ -831,7 +904,10 @@ Plots are generated from overlap‑aligned daily data to ensure consistent compa
 <span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p><strong>Seasonal scatter panels</strong> for wind and precipitation, showing seasonal structure in agreement.</p>
+</section>
+<section id="seasonal-scatter-panels" class="level3">
+<h3 class="anchored" data-anchor-id="seasonal-scatter-panels"><strong>Seasonal scatter panels</strong></h3>
+<p>For wind and precipitation, showing seasonal structure in agreement.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show example code: Seasonal scatter</summary>
@@ -866,7 +942,10 @@ Plots are generated from overlap‑aligned daily data to ensure consistent compa
 <span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p><strong>Event‑agreement plots</strong> for precipitation: stacked outcome counts (hits/misses/false alarms/correct negatives), skill score bars (POD, FAR, CSI, bias score), and false‑alarm magnitude histograms (log1p scale).</p>
+</section>
+<section id="eventagreement-plots" class="level3">
+<h3 class="anchored" data-anchor-id="eventagreement-plots"><strong>Event‑agreement plots</strong></h3>
+<p>For precipitation: stacked outcome counts (hits/misses/false alarms/correct negatives), skill score bars (POD, FAR, CSI, bias score), and false‑alarm magnitude histograms (log1p scale).</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show example code: Event aggreement</summary>
@@ -998,7 +1077,7 @@ Plots are generated from overlap‑aligned daily data to ensure consistent compa
 <span id="cb12-126"><a href="#cb12-126" aria-hidden="true" tabindex="-1"></a>  <span class="at">direction =</span> <span class="st">"&gt;="</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p>This workflow ensures statistical results are computed on matched daily observations, with targeted event thresholds and seasonally resolved diagnostics to interpret both mean agreement and extreme‑event performance.</p>
+</section>
 <section id="section" class="level2">
 <h2 class="anchored" data-anchor-id="section"></h2>
 </section>
@@ -1017,13 +1096,13 @@ Plots are generated from overlap‑aligned daily data to ensure consistent compa
 </section>
 <section id="limitations" class="level1">
 <h1>Limitations</h1>
-<p>Spatial representativeness differs: point sensors (buoy, airport) capture local effects, while gridded/reanalysis products smooth extremes. Differences in wind measurement points/heights result in dataset differences, while precipitation measurements are subject to topographical and equipment differences. Residual timestamp misalignment could affect daily aggregates despite UTC standardisation. Zero-inflated precipitation can inflate r; wet-day metrics mitigate but do not eliminate this effect. Findings depend on the overlapping period; results may change with different seasons or longer records. Wet/windy thresholds are pragmatic; sensitivity checks are recommended if thresholds influence decisions.</p>
-<p>Although ground based meterological datasets are often considered the best reference, they are often plagued with gaps and at times succumb to the limitations of routine record keeping maintance.</p>
+<p>Spatial representativeness differs: point sensors (buoy, airport) capture local effects, while gridded/reanalysis products smooth extremes. Differences in wind measurement points/heights result in dataset differences, while precipitation measurements are subject to topographical and equipment differences. Residual timestamp misalignment could affect daily aggregates despite UTC standardisation. Zero inflated precipitation can inflate r wet-day metrics mitigate, but do not eliminate this effect. Findings depend on the overlapping period; results may change with different seasons or longer records. Wet/windy thresholds are pragmatic; sensitivity checks are recommended if thresholds influence decisions. If there are not enough overlapping dates or complete missing variables plots will not render. For example Radiation for rotorua went through the same methods process as the rest of the variables but a lack over overlap resulted in no diagnostic execution. Too low for statistical evaluation.</p>
+<p>Although ground based meterological datasets are usually considered the best reference, they are often plagued with gaps and at times succumb to the limitations of routine record keeping maintance.</p>
 <p>Future users should adapt thresholds, reference choice, and aggregation rules to their lake, documenting any deviations.</p>
 </section>
-<section id="references-methods-background" class="level1">
-<h1>References (methods background)</h1>
-<section id="section-1" class="level2">
+<section id="section-1" class="level1">
+<h1></h1>
+<section id="section-2" class="level2">
 
 
 

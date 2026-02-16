@@ -1,6 +1,5 @@
 ---
 title: "Meterological Lake Comparison"
-subtitle: "Rotorua overview"
 author: "Cady B"
 params:
   lake_name: "Lake Rotorua"
@@ -15,37 +14,38 @@ params:
 
 ![](images/update.png){fig-align="center"}
 
-Precipitation, wind, and temperature are unavoidable physical forms when it comes to Lymnological science. Choosing the right meteorological dataset/source can play a critical role in both physical and biological results. However, it is often difficult to know which dataset/source is best to apply. Therefore, by critically comparing and analysing different data sources for a given location, we can gather more confidence in whict data set, which variable and when the dataset is best to use.
+
+When it comes to limnological science, precipitation, wind and temperature are unavoidable physcal forms to consider. Selecting the appropriate dataset or source can play a critical role in both physical and biological results. However, it is often difficult to know which dataset or source is best to apply. Therefore, by critically comparing and analysing different data sources for a given location, we can gather more confidence in what data set and which variable is best to use, and when it is best to use it.
 
 ## Project description
 
-This project aims to take meteorological data in close proximity from different sources (stations, grided, reanalysis) and evaluate their validity across variables and time.
+This project aims to take meteorological data in close proximity from different sources (e.g. stations, gridded, and reanalysis) and evaluate their validity across variables and time.
 
 It assesses four main meteorological parameters (precipitation, wind, radiation, temperature) for accuracy, stability and usability. This was developed for the use of limnologists with the purpose of selecting data sources for differing projects and attempts to answer the question "what data to use and when?". The data sources used are [Limnotrack](https://limnotrack.com/) Buoy in-situ, NIWA virtual climate station network ([VCSN](https://data.niwa.co.nz/products/vcsn-timeseries)), ERA5 ([European Centre for Medium-Range Weather Forecasts (ECMWF) reanalysis v5](https://www.ecmwf.int/en/forecasts)) statlite data and NIWAs ([Earth Sciences New Zealand](https://www.earthsciences.nz/)) observational climate data .
 
 Lake Rotorua, North Island, New Zealand is used as a worked example throughout.
 
-## Guide
+## Guide for tabs
 
 This project takes your though the overview of the project which addresses:
 
-1.  The objective, data sources and the project outputs so the reader can understand what they will get out of the process.
+1.  Overview: Data sources and the project outputs so the reader can understand what they will get out of the process.
 
-2.  The methods, outlining the steps taken to prepare, align, and compare the metrological datasets.
+2.  Methods: Outlining the steps taken to prepare, align, and compare the metrological datasets.
 
-3.  Viriable diagnostics whcih shows time series plots to visulise data stability and alignment.
+3.  Time series: Which shows time series plots to visualise data stability and alignment.
 
 <!-- -->
 
-4.  Metrics and stats, which shows the statistical/quantitative diagnostics outlined in the overview.
+4.  Metrics and stats: Which shows the statistical/quantitative diagnostics outlined in the overview.
 
-5.  Seasonal and event behaviour, which shows seasonality preformance and dataset agreement during events.
+5.  Seasonal and event behaviour: Which shows seasonality/climatology performance and dataset agreement during events.
 
-6.  Rotorua demo gives the reader a visual flow of the project using Lake Rotorua as the example lake.
+6.  Rotorua demo: A demonstration project output with Lake Rotorua as the example lake.
 
-7.  Reproducibility talks through the reusability of this project when accessing different lakes around New Zealand.
+7.  Reproducibility: Talks through the reusability of this project when accessing different lakes around New Zealand.
 
-Desision of what data sets to use will depend on intended outcome. The objective tab will show outputs where the reader can decide how to use the project to answer their questions around meterological data sources.
+Desision of what data sets to use will depend on intended outcome. The objective tab will show outputs where the reader can decide how to use the project to answer their questions around meteorological data sources. Rotorua Demo addresses what datasets would be best to use and what for the Lake Rotorua.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)

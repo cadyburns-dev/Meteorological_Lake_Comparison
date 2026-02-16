@@ -44,7 +44,7 @@ ap1770  <- read_csv("data/processed/rotorua_airport_1770_daily.csv", show_col_ty
 twn40177 <- read_csv("data/processed/rotorua_town_40177_daily.csv", show_col_types = FALSE)
 vcs_on <- read_csv("data/processed/rotorua_vcs_on_daily.csv", show_col_types = FALSE)
 
-
+# Assign files and make sure date aligns
 era5$Date <- as.Date(era5$Date)
 buoy$Date <- as.Date(buoy$Date)
 ap1770$Date <- as.Date(ap1770$Date)
@@ -90,14 +90,14 @@ vcs_on   <- datasets[[5]]
 #1. Metrics table
 #----------------------------------------
 # note to add to corr plot locatrion# “Correlation for precipitation can be influenced by many zero-rain days; we also evaluate performance on wet days (e.g., Precip > 0 or > 1 mm).”
-# # note to do after 1. 1.1?? Compute metrics twice - all days and then wet days only (e.g. obs > 1mm)
+#  Compute metrics twice - all days and then wet days only (e.g. obs > 1mm)
 
-# tidy-table metrics_vs_ref that compares each target dataset to a reference dataset
+# table metrics_vs_ref that compares each target dataset to a reference dataset
 # returns one table with columns:target, var, subset, n, cor, slope, intercept, mae, rmse, ccc, bias, rel_bias
 # computes:all days for every variable,wet days for precipitation (threshold configurable),windy days for wind using either:
 # a fixed threshold (e.g. 10 m/s), or
-#top X% of observed winds (recommended)
-# It uses your new helper function 00_metrics_helpers
+#top X% of observed winds (What is used in rotorua demo)
+# It uses helper function 00_metrics_helpers
 
 
 
@@ -177,7 +177,7 @@ metrics_vs_ref <- function(ref_df,
 }
 
 # This threshold is computed per comparison (per target vs reference and per overlap period).;
-# That’s usually what you want, because the overlap period can differ across targets. 
+# The overlap period can differ across targets. 
 # If a single global threshold shared across all targets is required, compute once from the reference dataset and pass it in — but don’t do that unless you explicitly want it.
 
 
@@ -185,13 +185,29 @@ metrics_vs_ref <- function(ref_df,
 # if windy_top_pct is not NULL it calcs a threshold e.g. thr <- quantile(obs_wind, probs = 1 - windy_top_pct, na.rm = TRUE)
 # For windy_top_pct = 0.10, its the 90th percentile of the reference wind (obs_wind). then keeps obs_wind >= thr so windy days = days where reference wind is in the tp 10%
 
+#What “top 10% of obs” does -It finds a cutoff value so that only the windiest 10% of reference days are kept.
+
+#How that cutoff (threshold) is made
+# Code uses the reference wind series (obs) and calculates the 90th percentile:
+#90% of observed days are below this value
+#10% of observed days are at or above this value
+#That percentile value is stored as wind_threshold.
+#e.g for target (sim) vs refrence (obs) wind_threshold = 5.78 (threshold defind from the reference then applied to select dates for both series)
+# the 90th-percentile observed wind is 5.78 m/s, So “windy day” is defined as:
+#keep day if obs >= 5.78
+#drop day if obs < 5.78    Then metrics are computed using:
+#obs (Airport wind) on those kept days
+#sim (Buoy wind) on those same days
+#So for windy_top_10%_obs, Buoy is being judged only during days when the reference says it was in its windiest 10%.
+
+
 metrics_era5 <- metrics_vs_ref(ap1770, era5, "ERA5", wet_threshold_mm = 1, windy_top_pct = 0.10)
 metrics_buoy <- metrics_vs_ref(ap1770, buoy, "Buoy", wet_threshold_mm = 1, windy_top_pct = 0.10)
 metrics_vcsn <- metrics_vs_ref(ap1770, vcs_on, "vcs_on", wet_threshold_mm = 1, windy_top_pct = 0.10 )
 metrics_all <- bind_rows(metrics_era5, metrics_buoy, metrics_vcsn)
 
-# Leave a ready-made example without printing during `source()` to avoid clutter in Quarto renders.
-# use metrics_all in an interactive session as needed, e.g. View(metrics_all)
+
+View(metrics_all)
 
 #Note radiation only found in two datasets, and has very little points for this reason it is not used
 #Add extra code for RAD if yu have the nessesary data for analysis

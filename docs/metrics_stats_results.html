@@ -185,6 +185,10 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#buoy-wind" id="toc-buoy-wind" class="nav-link" data-scroll-target="#buoy-wind">Buoy wind</a>
   <ul class="collapse">
   <li><a href="#precipitation" id="toc-precipitation" class="nav-link" data-scroll-target="#precipitation">Precipitation</a></li>
+  <li><a href="#era5" id="toc-era5" class="nav-link" data-scroll-target="#era5">ERA5</a></li>
+  <li><a href="#buoy" id="toc-buoy" class="nav-link" data-scroll-target="#buoy">Buoy</a></li>
+  <li><a href="#town" id="toc-town" class="nav-link" data-scroll-target="#town">Town</a></li>
+  <li><a href="#vcs" id="toc-vcs" class="nav-link" data-scroll-target="#vcs">VCS</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -226,8 +230,8 @@ Table&nbsp;1: Data sets obtained and used, showing date range and count per data
 </figcaption>
 <div aria-describedby="tbl-Coverage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div class="reactable html-widget html-fill-item" id="htmlwidget-e5038f5ac590588ae0a8" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-e5038f5ac590588ae0a8">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Dataset":["Buoy","ERA5","Reference","Town_40177","VCS_On"],"first_date":["2007-07-13","1990-01-01","2009-06-29","2015-09-24","1960-01-01"],"last_date":["2025-09-01","2025-08-31","2025-07-27","2025-11-28","2025-06-30"],"n_days":[6590,13027,5873,3654,23923]},"columns":[{"id":"Dataset","name":"Dataset","type":"character"},{"id":"first_date","name":"first_date","type":"Date"},{"id":"last_date","name":"last_date","type":"Date"},{"id":"n_days","name":"n_days","type":"numeric"}],"pagination":false,"striped":true,"dataKey":"7ab4c88afb01d04f54b42035a5032604"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+<div class="reactable html-widget html-fill-item" id="htmlwidget-79984b175619f2038c1f" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-79984b175619f2038c1f">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Dataset":["Buoy","ERA5","Reference","Town_40177","VCS_On"],"first_date":["2007-07-13","1990-01-01","2009-06-29","2015-09-24","1960-01-01"],"last_date":["2025-09-01","2025-08-31","2025-07-27","2025-11-28","2025-06-30"],"n_days":[6590,13027,5873,3654,23923]},"columns":[{"id":"Dataset","name":"Dataset","type":"character"},{"id":"first_date","name":"first_date","type":"Date"},{"id":"last_date","name":"last_date","type":"Date"},{"id":"n_days","name":"n_days","type":"numeric"}],"pagination":false,"striped":true,"dataKey":"7ab4c88afb01d04f54b42035a5032604"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </figure>
@@ -245,8 +249,8 @@ Table&nbsp;2: Metrics table showing outputs mean absolute error (MAR), correlati
 </figcaption>
 <div aria-describedby="tbl-Metrics-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div class="reactable html-widget html-fill-item" id="htmlwidget-8dad27fb011654793d82" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-8dad27fb011654793d82">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"target":["ERA5","ERA5","ERA5","ERA5","ERA5","Buoy","Buoy","Buoy","Buoy","Buoy","Town_40177","Town_40177","Town_40177","Town_40177","Town_40177","VCS_On","VCS_On","VCS_On","VCS_On","VCS_On"],"var":["Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms"],"subset":["all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs"],"n":[5873,5829,1799,5854,588,5491,1246,417,5442,554,3519,3462,1101,3512,355,5846,5802,1789,5827,586],"cor":[0.950252726263742,0.741249024236475,0.67431636909125,0.606393155341196,0.202352666779504,0.923679980700124,0.610776596436927,0.555737937323425,0.784614606192337,0.31361065431878,0.993523541694969,0.927727505844174,0.908752364819289,0.884974987196444,0.727268238915944,0.914770965293676,0.947898015007699,0.928074207258292,0.822134183330596,0.425332331613507],"slope":[0.882440597429375,0.873042895451712,0.74450910126041,0.413238038168765,0.209763580348193,0.827350288767713,0.336701182510668,0.337291395166382,0.879467853449804,0.555470237405179,1.00166451159841,0.830816719267625,0.795081195311294,0.597634516035904,0.74585101846782,0.90166498186377,1.02463410075137,0.991222656419513,0.777390508576691,0.584731478239795],"intercept":[0.990114265176521,3.12251727307789,7.32500023937001,0.650308415288529,2.00137814653436,3.12863896634716,0.280888326973165,0.256896363571603,1.09330703859897,3.13780546905575,-0.013860360669776,0.487804562202073,1.67307840471515,0.684516044231292,-0.31724627206801,1.75419784752098,0.38475932953196,1.47974123074671,0.947923136517395,2.19211560546403],"mae":[1.15386341645304,4.16337519300051,9.04532406892718,1.57904988042364,3.46403401360544,1.35635418690091,3.93232143739968,11.0438369868106,0.978142295018613,1.11179588111854,0.354806576606159,1.45684575389948,4.12706630336058,0.891480637813212,2.09729577464789,1.41336360519805,1.36356428817649,3.98026830631638,0.700401578857045,1.20085324232082],"rmse":[1.41555448747477,8.86946127120353,14.2341676187537,1.95487627601514,3.70517131169121,1.82068764387213,10.0334222233155,17.1156148511674,1.29348823466425,1.75703221512302,0.479666914260097,4.0831868423009,6.82779687546213,1.1471362530857,2.23439590726947,1.78540246223107,3.67696698070302,6.47907281733944,0.932972445285637,1.50448306181108],"ccc":[0.939515902763934,0.713125950941946,0.651607296459391,0.352113960138051,0.0309773822460065,0.896421541912313,0.493187885727772,0.404469167514134,0.724935242161359,0.268237241627964,0.99348864500982,0.921905693753109,0.898860629964187,0.697054538771047,0.241273601778792,0.90869487971212,0.944125926435051,0.92287924486931,0.817678222425936,0.35120818455802],"bias":[-0.53343589580586,2.62003808543489,4.10320177876598,-1.48949538776905,-3.46403401360544,0.869477375018544,-2.99248601391118,-9.40593543285372,0.652744988611671,0.067388649995119,0.00803602166618504,-0.217331022530329,-0.970299727520436,-0.809578587699317,-2.09712676056338,0.477827095145039,0.482040675629093,1.36920067076579,0.135802299639609,-0.679317406143345],"rel_bias":[-4.11607092609458,66.1982540398086,32.5386805843303,-40.8438958103125,-50.0859908869824,6.64472246235729,-60.6381130807177,-64.5089812094997,17.8582686887154,0.975641495902197,0.0610879508001442,-5.2144263022205,-7.52191515578243,-21.8022656185899,-29.9448549375143,3.68130780022946,12.2064908084705,10.8719774171786,3.72246092996606,-9.82433279532475],"wind_threshold":["NA","NA","NA","NA",5.78,"NA","NA","NA","NA",5.78,"NA","NA","NA","NA",5.84,"NA","NA","NA","NA",5.78]},"columns":[{"id":"target","name":"target","type":"character"},{"id":"var","name":"var","type":"character"},{"id":"subset","name":"subset","type":"character"},{"id":"n","name":"n","type":"numeric"},{"id":"cor","name":"cor","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"slope","name":"slope","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"intercept","name":"intercept","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"mae","name":"mae","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"rmse","name":"rmse","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"ccc","name":"ccc","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"bias","name":"bias","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"rel_bias","name":"rel_bias","type":"numeric","format":{"cell":{"digits":1},"aggregated":{"digits":1}}},{"id":"wind_threshold","name":"wind_threshold","type":"numeric"}],"searchable":true,"defaultPageSize":12,"highlight":true,"dataKey":"ae9dca89cb33bba75719bf6742c280ae"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+<div class="reactable html-widget html-fill-item" id="htmlwidget-34ad7656e383038e8a2f" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-34ad7656e383038e8a2f">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"target":["ERA5","ERA5","ERA5","ERA5","ERA5","Buoy","Buoy","Buoy","Buoy","Buoy","Town_40177","Town_40177","Town_40177","Town_40177","Town_40177","VCS_On","VCS_On","VCS_On","VCS_On","VCS_On"],"var":["Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms","Temp_C","Precip_mm","Precip_mm","Wind_Spd_ms","Wind_Spd_ms"],"subset":["all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs","all_days","all_days","wet_days_obs>1mm","all_days","windy_top_10%_obs"],"n":[5873,5829,1799,5854,588,5491,1246,417,5442,554,3519,3462,1101,3512,355,5846,5802,1789,5827,586],"cor":[0.950252726263742,0.741249024236475,0.67431636909125,0.606393155341196,0.202352666779504,0.923679980700124,0.610776596436927,0.555737937323425,0.784614606192337,0.31361065431878,0.993523541694969,0.927727505844174,0.908752364819289,0.884974987196444,0.727268238915944,0.914770965293676,0.947898015007699,0.928074207258292,0.822134183330596,0.425332331613507],"slope":[0.882440597429375,0.873042895451712,0.74450910126041,0.413238038168765,0.209763580348193,0.827350288767713,0.336701182510668,0.337291395166382,0.879467853449804,0.555470237405179,1.00166451159841,0.830816719267625,0.795081195311294,0.597634516035904,0.74585101846782,0.90166498186377,1.02463410075137,0.991222656419513,0.777390508576691,0.584731478239795],"intercept":[0.990114265176521,3.12251727307789,7.32500023937001,0.650308415288529,2.00137814653436,3.12863896634716,0.280888326973165,0.256896363571603,1.09330703859897,3.13780546905575,-0.013860360669776,0.487804562202073,1.67307840471515,0.684516044231292,-0.31724627206801,1.75419784752098,0.38475932953196,1.47974123074671,0.947923136517395,2.19211560546403],"mae":[1.15386341645304,4.16337519300051,9.04532406892718,1.57904988042364,3.46403401360544,1.35635418690091,3.93232143739968,11.0438369868106,0.978142295018613,1.11179588111854,0.354806576606159,1.45684575389948,4.12706630336058,0.891480637813212,2.09729577464789,1.41336360519805,1.36356428817649,3.98026830631638,0.700401578857045,1.20085324232082],"rmse":[1.41555448747477,8.86946127120353,14.2341676187537,1.95487627601514,3.70517131169121,1.82068764387213,10.0334222233155,17.1156148511674,1.29348823466425,1.75703221512302,0.479666914260097,4.0831868423009,6.82779687546213,1.1471362530857,2.23439590726947,1.78540246223107,3.67696698070302,6.47907281733944,0.932972445285637,1.50448306181108],"ccc":[0.939515902763934,0.713125950941946,0.651607296459391,0.352113960138051,0.0309773822460065,0.896421541912313,0.493187885727772,0.404469167514134,0.724935242161359,0.268237241627964,0.99348864500982,0.921905693753109,0.898860629964187,0.697054538771047,0.241273601778792,0.90869487971212,0.944125926435051,0.92287924486931,0.817678222425936,0.35120818455802],"bias":[-0.53343589580586,2.62003808543489,4.10320177876598,-1.48949538776905,-3.46403401360544,0.869477375018544,-2.99248601391118,-9.40593543285372,0.652744988611671,0.067388649995119,0.00803602166618504,-0.217331022530329,-0.970299727520436,-0.809578587699317,-2.09712676056338,0.477827095145039,0.482040675629093,1.36920067076579,0.135802299639609,-0.679317406143345],"rel_bias":[-4.11607092609458,66.1982540398086,32.5386805843303,-40.8438958103125,-50.0859908869824,6.64472246235729,-60.6381130807177,-64.5089812094997,17.8582686887154,0.975641495902197,0.0610879508001442,-5.2144263022205,-7.52191515578243,-21.8022656185899,-29.9448549375143,3.68130780022946,12.2064908084705,10.8719774171786,3.72246092996606,-9.82433279532475],"wind_threshold":["NA","NA","NA","NA",5.78,"NA","NA","NA","NA",5.78,"NA","NA","NA","NA",5.84,"NA","NA","NA","NA",5.78]},"columns":[{"id":"target","name":"target","type":"character"},{"id":"var","name":"var","type":"character"},{"id":"subset","name":"subset","type":"character"},{"id":"n","name":"n","type":"numeric"},{"id":"cor","name":"cor","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"slope","name":"slope","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"intercept","name":"intercept","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"mae","name":"mae","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"rmse","name":"rmse","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"ccc","name":"ccc","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"bias","name":"bias","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"rel_bias","name":"rel_bias","type":"numeric","format":{"cell":{"digits":1},"aggregated":{"digits":1}}},{"id":"wind_threshold","name":"wind_threshold","type":"numeric"}],"searchable":true,"defaultPageSize":12,"highlight":true,"dataKey":"ae9dca89cb33bba75719bf6742c280ae"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </figure>
@@ -254,7 +258,7 @@ Table&nbsp;2: Metrics table showing outputs mean absolute error (MAR), correlati
 </div>
 <section id="temperature-temp_c" class="level3">
 <h3 class="anchored" data-anchor-id="temperature-temp_c">Temperature (Temp_C)</h3>
-<p>Town_40177 shows near‑perfect agreement with Airport_1770 (r=0.99, RMSE=0.48, bias=0.01). ERA5 is strong but cool‑biased (r=0.95, RMSE=1.42, bias −0.53). Buoy and VCS_On are similar in correlation (r=0.92 and 0.91) with slight warm biases (bias +0.87 and +0.48, RMSE ~1.8). Overall high agreeability across all datasets with = or &gt; 0.90 CCC score</p>
+<p>Town_40177 shows near‑perfect agreement with Airport_1770 (r=0.99, RMSE=0.48, bias=0.01). ERA5 is strong but cool‑biased (r=0.95, RMSE=1.42, bias −0.53). Buoy and VCS_On are similar in correlation (r=0.92 and 0.91) with slight warm biases (bias +0.87 and +0.48, RMSE ~1.8). Overall high agreeability across all datasets with = or &gt; 0.90 CCC score.</p>
 </section>
 <section id="precipitation-precip_mm" class="level3">
 <h3 class="anchored" data-anchor-id="precipitation-precip_mm">Precipitation (Precip_mm)</h3>
@@ -282,7 +286,7 @@ Figure&nbsp;1: Density distribution overlays of daily temperature (°C) for each
 </div>
 </div>
 </div>
-<p>The distributions are broadly similar, but ERA5 is shifted slightly cooler (left of the reference), while Buoy and VCS_On are shifted warmer (right of the reference). Town_40177 most closely overlaps the reference distribution. Differences in tail thickness suggest small changes in variability, but the overall temperature range is consistent.</p>
+<p>The distributions are broadly similar with a classic bimodal structure, but ERA5 is shifted slightly cooler (left of the reference) with the only hint of a multimodal structure forming at around 12 degrees. Buoy and VCS_On are shifted warmer (right of the reference). Buoy shows a consistant hihger density of temperature between 10 and 20 degrees but has the lowest cooler density below 7.5 degrees. Town_40177 most closely overlaps the reference distribution. Differences in tail thickness suggest small changes in variability, but the overall temperature range is consistent.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-density-wind" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -297,7 +301,7 @@ Figure&nbsp;2: Density distribution overlays of daily wind speed (m s⁻¹) fo
 </div>
 </div>
 </div>
-<p>ERA5 is shifted to lower wind speeds (left) with a longer tail, showing a consistent low‑wind bias. Buoy and VCS_On have higher density right tails (higher wind) than the reference, showing higher frequency of moderate–strong winds measurments. Town_40177 is closest to the reference peak but has dampend higher wind records.</p>
+<p>ERA5 is shifted to lower wind speeds (left) with a longer tail and a less defined unimodal shape, showing a consistent low‑wind bias. Buoy and VCS_On are shifted to the right with have higher density right tails (higher wind) than the reference, particulary the Buoy hold a stronger density showing higher frequency of moderate–strong winds measurments (high variability). Town shows less wind variability compared to the other datassets.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-Histogram-Precip" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -312,7 +316,7 @@ Figure&nbsp;3: Histogram of daily precipitation (mm) for all datasets, including
 </div>
 </div>
 </div>
-<p>All datasets are strongly zero‑inflated, but ERA5 shows a longer right tail and more moderate rainfall counts that are spread out, consistent with wet bias. Buoy has fewer non‑zero counts, indicating a lack of precipitation detection. VCS_On is closest to the reference, with similar tails and event frequencies. Town_40177 follows a similar pattern to the reference, but seems to underrepresent rain.</p>
+<p>All datasets are strongly zero‑inflated, but ERA5 shows a longer right tail and more moderate rainfall counts that are spread out, consistent with wet bias. Buoy has fewer non zero counts, indicating a lack of precipitation detection. VCS_On is closest to the reference, with similar tails and event frequencies. Town_40177 follows a similar pattern to the reference, but seems to underrepresent rain.</p>
 </section>
 <section id="scatter-vs-reference-11" class="level2">
 <h2 class="anchored" data-anchor-id="scatter-vs-reference-11">Scatter vs reference (1:1)</h2>
@@ -346,7 +350,7 @@ Figure&nbsp;5: Scatter plots of daily wind speed (m s⁻¹) for each dataset a
 </div>
 </div>
 </div>
-<p>All datasets show positive associations with the airport reference, but performance differs. Town_40177 and VCS_On show the strongest correlations and lowest errors, with regression lines closest to the 1:1 line. Buoy shows lower but moderate correlation and a positive bias (overestimation), while ERA5 shows weaker correlation and a strong negative bias (underestimation) with the largest RMSE among the four.</p>
+<p>The heteroscedastcity shows errors are not constant but high wind days more uncertanty. All datasets show positive associations with the airport reference, but performance differs. Town_40177 and VCS_On show the strongest correlations and lowest errors, with regression lines closest to the 1:1 line, Town wind is dampened in stronger winds. however, VCS shows Heteroscedasticity. Buoy shows lower but moderate correlation and a positive bias (overestimation), while ERA5 shows weaker correlation and a strong negative bias (underestimation) with the largest RMSE among the four and dampened/smoother higher wimds.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-scatter-precip" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -365,7 +369,7 @@ Figure&nbsp;6: Fig Scatter plots of daily precipitation (mm) for each dataset so
 </section>
 <section id="rolling-diagnostics-drift-through-time" class="level2">
 <h2 class="anchored" data-anchor-id="rolling-diagnostics-drift-through-time">Rolling diagnostics (drift through time)</h2>
-<p>Rolling diagnostics reveal gradual offsets or drift through time where breaks away from 0 bias or a changing correlation is looked for, answering the “does it shift seasonally?” question.</p>
+<p>Rolling diagnostics reveal gradual offsets or drift through time where breaks away from 0 bias or a changing correlation is looked for, answering the “does it shift seasonally?” question. Because precipitation is intermittent and heavy tailed, errors are regime-dependent (large during event windows). Consideer the 30-day-rolling plots along side wet-day/event metrics, not all-days metrics alone.</p>
 <section id="temperature" class="level3">
 <h3 class="anchored" data-anchor-id="temperature">Temperature</h3>
 <div id="fig-rolling-temp" class="quarto-layout-panel">
@@ -436,7 +440,7 @@ Figure&nbsp;7: Rolling 30‑day diagnostics for daily temperature (°C) comparin
 </section>
 <section id="buoy-temperature" class="level3">
 <h3 class="anchored" data-anchor-id="buoy-temperature">Buoy temperature</h3>
-<p>Bias is mostly positive, with two standout negative points. In particular, in late 2019, which coincides with sharp drops in correlation and spikes in MAE/RMSE due to data errors/missreadings in this period. Outside these events, correlation is high, and errors are low. Buoy temperatures tend to be higher than the reference.</p>
+<p>Bias is mostly positive, with two standout negative points. In particular, in late 2019, which coincides with sharp drops in correlation and spikes in MAE/RMSE. Outside these events, correlation is high, and errors are low. Buoy temperatures tend to be higher than the reference.</p>
 </section>
 <section id="town-temperature" class="level3">
 <h3 class="anchored" data-anchor-id="town-temperature">Town temperature</h3>
@@ -522,12 +526,12 @@ Figure&nbsp;8: Rolling 30‑day diagnostics for daily wind speed (m s⁻¹) co
 <section id="vcsn-wind" class="level2">
 <h2 class="anchored" data-anchor-id="vcsn-wind">VCSN wind</h2>
 <p>Bias shifts over time from slightly positive in the early record toward near‑zero and then slightly negative values, indicating a gradual drift in mean offset. Correlation remains moderate to high with intermittent dips, while MAE/RMSE display recurring oscillations without large spikes.</p>
-<p>Slow bias drift: Mean bias trends from positive to slightly negative across the record, indicating gradual change in relative wind magnitude. Consistent but variable correlation: Correlation is generally moderate–high with periodic drops, reflecting time‑varying agreement. Stable error magnitudes: MAE/RMSE show cyclical variability but no extreme excursions, suggesting steady performance without major anomalies. Implication: VCS_On captures wind variability reasonably well, but bias may need time‑dependent adjustment.</p>
+<p>Slow bias drift are seen. Mean bias trends from positive to slightly negative across the record, showing gradual change in relative wind magnitude. Correlation is generally moderate–high with periodic drops, reflecting time‑varying agreement. MAE/RMSE show cyclical variability but no extreme excursions, suggesting steady performance without major anomalies. VCS_On captures wind variability reasonably well, but bias may need adjustment.</p>
 </section>
 <section id="buoy-wind" class="level2">
 <h2 class="anchored" data-anchor-id="buoy-wind">Buoy wind</h2>
-<p>A pronounced early‑record anomaly is evident as a sharp negative bias, collapse in correlation, and a simultaneous spike in MAE/RMSE. Outside this episode, bias remains small and positive, correlation is generally high, and errors are comparatively low with occasional minor excursions.</p>
-<p>Early anomaly dominates: A short early interval shows extreme disagreement (large negative bias, correlation collapse, large MAE/RMSE), indicating a likely data issue or calibration mismatch in that period. Otherwise strong agreement: After the anomaly, correlation stays high and error levels are low, implying good temporal coherence between buoy and airport winds. Small systematic bias: The buoy shows a slight positive bias relative to the airport in the stable period. Transient deviations only: Later deviations are modest and short‑lived, suggesting the relationship is stable after initial issues.</p>
+<p>A pronounced early anomaly is evident as a sharp negative bias, collapse in correlation, and a simultaneous spike in MAE/RMSE. Outside this episode, bias remains small and positive, correlation is generally high, and errors are comparatively low with occasional minor excursions.</p>
+<p>Early anomaly dominates with a short early interval shows extreme disagreement (large negative bias, correlation collapse, large MAE/RMSE), indicating a likely data issue or calibration mismatch in that period. Otherwise strong agreement. After the anomaly, correlation stays high and error levels are low, implying good temporal coherence between buoy and airport winds. The buoy shows a slight positive bias relative to the airport in the stable period. Later deviations are modest and short‑lived, suggesting the relationship is stable after initial issues.</p>
 <section id="precipitation" class="level3">
 <h3 class="anchored" data-anchor-id="precipitation">Precipitation</h3>
 <div id="fig-rolling-precip" class="quarto-layout-panel">
@@ -591,6 +595,22 @@ Figure&nbsp;9: Rolling 30‑day diagnostics for daily total precipitation (mm) c
 </figcaption>
 </figure>
 </div>
+</section>
+<section id="era5" class="level3">
+<h3 class="anchored" data-anchor-id="era5">ERA5</h3>
+<p>ERA5 show a wet bias dominated with moderate correlation overall with periodic short lived drops. MAE/RMSE are largely variable showing temporal cohesion is present but not magnatude compared to the reference dataset, especially in high rain events.</p>
+</section>
+<section id="buoy" class="level3">
+<h3 class="anchored" data-anchor-id="buoy">Buoy</h3>
+<p>The most unstable rainfall dataset is buoy rainfall. Buoy precipitation shows a consistand underestimation. Clear instability is shows with teh shape of the data. MAE/RMSE are elevated and show a staircase increase late in the data.</p>
+</section>
+<section id="town" class="level3">
+<h3 class="anchored" data-anchor-id="town">Town</h3>
+<p>Town precipitation shows overall high correlation with notable plunges. Bias is relativly neutral with a dry bias (2017 and 2023) followed by a 2017 spike (small wet bias) which matched the incresed MAE and RMSE in 2017 and 2023 (deterioration episodes). MAE/RMSE is relativly low with some short periods of small rises.</p>
+</section>
+<section id="vcs" class="level3">
+<h3 class="anchored" data-anchor-id="vcs">VCS</h3>
+<p>A Shift from wet (early data) to dry (late data) bias is seen across the daataset. Correlation is high for the most part with occasional drops. MAE/RMSE are relatively stable and moderate relative to ERA5 and BUoy, showing alignment with the reference.</p>
 
 
 </section>

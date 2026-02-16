@@ -17,7 +17,7 @@ params:
   window_days: 30
 ---
 
-This page focuses on behaviour: when datasets agree on events, where they miss each other (zeros vs non-zeros, timing offsets, extremes), and how seasonality shows up.
+This page focuses on behaviour: when datasets agree on events, where they miss each other (zeros vs non-zeros, timing offsets, extremes), and how datasets change over different seasons.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
@@ -84,15 +84,24 @@ vars_available <- Reduce(
 vars <- intersect(vars_requested, vars_available)
 ```
 
-## Precipitation event structure
+## Precipitation event structure: The following plots show how precipitation volumes and timing align across datasets.
 
-The following plots show how precipitation volumes and timing align across datasets.
 
+::: panel-tabset
+### 7-day total
 ```{r}
-#| label: fig-timeseries-hydro
-#| fig-cap: "Hydrograph of daily precipitation (mm) for all datasets (Airport, Buoy, Town, ERA5, VCS) for Lake Rotorua."
-plot_precip_hydrograph(ref_df, targets_list, show_7day_sum = TRUE)
+#| label: fig-Rolling-7-hydro
+#| fig-cap: "7-day rolling hydrograph showing total precipitation (mm/7day) for all datasets (Airport, Buoy, Town, ERA5, VCS) at Lake Rotorua."
+plot_precip_hydrograph(ref_df, targets_list, display = "rolling", window_days = 7)
 ```
+
+### Daily Hydrograph
+```{r}
+#| label: fig-hydrograph
+#| fig-cap: "Hydrograph of daily precipitation (mm) for all datasets (Airport, Buoy, Town, ERA5, VCS) for Lake Rotorua."
+plot_precip_hydrograph(ref_df, targets_list, display = "bars")
+```
+:::
 
 ```{r}
 #| label: fig-cumulative-freq
@@ -101,7 +110,7 @@ plot_precip_cdf(ref_df, targets_list)
 ```
 
 
-ERA5’s curve is shifted rightward, indicating more frequent moderate–high rainfall (wet bias). The buoy curve rises faster at low precipitation, indicating fewer heavy‑rain days and a tendency toward under‑reporting. Town_40177 and VCS_On track the reference most closely across the distribution, suggesting better alignment in both light and heavy rain frequencies.
+ERA5’s curve is shifted rightward, indicating more frequent moderate to high rainfall (wet bias). The buoy curve rises faster at low precipitation, indicating fewer heavy‑rain days and a tendency toward under tracking. Town_40177 and VCS_On track the reference most closely across the distribution, showing potential better fit in both light and heavy rain.
 
 ```{r}
 #| label: fig-histogram-ncol2-rain
@@ -110,11 +119,11 @@ plot_precip_wetday_distribution(ref_df, targets_list, threshold_mm = wet_thresho
 ```
 
 
-ERA5 shows the broadest distribution and the longest upper tail, consistent with overestimation of heavier events. Town_40177 and VCS_On align more closely with the reference shape, indicating better magnitude agreement on wet days. The buoy distribution is compressed toward lower totals, indicating underestimation of event magnitudes.
+ERA5 shows the broadest distribution and the longest upper tail, which aligns with overestimation of heavier events. Town_40177 and VCS_On align more closely with the reference shape, indicating better magnitude agreement on wet days. The buoy distribution is pressed toward lower totals, indicating underestimation of event magnitudes.
 
 ## Event detection and mismatches
 
-Use these to spot zero vs non‑zero disagreements, misses/false alarms, and timing offsets during wet events. POD: Probability detection FAR: False alarm ratio CSI: Critical success inder Bias score:
+Use these to spot zero vs non zero disagreements, misses/false alarms, and timing offsets during wet events. POD: Probability detection FAR: False alarm ratio CSI: Critical success inder Bias score:
 
 ```{r}
 #| echo: false
@@ -157,7 +166,7 @@ plot_event_skill_scores(
 ```
 
 
-Town_40177 has the highest CSI and low FAR, indicating the most robust event agreement. ERA5 shows the highest POD but also the highest FAR and bias_score (>1), reflecting over‑prediction. VCS_On is conservative (low FAR, lower POD), and Buoy has the weakest skill overall.
+Town_40177 has the highest critical sucess index (CSI) score and low ralse alarm ratio (FAR), indicating the most robust event agreement. ERA5 shows the highest probability of detection (POD), but also the highest FAR and bias_score (>1), showing its over prediction nature. VCS_On shows low FAR and lower POD, while the Buoy data has the weakest skill overall, but also the lowest overall counts compared to the reference.
 
 ```{r}
 #| label: fig-false-alarm-mag
@@ -166,15 +175,16 @@ plot_false_alarm_magnitude(ref_df, targets_list, threshold_mm = precip_event_thr
 ```
 
 
-ERA5 shows the largest and most frequent false‑alarm magnitudes, while Town_40177 and VCS_On are more constrained. Buoy contributes few false alarms but also fewer detected events overall.
+ERA5 shows the largest and most frequent false alarm magnitudes, while Town_40177 and VCS_On are more constrained. Buoy contributes few false alarms but also fewer detected events overall.
 
-ERA5 has very high POD (0.95) but high FAR (0.42) and bias_score > 1 (1.64), meaning it detects most events but over‑predicts rain (many false alarms). Town_40177 shows the best balance: high POD (0.86), low FAR (0.08), and the highest CSI (0.795), indicating the most reliable event agreement overall. VCS_On has low FAR (0.024) but a lower POD (0.75), indicating it is conservative—it misses more events but rarely produces false alarms. Buoy is least reliable for event detection: lower POD (0.60) and CSI (0.548) despite a moderate FAR. False‑alarm magnitudes (when ref ≤ 1 mm):
 
-ERA5 false alarms are numerous and span large magnitudes, indicating systematic wet bias. Town_40177 and VCS_On false alarms are fewer and generally smaller. Buoy has the fewest false alarms but also the poorest detection rate.
+ERA5 VCS and Town all have a bias score 1 or >1 and 0.9 or greater POD, indicating over prediction of rain (more false alarms), while the Buoy data has lower bias score (0.52) and POD (0.44) showing it underpredicts rain events. Even thought ERA5 had the highest POD it also had the highest FAR (0.42) while VCS has the lowest FAR and strongest CSI (0.827). Town also produced a strong CSI (0.824) while ERA5 and Buoy both have weak to moderate scores.
+
+
 
 ## Seasonal behaviour
 
-Climatology and seasonal bias plots highlight over/under-capture of extremes across the year.
+Climatology and seasonal bias plots show potential detection or lack of for extremes across the year.
 
 ```{r}
 #| label: fig-climatology-temp
@@ -193,7 +203,7 @@ plot_monthly_climatology(ref_df, targets_list, "Wind_Spd_ms")
 ```
 
 
-All datasets show higher winds in spring–summer and lower in winter, but the magnitude differs. ERA5 is consistently lower than the reference across all months (systematic low bias). Buoy and VCS_On are higher than the reference, while Town_40177 is slightly low but closer. The Buoy and VCS_On bands are wider, suggesting greater variability or local effects.
+All datasets show higher winds in spring and summer and lower in winter, but the magnitude differs. ERA5 is consistently lower than the reference across all months (systematic low bias). Buoy and VCS_On are higher than the reference, while Town_40177 is lower. The VCS_On bands are closest to the reference, The thisckness in the IQR bands suggest greater variation or local effects.
 
 ```{r}
 #| label: fig-climatology-precip
@@ -202,7 +212,7 @@ plot_monthly_climatology(ref_df, targets_list, "Precip_mm")
 ```
 
 
-All datasets show a winter–spring enhancement and a relative summer minimum, but the magnitude differs substantially. ERA5 is consistently wetter than the reference across months, while Buoy is markedly drier. Town_40177 aligns closely with the airport, and VCS_On is slightly wetter in several months. Wider IQRs for ERA5 indicate more variability and heavier tails.
+All datasets show a winter spring increase and a relative summer decrease, but the magnitude differs substantially. ERA5 is consistently wetter than the reference across months, while Buoy is clearly drier exept for september. Town_40177 aligns closely with the airport, and VCS_On is slightly wetter in several months but closer in the warmer dryer parts of the year. Wider IQRs for ERA5 indicate more variability and heavier tails.
 
 ```{r}
 #| label: fig-seasonal-bias-temp
@@ -212,7 +222,7 @@ plot_seasonal_bias(ref_df, targets_list, "Temp_C", season_defs = season_defs)
 ```
 
 
-ERA5 is cool‑biased in all seasons, strongest in spring. Buoy shows a warm bias in all seasons, especially autumn/winter. Town_40177 is near zero in every season (best match). VCS_On is consistently warm‑biased but smaller than Buoy.
+ERA5 is cool biased in all seasons, most pronounced spring. Buoy shows a warm bias in all seasons, especially autumn/winter. Town_40177 is near zero in every season (best match). VCS_On is consistently warm biased but smaller than Buoy.
 
 
 ```{r}
@@ -231,4 +241,4 @@ plot_seasonal_scatter(ref_df, targets_list, "Precip_mm", season_defs = season_de
 ```
 
 
-Interpretation Town_40177 and VCS_On are closest to the 1:1 line in all seasons, indicating the best precipitation agreement. ERA5 tends to overestimate moderate and heavy events (slope > 1), while Buoy underestimates rainfall across seasons and shows the greatest dispersion at higher totals.
+VCS_On are closest to the 1:1 line in all seasons, indicating the best precipitation agreement. Town and ERA5 tends to overestimate moderate and heavy events (slope > 1), while Buoy underestimates rainfall across seasons and shows the greatest dispersion at higher totals.

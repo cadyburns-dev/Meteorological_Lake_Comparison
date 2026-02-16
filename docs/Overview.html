@@ -255,34 +255,33 @@ div.csl-indent {
 </header>
 
 
-<p>Meterological data is utalised for many different lake assesments, from understanding lake regime shifts to modeling future lake dynamices <span class="citation" data-cites="freshwat2020">(<a href="#ref-freshwat2020" role="doc-biblioref"><em>Freshwater Ecology : Concepts and Environmental Applications of Limnology</em> 2020</a>)</span>. It is therfore vital to use the best avalable meterological data for the location and time of choice. Too often meterological data are incomplete and unreliable. ERA5 (ECMWF fifth gen) data gridded at 31km is widely used due to its comprehensive and clean nature combining observations with model data, however it is coarse and some variables are known to misrepresent data at the land/lake surface (low atmosphere metorology). NIWAs virtual climate station network takes captured observational station data and created a 5km grid conecting other weather stations to allow for intergrated data in a chosen location. The VCSN data is somewhat intertwined with the Airport data which is used as the Reference for the Rotorua Lake demo. Meterological datasets in more densely populated areas or with large topographical gradients will typically result in micro-climatic datasets due to the physical nature of these environments. In partucular wind, rain and even temperature in larger cities. Additionally, stations placed in higher altitudes can often misrepresent lower altitudes. When wanting to use datasets for lake specific projects Buoy data has the opportunity to allow for more accurate readings due to its on water position. However precipitation data is often inaccurate, especially in higher wind events, causing movement of monitoring equipment. This is especially true in large lakes that can develope substantial waves. For this reason wind can also be skewed in events. Temperature for a given Lake from a Buoy is regarded the most likely accurate candidate as fulxtuations from a water body and fluxes from land follow different physical laws.</p>
-<p>The question here is how does coarse global, modelled national, Local, and Lake source metorological data compare. Is there a better data source in cool or warm periods? or in a storm event? or for a specific variable? or Is there a better data source for local models?</p>
-<p>By analysing the different datasets in a given location compared to a verifiable meteorological dataset we can start to see where datasets perform well and where they lack agreement.</p>
+<p>Meteorological data is utilised for many different lake assessments, from understanding lake regime shifts to modelling future lake dynamics <span class="citation" data-cites="freshwat2020a">(<a href="#ref-freshwat2020a" role="doc-biblioref"><em>Freshwater Ecology : Concepts and Environmental Applications of Limnology</em> 2020</a>)</span>. It is therefore vital to use the best available meteorological data for the location and time of choice. Too often meteorological data are incomplete and unreliable. ERA5 (ECMWF fifth gen) data gridded at 9km <span class="citation" data-cites="setchellb">(<a href="#ref-setchellb" role="doc-biblioref">Setchell, n.d.</a>)</span> is widely used due to its comprehensive and clean nature, combining observations with model data, however, it is more coarse than other available sources and some variables are known to misrepresent data at the lake surface (low atmosphere meteorology). NIWAs virtual climate station network takes captured observational station data and creates a 5km grid connecting other weather stations and integrates data in a chosen location. The VCSN data is somewhat intertwined with the Airport data, which is used as the Reference for the Rotorua Lake demo. Meteorological datasets in more densely populated areas or with large topographical gradients will typically result in micro-climatic datasets due to the physical nature of these environments. In partucular wind, rain and even temperature in larger cities. Additionally, stations placed in higher altitudes can often misrepresent lower altitudes. When using datasets for lake specific projects Buoy data has the opportunity to allow for more accurate readings due to its on water position. However, precipitation data is often inaccurate, especially in higher wind events, causing movement of monitoring equipment. This is especially true in large lakes that can develop substantial waves. For this reason, wind can also be skewed in events. Temperature for a given lake from a Buoy is regarded the most likely accurate candidate, as fluctuations from a water body and fluxes from land follow different physical laws.</p>
+<p>The question here is how coarse global, modelled national, Local observational, and Lake source meteorological data compare. Is there a better data source in cool or warm periods? how about in a storm event? or for a specific variable? and perhapse there a better data source for local models?</p>
 <section id="objective" class="level2">
 <h2 class="anchored" data-anchor-id="objective">Objective</h2>
-<p>To analyse different meterological data avalable for a given location, access accuarcy, precision, bias and overall aggreability.</p>
+<p>To analyse different meteorological data available for a given location, access accuracy, precision, bias and overall agreement.</p>
 </section>
 <section id="data-sources" class="level2">
 <h2 class="anchored" data-anchor-id="data-sources">Data sources</h2>
-<p>Limnotrack Buoy on lake, NIWA virtual climate station network (VCSN) , ERA5 statlite data, Observational data “Airport” station, Obresvational data “Town” station.</p>
+<p>Limnotrack Buoy on lake, NIWA virtual climate station network (VCSN), ERA5 statlite data, Observational data “Airport” station, Observational data “Town” station.</p>
 <p>Data source and station names will vary from location to location. Selecting stations from these websites is laid out in the reproducibility tab, methods tab and 02_prepare_raw_data R script.</p>
 </section>
 <section id="outputs" class="level2">
 <h2 class="anchored" data-anchor-id="outputs">Outputs</h2>
 <p>The outputs of this project will show:</p>
 <ol type="1">
-<li><p>Correlation coeficient (Pearsons r)</p></li>
-<li><p>Change in intercept and slope (linear regrassion slope and intercept)</p></li>
+<li><p>Correlation coefficient (Pearsons r)</p></li>
+<li><p>Change in intercept and slope (linear regression slope and intercept)</p></li>
 <li><p>Mean absolute error (MAE)</p></li>
 <li><p>Root mean squared error (RMSE)</p></li>
-<li><p>Concordance (ccc)</p></li>
-<li><p>Mean and realitive bias</p></li>
+<li><p>Concordance correlation coefficient (CCC)</p></li>
+<li><p>Mean and relative bias (%)</p></li>
 <li><p>Event score</p></li>
 <li><p>Rolling window/drift</p></li>
 <li><p>Probability detection (POD)</p></li>
-<li><p>False alarm ration (FAR)</p></li>
+<li><p>False alarm ratio (FAR)</p></li>
 <li><p>Critical success index (CSI)</p>
-<p>These metrics along with plots and diagnostics will answer bias questions, seasonal behaviour, event disagreement and extremes</p></li>
+<p>These metrics along with plots and diagnostics, will answer bias questions, seasonal behaviour, event disagreement and extremes</p></li>
 </ol>
 </section>
 <section id="study-area" class="level2">
@@ -315,8 +314,8 @@ div.csl-indent {
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setView</span>(<span class="at">lng =</span> params<span class="sc">$</span>lon, <span class="at">lat =</span> params<span class="sc">$</span>lat, <span class="at">zoom =</span> <span class="dv">11</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div class="leaflet html-widget html-fill-item" id="htmlwidget-0462234f226790f5cbe1" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-0462234f226790f5cbe1">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addCircles","args":[-38.114908,176.316662,10000,null,null,{"interactive":true,"className":"","stroke":true,"color":"dodgerblue","weight":5,"opacity":0.5,"fill":true,"fillColor":"dodgerblue","fillOpacity":0.25},"Lake Rotorua",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null,null]},{"method":"addCircleMarkers","args":[-38.114908,176.316662,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"navy","weight":5,"opacity":0.5,"fill":true,"fillColor":"navy","fillOpacity":0.9},null,null,"Lake Rotorua",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[-38.114908,-38.114908],"lng":[176.316662,176.316662]},"setView":[[-38.114908,176.316662],11,[]]},"evals":[],"jsHooks":[]}</script>
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-07597b4c29dfb56d5c78" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-07597b4c29dfb56d5c78">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addCircles","args":[-38.114908,176.316662,10000,null,null,{"interactive":true,"className":"","stroke":true,"color":"dodgerblue","weight":5,"opacity":0.5,"fill":true,"fillColor":"dodgerblue","fillOpacity":0.25},"Lake Rotorua",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null,null]},{"method":"addCircleMarkers","args":[-38.114908,176.316662,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"navy","weight":5,"opacity":0.5,"fill":true,"fillColor":"navy","fillOpacity":0.9},null,null,"Lake Rotorua",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[-38.114908,-38.114908],"lng":[176.316662,176.316662]},"setView":[[-38.114908,176.316662],11,[]]},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
@@ -449,8 +448,11 @@ div.csl-indent {
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
-<div id="ref-freshwat2020" class="csl-entry" role="listitem">
+<div id="ref-freshwat2020a" class="csl-entry" role="listitem">
 <em>Freshwater Ecology : Concepts and Environmental Applications of Limnology</em>. 2020. 3rd edition. Aquatic Ecology. San Diego, Calif.: Academic Press.
+</div>
+<div id="ref-setchellb" class="csl-entry" role="listitem">
+Setchell, Helen. n.d. <span>“ECMWF Reanalysis V5.”</span>
 </div>
 </div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

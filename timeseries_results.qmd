@@ -94,11 +94,27 @@ plot_timeseries_line(ref_df, targets_list, "Temp_C")
 plot_timeseries_line(ref_df, targets_list, "Wind_Spd_ms")
 ```
 
+Toggle between timeseries and hydrograph 
+
+
+::: panel-tabset
+### Timeseries line plot
+
 ```{r}
 #| label: fig-timeseries-precip
 #| fig-cap: "Meteorological data for daily total precipitation (mm) from different data sources (Airport, Buoy, ERA5, Town, VCS) around Lake Rotorua plotted against the reference data (Airport)."
 plot_timeseries_line(ref_df, targets_list, "Precip_mm")
 ```
+
+### Hydrograph daily totals
+
+```{r}
+#| label: fig-Daily-Hydrograph
+#| fig-cap: "Hydrograph for daily total precipitation (mm) from different data sources (Airport, Buoy, ERA5, Town, VCS) around Lake Rotorua plotted against the reference data (Airport)."
+plot_precip_hydrograph(ref_df, targets_list, display = "bars")
+```
+:::
+
 
 ```{r}
 #| label: fig-timeseries-rad

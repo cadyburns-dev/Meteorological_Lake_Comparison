@@ -54,10 +54,10 @@ targets_list <- list(
 
 target_colors <- c(
   Airport_1770 = "black",
-  ERA5         = "#d95f02",
-  Buoy         = "#7570b3",
-  Town_40177   = "#f0c400",
-  VCS_On       = "#1b9e77"
+  ERA5         = "#ef840aff",
+  Buoy         = "#7742b8ff",
+  Town_40177   = "#e6de0eff",
+  VCS_On       = "#1b9e77ff"
 )
 
 vars <- c("Temp_C", "Precip_mm", "Wind_Spd_ms", "RadSWD_Wm2")
@@ -114,7 +114,7 @@ make_long_overlap <- function(ref_df, targets_list, var, ref_name = "Airport_177
 
 # -----------------------------
 # Time series: line (Temp/Wind/Rad)
-# Why: time series shows seasonal structure, drift, and event alignment across datasets.
+#  time series shows seasonal structure, drift, and event alignment across datasets.
 # Note: precip is "event-like" and zero-inflated, so bars (hydrograph) are clearer than lines. = event aware precip analysis
 # -----------------------------
 plot_timeseries_line <- function(ref_df, targets_list, var, ref_name = "Airport_1770") {
@@ -133,40 +133,79 @@ plot_timeseries_line <- function(ref_df, targets_list, var, ref_name = "Airport_
 }
 
 # -----------------------------
-# Precip hydrograph (bars) + optional 7-day rolling sum
+# Precipitation plot mode
+# display = "bars"    -> daily totals (mm/day)
+# display = "rolling" -> rolling totals (mm/window_days)
 # -----------------------------
-plot_precip_hydrograph <- function(ref_df, targets_list, ref_name = "Airport_1770", show_7day_sum = TRUE) {
+plot_precip_hydrograph <- function(ref_df,
+                                   targets_list,
+                                   ref_name = "Airport_1770",
+                                   display = c("bars", "rolling"),
+                                   window_days = 7,
+                                   show_7day_sum = NULL) {
+
+  # Backward compatibility with older calls using show_7day_sum.  # changed at a later date  old code called 7day_sam new one calls "display = bars or rolling"
+  if (!is.null(show_7day_sum)) {
+    display <- if (isTRUE(show_7day_sum)) "rolling" else "bars"
+  } else {
+    display <- match.arg(display)
+  }
 
   df <- make_long_overlap(ref_df, targets_list, "Precip_mm", ref_name = ref_name)
 
-  p <- ggplot(df, aes(Date, value, fill = source)) +
-    geom_col(alpha = 0.55) +
+  p <- ggplot() +
     facet_wrap(~ source, ncol = 1, scales = "fixed") +
-    scale_fill_manual(values = target_colors) +
-    labs(
-      title = "Precipitation hydrograph (daily totals; overlap with reference)",
-      x = NULL, y = "Precip (mm/day)"
-    ) +
     theme_bw() +
     theme(legend.position = "none")
 
-  # OPTIONAL 7-day sum is useful for storm periods but is on a different scale than daily totals.
-    #  7-day rolling sum line per dataset to show storm periods more clearly
-  # Allows to see week long totals over the daily bars
-  if (isTRUE(show_7day_sum)) {
-    df7 <- df |>
+  if (display == "bars") {
+    p <- p +
+      geom_col(
+        data = df,
+        aes(Date, value, fill = source),
+        alpha = 0.55
+      ) +
+      scale_fill_manual(values = target_colors) +
+      labs(
+        title = "Precipitation hydrograph (daily totals)",
+        x = NULL,
+        y = "Precip (mm/day)"
+      )
+  } else {
+    df_roll <- df |>
       arrange(source, Date) |>
       group_by(source) |>
-      mutate(sum7 = slider::slide_dbl(value, ~ sum(.x, na.rm = TRUE), .before = 6, .complete = TRUE)) |>
+      mutate(
+        roll_sum = slider::slide_dbl(
+          value, ~ sum(.x, na.rm = TRUE),
+          .before = window_days - 1,
+          .complete = TRUE
+        )
+      ) |>
       ungroup()
 
     p <- p +
-      geom_line(data = df7, aes(Date, sum7, color = source), inherit.aes = FALSE, alpha = 0.85) +
-      scale_color_manual(values = target_colors)
+      geom_line(
+        data = df_roll,
+        aes(Date, roll_sum, color = source),
+        linewidth = 0.8,
+        alpha = 0.95
+      ) +
+      scale_color_manual(values = target_colors) +
+      labs(
+        title = paste0("Precipitation hydrograph (", window_days, "-day rolling totals)"),
+        x = NULL,
+        y = paste0("Precip (mm/", window_days, " days)")
+      )
   }
 
   p
 }
+
+# look at data if you want
+ # plot_precip_hydrograph(ref_df, targets_list, display = "bars")
+ # plot_precip_hydrograph(ref_df, targets_list, display = "rolling", window_days = 7)
+
 
 # -----------------------------
 # Distributions
@@ -176,7 +215,8 @@ plot_precip_hydrograph <- function(ref_df, targets_list, ref_name = "Airport_177
 
 # Why: distributions show bias in variability (e.g., too many moderate values, missing extremes).
 # For precip: include wet-day-only to reduce distortion from many zero-rain days.
-# Option to scale the ) rain days so they are ot inflaed -> Code below ->
+# Option to scale the ) rain days so they are not inflaed -> Code below ->
+
 #ggplot(df, aes(value, fill = source)) +
  # geom_histogram(bins = 40, alpha = 0.5, position = "identity") +
  # scale_x_continuous(trans = "log1p") +
@@ -207,8 +247,12 @@ plot_distribution <- function(ref_df, targets_list, var, ref_name = "Airport_177
   }
 }
 
+
+
+
 plot_precip_wetday_distribution <- function(ref_df, targets_list, threshold_mm = 1, ref_name = "Airport_1770") {
   df <- make_long_overlap(ref_df, targets_list, "Precip_mm", ref_name = ref_name)
+
 
   # Wet days defined using reference only (critical for fair event evaluation)
   ref_wet_dates <- ref_df |>
@@ -376,32 +420,7 @@ plot_rolling_diagnostics <- function(ref_df, target_df, target_name, var, window
 
 
 # ============================================================
-# Example calls (keep these minimal for script testing)
-# ============================================================
-
-#print(plot_timeseries_line(ref_df, targets_list, "Temp_C"))
-#print(plot_timeseries_line(ref_df, targets_list, "Wind_Spd_ms"))
-# only plot timeseries is enough data avalable
-# p_ts_rad  <- plot_timeseries_line(ref_df, targets_list, "RadSWD_Wm2")
-
-#print(plot_precip_hydrograph(ref_df, targets_list, show_7day_sum = TRUE))
-#p_hydro can be shown either with a running weekly total (show_7day_sum = TRUE or not (=FALSE)
-#be sure to know the difference because the output plot is very different
-#print(plot_precip_cdf(ref_df, targets_list))
-#print(plot_precip_wetday_distribution(ref_df, targets_list, threshold_mm = 1))
-
-#print(plot_scatter_faceted(ref_df, targets_list, "Temp_C", ncol = 2))
-#print(plot_scatter_faceted(ref_df, targets_list, "Wind_Spd_ms", ncol = 2))
-#print(plot_scatter_faceted(ref_df, targets_list, "Precip_mm", ncol = 2))
-
-#print(plot_rolling_diagnostics(ref_df, era5, "ERA5", "Temp_C", window_days = 30))
-
-
-
-
-# ============================================================
 # EXTRA ANALYSIS: Event agreement + seasonal bias + climatology
-# Paste below your existing plotting code (no changes above)
 # ============================================================
 
 library(lubridate)
@@ -411,7 +430,7 @@ library(purrr)
 library(ggplot2)
 
 # -----------------------------
-# 1) EVENT AGREEMENT (hits/misses/false alarms)
+# EVENT AGREEMENT (hits/misses/false alarms)
 # -----------------------------
 # Why: correlation can look "good" while the model is wrong on events (rain/wind).
 # This section quantifies:
@@ -480,6 +499,14 @@ event_skill_all_targets <- function(ref_df, targets_list, var, threshold,
 }
 
 # --- Plot: stacked counts of event outcomes per target ---
+outcome_palette <- c(
+  hits = "#45adb4ff",
+  misses = "#ef6856ff",
+  false_alarms = "#757fa0ff",
+  correct_neg = "#7ecc76ff"
+)
+
+
 plot_event_outcomes <- function(skill_tbl, title = NULL) {
   long <- skill_tbl |>
     select(target, hits, misses, false_alarms, correct_neg) |>
@@ -487,6 +514,7 @@ plot_event_outcomes <- function(skill_tbl, title = NULL) {
 
   ggplot(long, aes(target, count, fill = outcome)) +
     geom_col() +
+    scale_fill_manual(values = outcome_palette) +
     coord_flip() +
     labs(
       title = title %||% "Event agreement outcomes",
@@ -501,8 +529,9 @@ plot_event_skill_scores <- function(skill_tbl, title = NULL) {
     select(target, POD, FAR, CSI, bias_score) |>
     pivot_longer(-target, names_to = "metric", values_to = "value")
 
-  ggplot(long, aes(target, value)) +
+  ggplot(long, aes(target, value, fill = target)) +
     geom_col() +
+    scale_fill_manual(values = target_colors) +
     facet_wrap(~ metric, ncol = 2, scales = "free_y") +
     coord_flip() +
     labs(
@@ -563,7 +592,7 @@ skill_precip <- event_skill_all_targets(
 
 
 # -----------------------------
-# 2) MONTHLY CLIMATOLOGY OVERLAY (mean + IQR)
+# MONTHLY CLIMATOLOGY OVERLAY (mean + IQR)
 # -----------------------------
 # Why: shows systematic seasonal bias in mean AND variability.
 # Uses overlap with reference dates to ensure fair comparison.
@@ -613,7 +642,7 @@ plot_monthly_climatology <- function(ref_df, targets_list, var,
     theme(legend.position = "right")
 }
 
-# --- Example calls ---
+
 #print(plot_monthly_climatology(ref_df, targets_list, "Temp_C"))
 #print(plot_monthly_climatology(ref_df, targets_list, "Wind_Spd_ms"))
 # Radiation only if you have decent overlap:
@@ -621,7 +650,7 @@ plot_monthly_climatology <- function(ref_df, targets_list, var,
 
 
 # -----------------------------
-# 3) SEASON DEFINITIONS (NZ / Southern Hemisphere) with editable month sets
+# SEASON DEFINITIONS (NZ / Southern Hemisphere) with editable month sets
 # -----------------------------
 # Default SH seasons:
 #   Summer = DJF (Dec-Jan-Feb)
@@ -657,9 +686,9 @@ assign_season <- function(date, season_defs = season_defs_default) {
 
 
 # -----------------------------
-# 4) SEASONAL METRICS (calc_metrics_* within each season)
+# SEASONAL METRICS (calc_metrics_* within each season)
 # -----------------------------
-# Why: claims "dataset X performs best in winter for wind" (defensible).
+# Why: claims "dataset X performs best in winter for wind".
 
 seasonal_metrics_vs_ref <- function(ref_df, target_df, target_name, var,
                                     season_defs = season_defs_default,
@@ -793,7 +822,9 @@ plot_seasonal_scatter <- function(ref_df, targets_list, var,
     theme(legend.position = "none")
 }
 
-# --- Example calls: pick one season definition ---
+
+
+# ---  pick one season definition ---
 season_defs <- season_defs_default
 # season_defs <- season_defs_warmcool  # <- switch to warm/cool quickly
 
@@ -808,7 +839,7 @@ season_defs <- season_defs_default
 #print(season_metrics_wind)
 #print(season_metrics_precip)
 
-# Seasonal scatter (big figure, but very informative)
+# Seasonal scatter 
 #print(plot_seasonal_scatter(ref_df, targets_list, "Wind_Spd_ms", season_defs = season_defs))
 # print(plot_seasonal_scatter(ref_df, targets_list, "Precip_mm", season_defs = season_defs))  # can be heavy; optional
 
