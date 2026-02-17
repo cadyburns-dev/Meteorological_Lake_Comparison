@@ -58,8 +58,8 @@ summarise_hourly_mean <- function(df, date_col, value_col) {
 }
 
 # makeing wind function as buoy units changed mid dataset (note = visualise this and get unit changes dates for diff lakes)
-wind_knots_conv <- function(df, Wind_Speed_ms, value_col) 
-wind_ms_conv <- function(df, Wind_Speed_ms, value_col)
+#wind_knots_conv <- function(df, Wind_Speed_ms, value_col) 
+#wind_ms_conv <- function(df, Wind_Speed_ms, value_col)
 
 #-------------------------------------------------------------------------------  
   # ERA5 data (daily)
