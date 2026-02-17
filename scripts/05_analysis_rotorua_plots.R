@@ -24,7 +24,7 @@ plot_precip_hydrograph(ref_df, targets_list, display = "rolling", window_days = 
 
 print(plot_precip_cdf(ref_df, targets_list))
 print(plot_precip_wetday_distribution(ref_df, targets_list, threshold_mm = 1))
-print(plot_distribution(ref_df, targets_list))
+print(plot_distribution(ref_df, targets_list, "Precip_mm"))
 
 print(plot_scatter_faceted(ref_df, targets_list, "Temp_C", ncol = 2))
 print(plot_scatter_faceted(ref_df, targets_list, "Wind_Spd_ms", ncol = 2))

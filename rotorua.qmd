@@ -252,7 +252,7 @@ vars <- intersect(vars_requested, vars_available)
 
 # Lake Rotorua analysis
 
-For Rotorua there seems to be no single “best” dataset, rather, there are better choices to make depending on what variable you wish to use and for what purpose. All quantitative performance statements below are relative to the Airport_1770 reference and overlap period (Table: [Metrics](metrics_stats_results.qmd#tbl-metrics); Table: [Coverages](metrics_stats_results.qmd#tbl-coverage)).
+For Rotorua there seems to be no single “best” dataset, rather, there are better choices to make depending on what variable you wish to use and for what purpose. All quantitative performance statements below are relative to the Airport_1770 reference and overlap period (Table: [Metrics](metrics_stats_results.qmd#tbl-Metrics); Table: [Coverages](metrics_stats_results.qmd#tbl-Coverage)).
 
 ::: {.callout-note collapse="true"}
 ## Click to see data coverage table
@@ -408,7 +408,7 @@ plot_seasonal_scatter(ref_df, targets_list, "Wind_Spd_ms", season_defs = season_
 ```
 :::
 
-For precipitation, VCS and Town are the most reliable overall, while ERA5 tends towards higher wet-day values and more false alarms. Buoy precipitation is weakest for event detection (Figure: [precipitation scatter](metrics_stats_results.qmd#fig-scatter-precip)), (Figure: [event outcome](behaviour_results.qmd#fig-precip-events)), (Figure: [Precipitation score](behaviour_results.qmd#fig-Rain-event-scores)), (Figure: [False alarm](behaviour_results.qmd#fig-Rain-false-alarm-mag)), (Figure: [Climatology rain](behaviour_results.qmd#fig-climatology-precip)). ERA5 has the potential to be useful for wider scale projects and when needing longer records which are consistent. But for a project which require high accuracy and precision for local rain events (e.g. threshold modelling, runoff timing, loading pulses), ERA5 should be a secondary choice unless bias corrected.
+For precipitation, VCS and Town are the most reliable overall, while ERA5 tends towards higher wet-day values and more false alarms. Buoy precipitation is weakest for event detection (Figure: [precipitation scatter](metrics_stats_results.qmd#fig-scatter-precip)), (Figure: [event outcome](behaviour_results.qmd#fig-precip-events)), (Figure: [Precipitation score](behaviour_results.qmd#fig-Rain-event-scores)), (Figure: [False alarm](behaviour_results.qmd#fig-false-alarm-mag)), (Figure: [Climatology rain](behaviour_results.qmd#fig-climatology-precip)). ERA5 has the potential to be useful for wider scale projects and when needing longer records which are consistent. But for a project which require high accuracy and precision for local rain events (e.g. threshold modelling, runoff timing, loading pulses), ERA5 should be a secondary choice unless bias corrected.
 
 ::: {.callout-note collapse="true"}
 ## Rolling diagnostics plots (rain)
@@ -441,7 +441,7 @@ plot_scatter_faceted(ref_df, targets_list, "Precip_mm", ncol = 2)
 plot_seasonal_scatter(ref_df, targets_list, "Precip_mm", season_defs = season_defs)
 ```
 
-### Hydrograph
+### 7-day rolling precipitation totals
 
 ```{r}
 plot_precip_hydrograph(ref_df, targets_list, show_7day_sum = TRUE)
@@ -527,5 +527,3 @@ Althought the 30-day -rolling plots give us insight into overall preformance and
 ## Project type recommendations – what do use when
 
 When regarding seasonality or regime VCSN performs well in higher event situations (wet and windy). ERA5 temperature could be useful to use due to its clear, consistent temporal variability if needing to extend data or data gap fill, however adjustments will need to take place on an absolute level due to its cool bias. This is key to consider in lake level dynamic projects (e.g. water balance building). When it comes to Buoy and VCSN temperature recognising the spatial difference is necessary due to water/land differences. For this reason, both Buoy and VCSN temperature data are potentially better matches when it comes to lake process projects (e.g. ecological dynamics or evaporation calculations). For Climate change related projects, the ERA5 datasets completeness allows for more seamless and overarching comprehensive outcomes [@hersbach2020; @muñoz-sabater2021; @setchell]. However, if possible, bias adjust against a local reference (e.g. Airport) data.
-
-

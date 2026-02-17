@@ -215,7 +215,7 @@ plot_monthly_climatology(ref_df, targets_list, "Precip_mm")
 All datasets show a winter spring increase and a relative summer decrease, but the magnitude differs substantially. ERA5 is consistently wetter than the reference across months, while Buoy is clearly drier exept for september. Town_40177 aligns closely with the airport, and VCS_On is slightly wetter in several months but closer in the warmer dryer parts of the year. Wider IQRs for ERA5 indicate more variability and heavier tails.
 
 ```{r}
-#| label: fig-seasonal-bias-temp
+#| label: fig-seasonal-bias-temp_C
 #| fig-cap: "Seasonal mean temperature bias of ((target (Buoy, ERA5, Town, VCS) − reference(airport)) with interquartile ranges. Positive values indicate warm bias; negative values indicate cool bias."
 season_defs <- season_defs_default
 plot_seasonal_bias(ref_df, targets_list, "Temp_C", season_defs = season_defs)
@@ -226,8 +226,8 @@ ERA5 is cool biased in all seasons, most pronounced spring. Buoy shows a warm bi
 
 
 ```{r}
-#| label: fig-scatter-season-temp
-#| fig-cap: "Seasonal scatter plots of daily Temperature comparing each dataset (ERA5, Buoy, Town, VCS) to the reference (Airport) dataset. Dashed lines indicate 1:1 agreement; solid lines are fitted regressions. Rows represent seasons; columns represent datasets."
+#| label: fig-scatter-season-wind_ms
+#| fig-cap: "Seasonal scatter plots of daily wind comparing each dataset (ERA5, Buoy, Town, VCS) to the reference (Airport) dataset. Dashed lines indicate 1:1 agreement; solid lines are fitted regressions. Rows represent seasons; columns represent datasets."
 plot_seasonal_scatter(ref_df, targets_list, "Wind_Spd_ms", season_defs = season_defs)
 ```
 
@@ -235,8 +235,8 @@ plot_seasonal_scatter(ref_df, targets_list, "Wind_Spd_ms", season_defs = season_
 Town_40177 and VCS_On show tighter clustering around the 1:1 line across seasons, indicating stronger agreement. ERA5 shows systematic underestimation (regression slope < 1) in all seasons, especially at higher winds. Buoy shows reasonable agreement but with more spread in summer and spring.
 
 ```{r}
-#| label: fig-seasonal-scatter-wind
-#| fig-cap: "Seasonal scatter plots of daily wind speed comparing each dataset (ERA5, Buoy, Town, VCS) to the reference (Airport) dataset. Dashed lines indicate 1:1 agreement; solid lines are fitted regressions. Rows represent seasons; columns represent datasets."
+#| label: fig-seasonal-scatter-precip_mmday
+#| fig-cap: "Seasonal scatter plots of daily rain comparing each dataset (ERA5, Buoy, Town, VCS) to the reference (Airport) dataset. Dashed lines indicate 1:1 agreement; solid lines are fitted regressions. Rows represent seasons; columns represent datasets."
 plot_seasonal_scatter(ref_df, targets_list, "Precip_mm", season_defs = season_defs)
 ```
 

@@ -796,7 +796,7 @@ plot_event_skill_scores <- function(skill_tbl, title = NULL) {
 # --- Magnitude when disagreement occurs (precip example) ---
 # "Ref dry but target wet": how much rain do they report?
 plot_false_alarm_magnitude <- function(ref_df, targets_list,
-                                      threshold_mm = 0.1,
+                                      threshold_mm = 1,
                                       ref_name = "Airport_1770") {
 
   # Build paired dataset
@@ -826,7 +826,7 @@ plot_false_alarm_magnitude <- function(ref_df, targets_list,
 }
 
 # --- Example calls (precip threshold default = 0.1 mm; easy to change) ---
-precip_event_threshold <- 0.1  # change to 1 or 5 if you want sensitivity tests later
+precip_event_threshold <- 1  # change to 1 or 5 if you want sensitivity tests later
 
 skill_precip <- event_skill_all_targets(
   ref_df, targets_list,

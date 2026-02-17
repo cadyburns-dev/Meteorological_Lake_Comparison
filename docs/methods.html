@@ -1038,7 +1038,7 @@ Plots are generated from overlap‑aligned daily data to ensure consistent compa
 <span id="cb12-87"><a href="#cb12-87" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Magnitude when disagreement occurs (precip example) ---</span></span>
 <span id="cb12-88"><a href="#cb12-88" aria-hidden="true" tabindex="-1"></a><span class="co"># "Ref dry but target wet": how much rain do they report?</span></span>
 <span id="cb12-89"><a href="#cb12-89" aria-hidden="true" tabindex="-1"></a>plot_false_alarm_magnitude <span class="ot">&lt;-</span> <span class="cf">function</span>(ref_df, targets_list,</span>
-<span id="cb12-90"><a href="#cb12-90" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">threshold_mm =</span> <span class="fl">0.1</span>,</span>
+<span id="cb12-90"><a href="#cb12-90" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">threshold_mm =</span> <span class="dv">1</span>,</span>
 <span id="cb12-91"><a href="#cb12-91" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">ref_name =</span> <span class="st">"Airport_1770"</span>) {</span>
 <span id="cb12-92"><a href="#cb12-92" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-93"><a href="#cb12-93" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Build paired dataset</span></span>
@@ -1068,7 +1068,7 @@ Plots are generated from overlap‑aligned daily data to ensure consistent compa
 <span id="cb12-117"><a href="#cb12-117" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb12-118"><a href="#cb12-118" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-119"><a href="#cb12-119" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Example calls (precip threshold default = 0.1 mm; easy to change) ---</span></span>
-<span id="cb12-120"><a href="#cb12-120" aria-hidden="true" tabindex="-1"></a>precip_event_threshold <span class="ot">&lt;-</span> <span class="fl">0.1</span>  <span class="co"># change to 1 or 5 if you want sensitivity tests later</span></span>
+<span id="cb12-120"><a href="#cb12-120" aria-hidden="true" tabindex="-1"></a>precip_event_threshold <span class="ot">&lt;-</span> <span class="dv">1</span>  <span class="co"># change to 1 or 5 if you want sensitivity tests later</span></span>
 <span id="cb12-121"><a href="#cb12-121" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-122"><a href="#cb12-122" aria-hidden="true" tabindex="-1"></a>skill_precip <span class="ot">&lt;-</span> <span class="fu">event_skill_all_targets</span>(</span>
 <span id="cb12-123"><a href="#cb12-123" aria-hidden="true" tabindex="-1"></a>  ref_df, targets_list,</span>

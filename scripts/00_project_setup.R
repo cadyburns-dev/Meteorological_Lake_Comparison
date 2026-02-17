@@ -2,7 +2,7 @@
 
 
 #Install packages for following scripts
-renv::restore(prompt = FALSE)  # use the lockfile; idempotent
+
 
 
 if (!requireNamespace("renv", quietly = TRUE)) install.packages("renv")

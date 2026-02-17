@@ -758,7 +758,7 @@ vcs_on <- vcs_on_raw |>
     Baro_hPa      = MSLPress,
     RadSWD_Wm2    = RadSWD
   )
-(!dir.exists("data/processed")) {
+if(!dir.exists("data/processed")) {
   dir.create("data/processed", recursive = TRUE)
 }
 
