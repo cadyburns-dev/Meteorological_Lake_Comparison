@@ -152,10 +152,11 @@ reactable(
   highlight = TRUE,
   defaultPageSize = 5,
   columns = list(
-    Temp_C = colDef(format = colFormat(digits = 2, trailingZeros = TRUE)),
-    Precip_mm = colDef(format = colFormat(digits = 2, trailingZeros = TRUE)),
-    Wind_Spd_ms = colDef(format = colFormat(digits = 2, trailingZeros = TRUE)),
-    RadSWD_Wm2 = colDef(format = colFormat(digits = 2, trailingZeros = TRUE))
+    Temp_C      = colDef(format = colFormat(digits = 2)),
+    Precip_mm   = colDef(format = colFormat(digits = 2)),
+    Wind_Spd_ms = colDef(format = colFormat(digits = 2)),
+    RadSWD_Wm2  = colDef(format = colFormat(digits = 2))
   )
 )
+
 ```
