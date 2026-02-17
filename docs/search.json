@@ -46,7 +46,7 @@
     "href": "rotorua.html#precipitation",
     "title": "Rotorua demo",
     "section": "Precipitation",
-    "text": "Precipitation\n\nScatter rainSeasonal scatter rain7-day rolling precipitation totalsCDFWet day distClimatology rainDistribution rain"
+    "text": "Precipitation\n\nScatter rainSeasonal scatter rain7-day rolling precipitation totalsCDFWet day distributionClimatology rainDistribution rain"
   },
   {
     "objectID": "rotorua.html#precipitation-event-agreement",
@@ -341,5 +341,12 @@
     "title": "Reproducibility / How to reuse",
     "section": "Smaller analysis: one variable only",
     "text": "Smaller analysis: one variable only\n\nSet vars to a single variable (e.g., [\"Wind_Spd_ms\"]).\nEnsure that variable exists in every processed dataset.\nIn Results/Behaviour/Metrics QMDs, remove or guard plot chunks that reference other variables.\n\nThis keeps the workflow identical but limits output to one variable."
+  },
+  {
+    "objectID": "methods.html#event-performance-with-reference-defined-subsets",
+    "href": "methods.html#event-performance-with-reference-defined-subsets",
+    "title": "Methods",
+    "section": "Event performance with reference defined subsets",
+    "text": "Event performance with reference defined subsets\nWet‑day precipitation metrics use Precip_mm &gt; 1 mm in the reference (set with wet_threshold_mm = 1), to assess performance on “relevant” raining days. Wet‑day metrics were applied only when the reference precipitation exceeded 1 mm (Airport_1770), to focus on “notable” rain events.\nWindy‑day metrics used the top 10% of the reference dataset wind speeds (windy_top_pct = 0.10), defined by the the 90th percentile of the reference (e.g Airport) wind during the overlap period, metrics were computed only on those high‑wind days for the windy_day column. (A fixed threshold of 10 m/s is coded for as an alternative but not used)\nFor example: ERA5 vs Airport for precipitation, where airport precipitation= reference “obs” series ERA5 precipitation = source we are evaluating “sim”. mertrics_all uses every day where both datasets have values (after NA removal) (baseline overall performance) metrics_wet uses only days where the reference has “meaningful rain”:if threshold_mm = 1, it keeps days where airport precipitation mm &gt; 1. This answers: “How well does ERA5 match rainy days?”(which usually matters more for modelling than dry days). metrics_windy uses only days where the reference indictes high wind : if threshold_ms = 10, it keeps days where airport wind speed m/s &gt;=10. This answers: “How well does ERA5 match wind-storm days?” which matters because correlation may look high but perform poorly in seasonal extremes, wind and rain heavy events.\nEvent‑agreement statistics (Jolliffe 2003) for precipitation (threshold ≥ 1 mm/day, as set in the event‑skill section) include:\nHits (H) (ref event & target event), both obs and sim say “event”\nMisses (M) (ref event & target no event), obs says “event” but sim does not\nFalse alarms (FA), sim says “event” but obs does not\nCorrect negatives (CN), both say “no event”\nPOD (Probability of Detection) = H / (H + M)\n“Of the true events, how many did we catch?”\nFAR (False Alarm Ratio) = FA / (H + FA)\n“Of the predicted events, how many were false?”\nCSI (Critical Success Index) = H / (H + M + FA)\n“Overall event accuracy, ignoring correct negatives.” &gt;0.7 = strong, 0.4-0.7 = Moderate ,0.4 = weak\nBias score = (H + FA) / (H + M)\n“Do we predict too many events (&gt;1) or too few (&lt;1)?”\nThese quantify detection performance separately from continuous error metrics."
   }
 ]

@@ -457,7 +457,7 @@ plot_precip_hydrograph(ref_df, targets_list, show_7day_sum = TRUE)
 plot_precip_cdf(ref_df, targets_list)
 ```
 
-### Wet day dist
+### Wet day distribution
 
 ```{r}
 plot_precip_wetday_distribution(ref_df, targets_list, threshold_mm = wet_threshold_mm)
@@ -490,7 +490,18 @@ skill_precip <- event_skill_all_targets(
   direction = ">="
 )
 
-reactable(skill_precip, sortable = TRUE, striped = TRUE)
+reactable(
+  skill_precip,
+  sortable = TRUE,
+  striped = TRUE,
+  columns = list(
+    threshold   = colDef(format = colFormat(digits = 2)),
+    POD         = colDef(format = colFormat(digits = 2)),
+    FAR         = colDef(format = colFormat(digits = 2)),
+    CSI         = colDef(format = colFormat(digits = 2)),
+    bias_score  = colDef(format = colFormat(digits = 2))
+  )
+)
 ```
 :::
 

@@ -63,7 +63,7 @@ $$
 
 ***Relative bias:*** Give context to the bias. Expressed as percent (%) of mean observed, `100xbias/mean(obs)`. When considering light and heavy rain the relative bias can show the importance. For example a bias of +1mm/day is huge when tracking light rain only, but trivial if looking for heavy rain events.
 
-## Event‑based performance evaluated using reference‑defined subsets
+## Event performance with reference defined subsets
 
 ***Wet‑day precipitation*** metrics use `Precip_mm > 1 mm` in the reference (set with `wet_threshold_mm = 1`), to assess performance on "relevant" raining days. Wet‑day metrics were applied only when the reference precipitation exceeded 1 mm (Airport_1770), to focus on "notable" rain events.
 
