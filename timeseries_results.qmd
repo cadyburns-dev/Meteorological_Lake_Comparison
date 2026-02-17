@@ -94,8 +94,7 @@ plot_timeseries_line(ref_df, targets_list, "Temp_C")
 plot_timeseries_line(ref_df, targets_list, "Wind_Spd_ms")
 ```
 
-Toggle between timeseries and hydrograph 
-
+Toggle between timeseries and hydrograph
 
 ::: panel-tabset
 ### Timeseries line plot
@@ -114,7 +113,6 @@ plot_timeseries_line(ref_df, targets_list, "Precip_mm")
 plot_precip_hydrograph(ref_df, targets_list, display = "bars")
 ```
 :::
-
 
 ```{r}
 #| label: fig-timeseries-rad
@@ -152,6 +150,12 @@ reactable(
   pagination = TRUE,
   striped = TRUE,
   highlight = TRUE,
-  defaultPageSize = 5
+  defaultPageSize = 5,
+  columns = list(
+    Temp_C = colDef(format = colFormat(digits = 2, trailingZeros = TRUE)),
+    Precip_mm = colDef(format = colFormat(digits = 2, trailingZeros = TRUE)),
+    Wind_Spd_ms = colDef(format = colFormat(digits = 2, trailingZeros = TRUE)),
+    RadSWD_Wm2 = colDef(format = colFormat(digits = 2, trailingZeros = TRUE))
+  )
 )
 ```
