@@ -61,13 +61,13 @@ $$
 
 ***Bias*** `mean(sim - obs)`, and relative bias if mean obs is non-zero. Bias can tell us the direction of a systematic error, e.g. how far the dataset has shifted above or below the reference on average.
 
-Relative bias: Give context to the bias. Expressed as percent (%) of mean observed, `100xbias/mean(obs)`. When considering light and heavy rain the relative bias can show the importance. For example a bias of +1mm/day is huge when tracking light rain only, but trivial if looking for heavy rain events.
+***Relative bias:*** Give context to the bias. Expressed as percent (%) of mean observed, `100xbias/mean(obs)`. When considering light and heavy rain the relative bias can show the importance. For example a bias of +1mm/day is huge when tracking light rain only, but trivial if looking for heavy rain events.
 
 ## Event‑based performance evaluated using reference‑defined subsets
 
-Wet‑day precipitation metrics use `Precip_mm > 1 mm` in the reference (set with `wet_threshold_mm = 1`), to assess performance on "relevant" raining days. Wet‑day metrics were applied only when the reference precipitation exceeded 1 mm (Airport_1770), to focus on "notable" rain events.
+***Wet‑day precipitation*** metrics use `Precip_mm > 1 mm` in the reference (set with `wet_threshold_mm = 1`), to assess performance on "relevant" raining days. Wet‑day metrics were applied only when the reference precipitation exceeded 1 mm (Airport_1770), to focus on "notable" rain events.
 
-Windy‑day metrics used the top 10% of the reference dataset wind speeds (`windy_top_pct = 0.10`), defined by the the 90th percentile of the reference (e.g Airport) wind during the overlap period, metrics were computed only on those high‑wind days for the windy_day column. (A fixed threshold of 10 m/s is coded for as an alternative but not used)
+***Windy‑day*** metrics used the top 10% of the reference dataset wind speeds (`windy_top_pct = 0.10`), defined by the the 90th percentile of the reference (e.g Airport) wind during the overlap period, metrics were computed only on those high‑wind days for the windy_day column. (A fixed threshold of 10 m/s is coded for as an alternative but not used)
 
 For example: ERA5 vs Airport for precipitation, where airport precipitation= reference "obs" series ERA5 precipitation = source we are evaluating "sim". mertrics_all uses every day where both datasets have values (after NA removal) (baseline overall performance) metrics_wet uses only days where the reference has “meaningful rain”:if threshold_mm = 1, it keeps days where airport precipitation mm \> 1. This answers: “How well does ERA5 match rainy days?”(which usually matters more for modelling than dry days). metrics_windy uses only days where the reference indictes high wind : if threshold_ms = 10, it keeps days where airport wind speed m/s \>=10. This answers: “How well does ERA5 match wind-storm days?” which matters because correlation may look high but perform poorly in seasonal extremes, wind and rain heavy events.
 
@@ -88,7 +88,7 @@ FAR (False Alarm Ratio) = FA / (H + FA)\
 *“Of the predicted events, how many were false?”*
 
 CSI (Critical Success Index) = H / (H + M + FA)\
-*“Overall event accuracy, ignoring correct negatives.”* >0.7 = strong, 0.4-0.7 = Moderate ,0.4 = weak
+*“Overall event accuracy, ignoring correct negatives.”* \>0.7 = strong, 0.4-0.7 = Moderate ,0.4 = weak
 
 Bias score = (H + FA) / (H + M)\
 *“Do we predict too many events (\>1) or too few (\<1)?”*
