@@ -304,7 +304,17 @@ reactable(
   searchable = TRUE,
   sortable = TRUE,
   highlight = TRUE,
-  defaultPageSize = 12
+  defaultPageSize = 12,
+  columns = list(
+    cor = colDef(format = colFormat(digits = 2)),
+    slope = colDef(format = colFormat(digits = 2)),
+    intercept = colDef(format = colFormat(digits = 2)),
+    mae = colDef(format = colFormat(digits = 2)),
+    rmse = colDef(format = colFormat(digits = 2)),
+    ccc = colDef(format = colFormat(digits = 2)),
+    bias = colDef(format = colFormat(digits = 2)),
+    rel_bias = colDef(format = colFormat(digits = 1))
+  )
 )
 ```
 :::
@@ -334,12 +344,6 @@ purrr::iwalk(targets_list, ~ print(plot_rolling_diagnostics(ref_df, .x, .y, "Tem
 
 ```{r}
 plot_distribution(ref_df, targets_list, "Temp_C")
-```
-
-### Scatter Temp
-
-```{r}
-plot_scatter_faceted(ref_df, targets_list, "Temp_C", ncol = 2)
 ```
 
 ### Scatter Temp
