@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Time-series – Meterological Lake Comparison</title>
+<title>Reproducibility / How to reuse – Meterological Lake Comparison</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -68,26 +103,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script src="site_libs/core-js-2.5.3/shim.min.js"></script>
-
-<script src="site_libs/react-18.2.0/react.min.js"></script>
-
-<script src="site_libs/react-18.2.0/react-dom.min.js"></script>
-
-<script src="site_libs/reactwidget-2.0.0/react-tools.js"></script>
-
-<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
-
-<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
-
-<link href="site_libs/reactable-0.4.5/reactable.css" rel="stylesheet">
-
-<script src="site_libs/reactable-binding-0.4.5/reactable.js"></script>
-
-<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
-
-<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
-
 
 
 <link rel="stylesheet" href="custom.css">
@@ -123,7 +138,7 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Methods</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./timeseries_results.html" aria-current="page"> 
+    <a class="nav-link" href="./timeseries_results.html"> 
 <span class="menu-text">Time Series</span></a>
   </li>  
   <li class="nav-item">
@@ -139,7 +154,7 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Rotorua demo</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./reproducibility.html"> 
+    <a class="nav-link active" href="./reproducibility.html" aria-current="page"> 
 <span class="menu-text">Reproducibility</span></a>
   </li>  
   <li class="nav-item">
@@ -161,8 +176,13 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of Content</h2>
    
   <ul>
-  <li><a href="#time-series-overlays" id="toc-time-series-overlays" class="nav-link active" data-scroll-target="#time-series-overlays">Time-series overlays</a></li>
-  <li><a href="#latest-daily-snapshot" id="toc-latest-daily-snapshot" class="nav-link" data-scroll-target="#latest-daily-snapshot">Latest daily snapshot</a></li>
+  <li><a href="#setup-once-per-machine" id="toc-setup-once-per-machine" class="nav-link active" data-scroll-target="#setup-once-per-machine">Setup (once per machine)</a></li>
+  <li><a href="#changes-for-a-new-lake-scripts" id="toc-changes-for-a-new-lake-scripts" class="nav-link" data-scroll-target="#changes-for-a-new-lake-scripts">Changes for a new lake: scripts</a></li>
+  <li><a href="#changes-for-a-new-lake-qmd-yaml" id="toc-changes-for-a-new-lake-qmd-yaml" class="nav-link" data-scroll-target="#changes-for-a-new-lake-qmd-yaml">Changes for a new lake: QMD + YAML</a></li>
+  <li><a href="#step-by-step-new-lake-run" id="toc-step-by-step-new-lake-run" class="nav-link" data-scroll-target="#step-by-step-new-lake-run">Step-by-step: new lake run</a></li>
+  <li><a href="#example-lake-tutera-template" id="toc-example-lake-tutera-template" class="nav-link" data-scroll-target="#example-lake-tutera-template">Example: Lake Tutera (template)</a></li>
+  <li><a href="#smaller-analysis-two-datasets-only-era5-vcs_on" id="toc-smaller-analysis-two-datasets-only-era5-vcs_on" class="nav-link" data-scroll-target="#smaller-analysis-two-datasets-only-era5-vcs_on">Smaller analysis: two datasets only (ERA5 + VCS_On)</a></li>
+  <li><a href="#smaller-analysis-one-variable-only" id="toc-smaller-analysis-one-variable-only" class="nav-link" data-scroll-target="#smaller-analysis-one-variable-only">Smaller analysis: one variable only</a></li>
   </ul>
 </nav>
 </nav>
@@ -175,7 +195,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Time-series</h1>
+<h1 class="title">Reproducibility / How to reuse</h1>
 </div>
 
 
@@ -192,95 +212,133 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This tab focuses on time-series comparisons so you can visually check alignment and stability across datasets.</p>
-<section id="time-series-overlays" class="level2">
-<h2 class="anchored" data-anchor-id="time-series-overlays">Time-series overlays</h2>
-<p>Each plot shows the reference (Airport) against targets (Buoy, ERA5, Town, and Virtual Climate Station -VCS) for a single variable.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-timeseries-temp" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-timeseries-temp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="timeseries_results_files/figure-html/fig-timeseries-temp-1.png" class="img-fluid figure-img" width="960">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-timeseries-temp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Meteorological data fordaily average temperature (C) from different data sources (Airport, Buoy, ERA5, Town, VCS) around Lake Rotorua plotted against the reference data (Airport).
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-timeseries-wind" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-timeseries-wind-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="timeseries_results_files/figure-html/fig-timeseries-wind-1.png" class="img-fluid figure-img" width="960">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-timeseries-wind-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2: Meteorological data for daily average wind (m s⁻¹) from different data sources (Airport, Buoy, ERA5, Town, VCS) around Lake Rotorua plotted against the reference data (Airport).
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>Toggle between timeseries and hydrograph</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Timeseries line plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Hydrograph daily totals</a></li></ul>
-<div class="tab-content">
-<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-timeseries-precip" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-timeseries-precip-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="timeseries_results_files/figure-html/fig-timeseries-precip-1.png" class="img-fluid figure-img" width="960">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-timeseries-precip-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3: Meteorological data for daily total precipitation (mm) from different data sources (Airport, Buoy, ERA5, Town, VCS) around Lake Rotorua plotted against the reference data (Airport).
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-Daily-Hydrograph" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-Daily-Hydrograph-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="timeseries_results_files/figure-html/fig-Daily-Hydrograph-1.png" class="img-fluid figure-img" width="960">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-Daily-Hydrograph-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4: Hydrograph for daily total precipitation (mm) from different data sources (Airport, Buoy, ERA5, Town, VCS) around Lake Rotorua plotted against the reference data (Airport).
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
+<p>Use this guide to rerun the Rotorua workflow or adapt it to a new lake. The project flow is:</p>
+<ol type="1">
+<li>Prepare raw data into daily, standardized CSVs (<code>scripts/02_prepare_raw_data.R</code>).</li>
+<li>Load files into (<code>scripts/03_analysis_helpers.R</code>, and <code>scripts/04)analysis_plotting.R</code>).</li>
+<li>Load source scripts to QMDs, compute metrics, and render plots.</li>
+<li>Render the site with Quarto.</li>
+</ol>
+<p>Additionally, just use <code>scripts/05_analysis_rotorua_plots.R</code> to print plots without needing to render qmds.</p>
+<p>This page separates required changes to scripts (data prep and helper code) from changes to QMDs/YAML (report configuration).</p>
+<section id="setup-once-per-machine" class="level2">
+<h2 class="anchored" data-anchor-id="setup-once-per-machine">Setup (once per machine)</h2>
+<ol type="1">
+<li>Install R (&gt;= 4.4) and Quarto.</li>
+<li>From the project root, run <code>scripts/00_project_setup.R</code> to restore <code>renv</code> and required GitHub packages.</li>
+<li>If <code>renv::restore()</code> fails (offline), set a reachable CRAN mirror with <code>options(repos = ...)</code> and try again.</li>
+</ol>
 </section>
-<section id="latest-daily-snapshot" class="level2">
-<h2 class="anchored" data-anchor-id="latest-daily-snapshot">Latest daily snapshot</h2>
-<p>Quick look at the most recent reported day from each dataset.</p>
-<div class="cell">
-<div id="tbl-recent-data" class="cell quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-recent-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;1: Most recent data from each data source (Airport, ERA5, Buoy, Town, VCS)
-</figcaption>
-<div aria-describedby="tbl-recent-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<div class="reactable html-widget html-fill-item" id="htmlwidget-f5f4305e0cf0f4e3e75c" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-f5f4305e0cf0f4e3e75c">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Dataset":["Airport_1770","ERA5","Buoy","Town_40177","VCS_On"],"Date":["2025-07-27","2025-08-31","2025-09-01","2025-11-28","2025-06-30"],"Temp_C":[11.5857142857143,8.231,9.80763859722222,22.1,10.5],"Precip_mm":[0.2,24.029,0,"NA",0],"Wind_Spd_ms":[2.54,5.689,9.64310825442118,"NA",4.4],"RadSWD_Wm2":["NA",57.449,"NA","NA",63.6574074074074]},"columns":[{"id":"Dataset","name":"Dataset","type":"character"},{"id":"Date","name":"Date","type":"Date"},{"id":"Temp_C","name":"Temp_C","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"Precip_mm","name":"Precip_mm","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"Wind_Spd_ms","name":"Wind_Spd_ms","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}},{"id":"RadSWD_Wm2","name":"RadSWD_Wm2","type":"numeric","format":{"cell":{"digits":2},"aggregated":{"digits":2}}}],"searchable":true,"defaultPageSize":5,"highlight":true,"striped":true,"dataKey":"0528a18f38b1023354db54dee9e41032"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
-</div>
-</div>
-</figure>
-</div>
-</div>
+<section id="changes-for-a-new-lake-scripts" class="level2">
+<h2 class="anchored" data-anchor-id="changes-for-a-new-lake-scripts">Changes for a new lake: scripts</h2>
+<p>Make these edits in scripts if you want to re-use the pipeline for another lake. These changes affect data creation and helper defaults.</p>
+<p><strong>scripts/02_prepare_raw_data.R</strong></p>
+<ul>
+<li>Update the raw file paths under <code>data/raw/</code> to your new lake folders and filenames.</li>
+<li>Update station IDs in file paths and any column name mappings that differ.</li>
+<li>Keep the UTC conversion and daily aggregation rules, using means for state variables (Temp_C, Wind_Spd_ms, RadSWD_Wm2) and sums for flux variables (Precip_mm).</li>
+<li>Keep or update unit conversions, including wind knots to m/s if needed, sub-daily precip rates to daily totals, and radiation MJ/m^2 to W/m^2 when required.</li>
+<li>Update any bad-data filtering to match your lake (e.g., remove known corrupt periods).</li>
+<li>Update the output filenames at the end so they match your new lake ID (for example: <code>data/processed/&lt;lake_id&gt;_era5_daily.csv</code>, <code>data/processed/&lt;lake_id&gt;_vcs_on_daily.csv</code>, plus station/buoy files as applicable).</li>
+</ul>
+<p><strong>scripts/03_analysis_helpers.R</strong></p>
+<ul>
+<li>This file currently reads Rotorua processed data when sourced.</li>
+<li>If you are not keeping Rotorua files, update the file paths to your new lake or remove/guard those read lines so sourcing does not error.</li>
+<li>The metrics functions (<code>metrics_vs_ref</code>) are reusable and do not need changes unless you change variable names.</li>
+</ul>
+<p><strong>scripts/04_analysis_plotting.R</strong></p>
+<ul>
+<li>This file also reads Rotorua processed data when sourced.</li>
+<li>If you are not keeping Rotorua files, update those read paths or guard them.</li>
+<li>Update <code>ref_df</code>, <code>targets_list</code>, and <code>target_colors</code> defaults if your reference/targets have different names.</li>
+<li>Plot functions are reusable. They assume column names <code>Date</code>, <code>Temp_C</code>, <code>Precip_mm</code>, <code>Wind_Spd_ms</code>, <code>RadSWD_Wm2</code>.</li>
+</ul>
+<p><strong>scripts/05_analysis_rotorua_plots.R</strong></p>
+<ul>
+<li>Rotorua specific example. Update only if you want to run a stand alone script for a new lake. The QMDs do not depend on this file.</li>
+</ul>
+</section>
+<section id="changes-for-a-new-lake-qmd-yaml" class="level2">
+<h2 class="anchored" data-anchor-id="changes-for-a-new-lake-qmd-yaml">Changes for a new lake: QMD + YAML</h2>
+<p>These edits control the rendered report and are required even if you only update the scripts.</p>
+<p><strong>params.yml (optional single source of truth)</strong></p>
+<ul>
+<li>This file contains <code>params:</code> used by QMDs if you remove local params blocks.</li>
+<li>If you keep local params inside each QMD (current setup), update them in each QMD instead.</li>
+</ul>
+<p><strong>QMD front</strong></p>
+<p>Update these in each of: <code>index.qmd</code>, <code>Overview.qmd</code>, <code>Results.qmd</code>, <code>metrics_stats.qmd</code>, <code>Behaviour.qmd</code>, <code>rotorua.qmd</code>:</p>
+<ul>
+<li><code>lake_name</code>, <code>lat</code>, <code>lon</code>, <code>buffer_km</code>, <code>lake_id</code></li>
+<li><code>reference</code> and <code>targets</code></li>
+<li><code>vars</code> and thresholds (<code>wet_threshold_mm</code>, <code>precip_event_threshold</code>, <code>windy_top_pct</code>, <code>windy_threshold_ms</code>, <code>window_days</code>)</li>
+<li>In <code>Overview.qmd</code>, update any station/point coordinates and labels used for the map.</li>
+</ul>
+<p><strong>QMD file_map blocks</strong></p>
+<p>Each of the QMDs listed above contains a <code>file_map &lt;- list(...)</code> block. Update those paths to your new processed files.</p>
+<p><strong>QMD plot calls</strong></p>
+<p>Some plots are hard-coded to specific variables (Temp, Wind, Precip). If you remove variables or change the reference name:</p>
+<ul>
+<li>Wrap plot calls with checks like <code>if ("Temp_C" %in% vars) ...</code> to avoid errors.</li>
+<li>Pass <code>ref_name = params$reference</code> into plot functions if your reference is not Airport_1770.</li>
+</ul>
+<p>**_quarto.yml**</p>
+<ul>
+<li>Add or remove QMD files in the <code>project.render</code> list if you change page names.</li>
+<li>The site outputs to <code>docs/</code> by default.</li>
+</ul>
+</section>
+<section id="step-by-step-new-lake-run" class="level2">
+<h2 class="anchored" data-anchor-id="step-by-step-new-lake-run">Step-by-step: new lake run</h2>
+<ol type="1">
+<li>Place raw files under <code>data/raw/&lt;your_lake&gt;/...</code>.</li>
+<li>Edit <code>scripts/02_prepare_raw_data.R</code> for your new lake and run it to create <code>data/processed/&lt;lake_id&gt;_*.csv</code>.</li>
+<li>Update the QMD params and <code>file_map</code> blocks to point at your new processed files.</li>
+<li>Render the site: <code>quarto render</code>.</li>
+</ol>
+</section>
+<section id="example-lake-tutera-template" class="level2">
+<h2 class="anchored" data-anchor-id="example-lake-tutera-template">Example: Lake Tutera (template)</h2>
+<p>Use this as a starting point for naming and params:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lake_name</span><span class="kw">:</span><span class="at"> </span><span class="st">"Lake Tutera"</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lat</span><span class="kw">:</span><span class="at"> </span><span class="fl">-39.134088</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lon</span><span class="kw">:</span><span class="at"> </span><span class="fl">176.552553</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">buffer_km</span><span class="kw">:</span><span class="at"> </span><span class="dv">10</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lake_id</span><span class="kw">:</span><span class="at"> </span><span class="st">"tutera"</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">reference</span><span class="kw">:</span><span class="at"> </span><span class="st">"Airport_XXXX"</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">targets</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">"ERA5"</span><span class="kw">,</span><span class="at"> </span><span class="st">"VCS_On"</span><span class="kw">]</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">vars</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">"Temp_C"</span><span class="kw">,</span><span class="at"> </span><span class="st">"Precip_mm"</span><span class="kw">,</span><span class="at"> </span><span class="st">"Wind_Spd_ms"</span><span class="kw">,</span><span class="at"> </span><span class="st">"RadSWD_Wm2"</span><span class="kw">]</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">wet_threshold_mm</span><span class="kw">:</span><span class="at"> </span><span class="dv">1</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">precip_event_threshold</span><span class="kw">:</span><span class="at"> </span><span class="dv">1</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">windy_top_pct</span><span class="kw">:</span><span class="at"> </span><span class="fl">0.10</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">windy_threshold_ms</span><span class="kw">:</span><span class="at"> </span><span class="dv">10</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">window_days</span><span class="kw">:</span><span class="at"> </span><span class="dv">30</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Example processed filenames:</p>
+<ul>
+<li><code>data/processed/tutera_era5_daily.csv</code></li>
+<li><code>data/processed/tutera_vcs_on_daily.csv</code></li>
+<li><code>data/processed/tutera_airport_XXXX_daily.csv</code></li>
+</ul>
+</section>
+<section id="smaller-analysis-two-datasets-only-era5-vcs_on" class="level2">
+<h2 class="anchored" data-anchor-id="smaller-analysis-two-datasets-only-era5-vcs_on">Smaller analysis: two datasets only (ERA5 + VCS_On)</h2>
+<ol type="1">
+<li>Set <code>reference</code> to the dataset you want as the benchmark (e.g., <code>VCS_On</code>).</li>
+<li>Set <code>targets: ["ERA5"]</code>.</li>
+<li>In each QMD <code>file_map</code>, keep only those two files (plus the reference file if it is separate).</li>
+<li>Update any plot calls or titles that still say Airport_1770 to use <code>params$reference</code>.</li>
+</ol>
+<p>This will produce the same metrics, plots, and diagnostics, but only for the chosen pair.</p>
+</section>
+<section id="smaller-analysis-one-variable-only" class="level2">
+<h2 class="anchored" data-anchor-id="smaller-analysis-one-variable-only">Smaller analysis: one variable only</h2>
+<ol type="1">
+<li>Set <code>vars</code> to a single variable (e.g., <code>["Wind_Spd_ms"]</code>).</li>
+<li>Ensure that variable exists in every processed dataset.</li>
+<li>In Results/Behaviour/Metrics QMDs, remove or guard plot chunks that reference other variables.</li>
+</ol>
+<p>This keeps the workflow identical but limits output to one variable.</p>
 
 
 </section>

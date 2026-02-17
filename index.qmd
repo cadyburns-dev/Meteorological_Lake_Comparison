@@ -15,7 +15,7 @@ params:
 ![](images/update.png){fig-align="center"}
 
 
-When it comes to limnological science, precipitation, wind and temperature are unavoidable physcal forms to consider. Selecting the appropriate dataset or source can play a critical role in both physical and biological results. However, it is often difficult to know which dataset or source is best to apply. Therefore, by critically comparing and analysing different data sources for a given location, we can gather more confidence in what data set and which variable is best to use, and when it is best to use it.
+When it comes to limnology, precipitation, wind and temperature are unavoidable physcal forms to consider. Selecting the appropriate dataset or source can play a critical role in both physical and biological results. However, it is often difficult to know which dataset or source is best to apply. Therefore, by critically comparing and analysing different data sources for a given location, we can gather more confidence in what data set and which variable is best to use, and when it is best to use it.
 
 ## Project description
 
